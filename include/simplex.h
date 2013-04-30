@@ -2,6 +2,4 @@
  * Simplex Algorithm - straightforward implementation
  */
 
-namespace fnc {
-
-}
+void fnc_simplex(double * x, double * c, double * A, double * b, int n, int m);
