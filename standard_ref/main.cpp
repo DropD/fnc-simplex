@@ -1,5 +1,5 @@
 
-//~ #define VERBOSE
+#define VERBOSE
 //~ #include "simple.hpp"
 #include "general.hpp"
 

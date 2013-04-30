@@ -13,10 +13,10 @@
 
 /*
 Assumptions:
-  We have a feasible maximisation problem
+  We have a maximisation problem
   'Maximize' comes before 'Subject To'
   No newlines between 'Maximize'/'Subject To' and the data, or within the data
-  All constraints are <=
+  All constraint inequalities are <= and rhs is positive
   Variables determined by position (0 for empty)
   Variables are >= 0
 */
@@ -68,6 +68,13 @@ class Simplex {
                 getline(fp, line);                     // get objective function
                 costs = split_vars(line);              // split_vars is size n
 
+            //~ } else if(line == "Minimize") {
+//~ 
+                //~ getline(fp, line);
+                //~ costs = split_vars(line);
+                //~ for(int i = 0; i < costs.size(); ++i)
+                    //~ costs[i] *= -1;
+
             } else if(line == "Subject To") {
 
                 int nr = 0;
@@ -101,6 +108,8 @@ class Simplex {
             tab[i][n+i] = 1;                            // diagonal slack
             active[i] = n+i;
         }
+        for(int i = 0; i < nonstandard.size(); ++i)
+            tab[nonstandard[i]][n+nonstandard[i]] *= -1;
 
 
     }
@@ -111,17 +120,15 @@ class Simplex {
         std::vector<double> v;
         std::istringstream ss(str);
         T d;
-        T sign = 1;
         do {
             for(T d; ss >> d; )
-                v.push_back(sign*d);
+                v.push_back(d);
             if(ss.fail()) {
                 ss.clear();
                 std::string s;
                 ss >> s;
-                if(s == "<=") sign = 1;
+                if(s == "<=") {}
                 else if(s == ">=" && nr >= 0) {
-                    sign = -1;
                     nonstandard.push_back(nr);
                 }
                 else if(s.size()) {
@@ -149,12 +156,30 @@ class Simplex {
 
     void solve() {
 
-        while(true) {
+        for(int i = 0; i < nonstandard.size(); ++i) {
 
-            for(int i = 0; i < nonstandard.size(); ++i) {
-                int col = pivot_col_general(nonstandard[i]);
-                std::cout << "ns col " << col << std::endl;
+            int col = pivot_col_nonstandard(nonstandard[i]);
+            if(col >= width) break;  // no negative -> finished
+            int row = pivot_row(col);
+            if(row >= m) {
+                std::cerr << "Invalid pivot row (problem infeasible)" << std::endl;
+                throw;
             }
+            basis_exchange(row, col);
+
+            #ifdef VERBOSE
+                std::cout << "Pivoting NONSTANDARD element (" << row << ", " << col << ")" << std::endl;
+                print();
+                std::cout << "active:";
+                for(int i = 0; i < active.size(); ++i)
+                    std::cout << " " << active[i];
+                std::cout << std::endl;
+                usleep(0.2*1000*1000);
+            #endif // VERBOSE
+
+        }
+
+        while(true) {
 
             int col = pivot_col();
             if(col >= width) break;  // no negative -> finished
@@ -164,19 +189,15 @@ class Simplex {
                 throw;
             }
 
-            T pivot = tab[row][col];
-            for(int i = 0; i < m+1; ++i) {  // clear column
-                if(i == row)
-                    continue;
-                T fac = tab[i][col]/pivot;   // TODO: check for instability
-                for(int j = 0; j < width; ++j)
-                    tab[i][j] -= fac*tab[row][j];
-            }
-            active[row] = col;
+            basis_exchange(row, col);
 
             #ifdef VERBOSE
                 std::cout << "Pivoting element (" << row << ", " << col << ")" << std::endl;
                 print();
+                std::cout << "active:";
+                for(int i = 0; i < active.size(); ++i)
+                    std::cout << " " << active[i];
+                std::cout << std::endl;
                 usleep(0.2*1000*1000);
             #endif // VERBOSE
         }
@@ -187,7 +208,7 @@ class Simplex {
     int pivot_col() {
         T min = 0;              // min must be negative
         int idx = width;
-        for(int i = 0; i < width; ++i)      // TODO: move into comparer struct
+        for(int i = 0; i < width-1; ++i)      // TODO: move into comparer struct
             if(tab[m][i] < min) {
                 min = tab[m][i];
                 idx = i;
@@ -195,12 +216,12 @@ class Simplex {
         return idx;
     }
 
-    int pivot_col_general(int row) { // split from pivot_col since different optimisations might apply
-        T min = 0;
+    int pivot_col_nonstandard(int row) { // split from pivot_col since different optimisations might apply
+        T max = 0;
         int idx = width;
-        for(int i = 0; i < width; ++i)
-            if(tab[row][i] < min) {
-                min = tab[row][i];
+        for(int i = 0; i < width-1; ++i)
+            if(tab[row][i] > max) {
+                max = tab[row][i];
                 idx = i;
             }
         return idx;
@@ -221,6 +242,18 @@ class Simplex {
             }
         }
         return idx;
+    }
+
+    inline void basis_exchange(int row, int col) {
+        T pivot = tab[row][col];
+        for(int i = 0; i < m+1; ++i) {
+            if(i == row)
+                continue;
+            T fac = tab[i][col]/pivot;   // TODO: check for instability
+            for(int j = 0; j < width; ++j)
+                tab[i][j] -= fac*tab[row][j];
+        }
+        active[row] = col;
     }
 
     std::vector<T> solutions() {
