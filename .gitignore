@@ -1,0 +1,5 @@
+*.swp
+build/
+*.o
+*.a
+standard_ref/main
