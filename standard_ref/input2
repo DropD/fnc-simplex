@@ -1,8 +1,15 @@
 
+Known maxmimisation problem.
+Expected result {
+Optimal value: 22
+Variables:  0  2  6  0  16  0
+}
+
+
 Maximize
 +1 +2 +3
 
 Subject To
- 7  0  1    6
- 1  2  0   20
- 0  3  4   30
+ 7  0  1 <=  6
+ 1  2  0 <= 20
+ 0  3  4 <= 30

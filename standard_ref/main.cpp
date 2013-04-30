@@ -1,6 +1,7 @@
 
 //~ #define VERBOSE
-#include "simple.hpp"
+//~ #include "simple.hpp"
+#include "general.hpp"
 
 #include <iostream>
 #include <string>
