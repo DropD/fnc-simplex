@@ -1,0 +1,6 @@
+Maximize
+3 9
+Subject To
+3 1 <= 15
+2 3 <= 18
+-2 3 <= 6
