@@ -17,3 +17,8 @@ to generate an lp with specific size:
 
 * compile the templates with cheetah
 * then run the gen_lp.py script (run without arguments for usage hints).
+
+to generate an lp with specific size:
+
+* compile the templates with cheetah
+* then run the gen_lp.py script (run without arguments for usage hints).

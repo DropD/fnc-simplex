@@ -40,9 +40,15 @@ add_custom_command(
 
 add_custom_command(
     TARGET lpbench
+<<<<<<< HEAD
     COMMAND for i in {1..10}\; do python gen_lp.py 2000 lpbench/lpb_2e3_\$\$i\; done
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "generate 10 lps of size 2000"
+=======
+    COMMAND for i in {1..10}\; do python gen_lp.py 10000 lpbench/lpb_1e4_\$\$i\; done
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "generate 10 lps of size 10000"
+>>>>>>> 06c5cbbfdf0d36896086363eb3cc9bc234a5dc62
 )
 
 #---------- benchmark dir ----------
