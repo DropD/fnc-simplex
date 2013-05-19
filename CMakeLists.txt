@@ -3,33 +3,46 @@ cmake_minimum_required(VERSION 2.8)
 #---------- lp benchmark ----------
 add_custom_target(lpbench ALL DEPENDS gen lpbdir)
 
-set(bla "'for i in {1..5}; do echo \$\$i; done'")
 add_custom_command(
     TARGET lpbench
-    COMMAND for i in {1..100}\; do python gen_lp.py 10 lpbench/lpb_1_\$\$i\; done
+    COMMAND for i in {1..100}\; do python gen_lp.py 10 lpbench/lpb_1e1_\$\$i\; done
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "generate 100 lps of size 10"
 )
 
 add_custom_command(
     TARGET lpbench
-    COMMAND for i in {1..100}\; do python gen_lp.py 100 lpbench/lpb_2_\$\$i\; done
+    COMMAND for i in {1..100}\; do python gen_lp.py 20 lpbench/lpb_2e1_\$\$i\; done
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "generate 100 lps of size 20"
+)
+
+add_custom_command(
+    TARGET lpbench
+    COMMAND for i in {1..100}\; do python gen_lp.py 50 lpbench/lpb_5e1_\$\$i\; done
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "generate 100 lps of size 50"
+)
+
+add_custom_command(
+    TARGET lpbench
+    COMMAND for i in {1..100}\; do python gen_lp.py 100 lpbench/lpb_1e2_\$\$i\; done
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "generate 100 lps of size 100"
 )
 
 add_custom_command(
     TARGET lpbench
-    COMMAND for i in {1..100}\; do python gen_lp.py 1000 lpbench/lpb_3_\$\$i\; done
+    COMMAND for i in {1..10}\; do python gen_lp.py 1000 lpbench/lpb_1e3_\$\$i\; done
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "generate 100 lps of size 1000"
+    COMMENT "generate 10 lps of size 1000"
 )
 
 add_custom_command(
     TARGET lpbench
-    COMMAND for i in {1..100}\; do python gen_lp.py 10000 lpbench/lpb_4_\$\$i\; done
+    COMMAND for i in {1..10}\; do python gen_lp.py 2000 lpbench/lpb_2e3_\$\$i\; done
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "generate 100 lps of size 10000"
+    COMMENT "generate 10 lps of size 2000"
 )
 
 #---------- benchmark dir ----------
