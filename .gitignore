@@ -2,4 +2,5 @@
 build/
 *.o
 *.a
-standard_ref/main
+standard_ref/bin
+problems/gen
