@@ -46,9 +46,9 @@ int main(int argc, char ** argv) {
     int n = rdtsc_warmup(&s, fname);
     double cycles = rdtsc_measure(222, &s, fname);    // solve
 
+    vector<double> sol = s.solutions();
+    cout << "Optimal value: " << sol[0] << endl;
     if(INFO) {
-        vector<double> sol = s.solutions();
-        cout << "Optimal value: " << sol[0] << endl;
         cout << "Variables:";
         for(int i = 1; i < sol.size(); ++i)
             cout << "  " << sol[i];
