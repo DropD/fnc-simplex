@@ -1,0 +1,15 @@
+
+Known maxmimisation problem.
+Expected result {
+Optimal value: 3
+Variables:  0  0  3  7  0  13
+}
+
+
+Maximize
+ 2 -3  1
+
+Subject To
+ 1  1  1 <= 10
+ 4 -3  1 <=  3
+ 2  1 -1 <= 10
