@@ -7,8 +7,8 @@
 #include <iostream>
 #include <string>
 
-//~ #define RDTSC_CYCLES_REQUIRED 1E1           // cold
-#define RDTSC_CYCLES_REQUIRED 1E6
+#define RDTSC_CYCLES_REQUIRED 1E1           // cold
+//~ #define RDTSC_CYCLES_REQUIRED 1E6
 //~ #define RDTSC_CYCLES_REQUIRED 1E8           // warm
 #include "misc/rdtsc_testing.hpp"
 
@@ -17,12 +17,13 @@ const bool INFO = false;
 //~ #define VERBOSE         // in-algorithm info
 
 #include "simplex_baseline.hpp"
-#include "simplex_2.hpp"
+#include "simplex_array.hpp"
 
 
 
 using namespace std;
 typedef double s_type;
+typedef unsigned int uint;
 
 void run(SimplexBase<s_type> * s, string fname) {
 
@@ -41,7 +42,7 @@ void run(SimplexBase<s_type> * s, string fname) {
     cout << "Optimal value: " << sol[0] << endl;
     if(INFO) {
         cout << "Variables:";
-        for(int i = 1; i < sol.size(); ++i)
+        for(uint i = 1; i < sol.size(); ++i)
             cout << "  " << sol[i];
         cout << endl;
     }
@@ -85,7 +86,7 @@ int main(int argc, char ** argv) {
 
     Simplex<s_type> s;
     run(&s, fname);
-    Simplex2<s_type> s2;
+    SimplexArray<s_type> s2;
     run(&s2, fname);
 
     return 0;

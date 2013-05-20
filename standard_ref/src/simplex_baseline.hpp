@@ -28,7 +28,7 @@ class Simplex : public SimplexBase<T> {
 
     void solve() {
 
-        for(int i = 0; i < nonstandard.size(); ++i) {       // can be ignored in cost measure, as we solve highly standard problems in lpbench
+        for(uint i = 0; i < nonstandard.size(); ++i) {       // can be ignored in cost measure, as we solve highly standard problems in lpbench
 
             int col = pivot_col_nonstandard(nonstandard[i]);
             if(col >= width) break;  // no negative -> finished
@@ -43,7 +43,7 @@ class Simplex : public SimplexBase<T> {
                 std::cout << "Pivoting NONSTANDARD element (" << row << ", " << col << ")" << std::endl;
                 this->print();
                 std::cout << "active:";
-                for(int i = 0; i < active.size(); ++i)
+                for(uint i = 0; i < active.size(); ++i)
                     std::cout << " " << active[i];
                 std::cout << std::endl;
                 usleep(0.2*1000*1000);
@@ -55,19 +55,19 @@ class Simplex : public SimplexBase<T> {
 
             int col = pivot_col();        // width unit-stride memory accesses and comparisons
             if(col >= width) break;       // no negative -> finished
-            int row = pivot_row(col);     // m width-stride memory accesses and comparisons, 1-m flop divisons in fairly bad stride
+            int row = pivot_row(col);     // m width-stride memory accesses and comparisons, 1..m flop divisons in fairly bad stride
             if(row >= m) {
                 std::cerr << "Invalid pivot row (problem infeasible)" << std::endl;
                 throw;
             }
 
-            basis_exchange(row, col);
+            basis_exchange(row, col);     // m*(width+1) mem access, m*(2*width+1) float ops, unit stride
 
             #ifdef VERBOSE
                 std::cout << "Pivoting element (" << row << ", " << col << ")" << std::endl;
                 this->print();
                 std::cout << "active:";
-                for(int i = 0; i < active.size(); ++i)
+                for(uint i = 0; i < active.size(); ++i)
                     std::cout << " " << active[i];
                 std::cout << std::endl;
                 usleep(0.2*1000*1000);
@@ -126,19 +126,19 @@ class Simplex : public SimplexBase<T> {
     inline void basis_exchange(int row, int col) {
         ++PERFC_MEM;
         T pivot = tab[row][col];
-        for(int i = 0; i < m+1; ++i) {            // m-1 iterations
+        for(int i = 0; i < m+1; ++i) {
             if(i == row)
                 continue;
             ++PERFC_DIV;
             ++PERFC_MEM;
             T fac = tab[i][col]/pivot;
-            for(int j = 0; j < width; ++j) {      // 2*width addmul in unit stride
+            for(int j = 0; j < width; ++j) {
                 PERFC_ADDMUL += 2;
                 ++PERFC_MEM;
                 tab[i][j] -= fac*tab[row][j];
             }
         }
-        active[row] = col;                        // 1 random memory access
+        active[row] = col;
     }
 
 };
