@@ -8,8 +8,7 @@ from fncplot import fncplot
 
 problemdir = "../../problems/gen/"
 prog = "../bin/main"
-#~ problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
-problem_sizes = [30]
+problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 
 
 def run(prog):
