@@ -1,0 +1,8 @@
+*.swp
+build/
+*.o
+*.a
+standard_ref/bin
+problems/gen
+baseline/main
+lpbench/lpb_*

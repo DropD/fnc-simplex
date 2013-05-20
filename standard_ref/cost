@@ -1,0 +1,22 @@
+#var: n
+#constr: m
+width: m+n
+
+solve: while true
+  pivot_col
+  pivot_row
+  basis_exchange
+
+
+pivot_col:
+  m+n reads
+
+pivot_row:
+  m reads
+
+basis_exchange:
+  m(m+n) + m flops
+  m(m+n) reads
+
+U = m^2+mn+2m+n
+W = m^2+n
