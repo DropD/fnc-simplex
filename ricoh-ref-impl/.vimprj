@@ -1,0 +1,3 @@
+let builddir = "build"
+map <LEADER>mk :ScreenShell cd <C-R>=builddir<CR><CR>:new<CR>imake<Esc>:ScreenSend<CR>:q!<CR>
+nmap \cm :call ScreenShellSend('make')<CR>

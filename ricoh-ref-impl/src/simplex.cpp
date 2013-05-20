@@ -1,7 +1,6 @@
-#include "../include/simplex.h"
+#include <iostream>
 
-#include <stdlib.h>
-#include <stdio.h>
+#include "../include/simplex.hpp"
 
 void fnc_mvmm(double * a, double * b, double * C, double * D, double * e, int n, int m, int * I);
 void fnc_mvm(double * a, double * B, double * C, int n, int m, int s);
@@ -10,11 +9,11 @@ void fnc_simplex(double * x, double * c, double * A, double * b, int n, int m) {
     double eps = 1e-9;
 
     double *Ai, *cb;
-    Ai = (double*)malloc(m * m * sizeof(double));
-    cb = (double*)malloc(m * sizeof(double));
+    Ai = new double[m*m];
+    cb = new double[m];
 
     int *B;
-    B = (int*)malloc(m * sizeof(int));
+    B = new int[m];
 
     // initial basis
     int i, j;
@@ -35,12 +34,12 @@ void fnc_simplex(double * x, double * c, double * A, double * b, int n, int m) {
         x[i + n - m] = b[i];
     }
 
-    int go_on = 3;
+    int go_on = 100;
 
     // temp for $\bar{c}$
     double *p, *u;
-    p  = (double*)malloc(m * sizeof(double));
-    u  = (double*)malloc(m * sizeof(double));
+    p  = new double[m];
+    u  = new double[m];
     double d, xbu, min, ut;
     int s, count, t, tmp;
 
@@ -96,45 +95,41 @@ void fnc_simplex(double * x, double * c, double * A, double * b, int n, int m) {
 
         // debug output
 #ifdef VERBOSE
-        printf("B = [");
-        for(i = 0; i < m; ++i) {
-            printf(" %d", B[i]);
-        }
-        printf(" ] ");
+        //printf("B = [");
+        //for(i = 0; i < m; ++i) {
+        //    printf(" %d", B[i]);
+        //}
+        //printf(" ] ");
+        std::cout << "B = ";
+        fnc_printvec(B, m);
+        std::cout << " "
+                  << "Bt = " << B[t] << " "
+                  << "s = " << s << " ";
 
-        printf("Bt = %d ", B[t]);
-        printf("s = %d ", s);
+        std::cout << "u = ";
+        fnc_printvec(u, m);
+        std::cout << " ";
 
-        printf("u = [ ");
-        for(i = 0; i < m; ++i) {
-            printf("%lf ", u[i]);
-        }
-        printf(" ] ");
+        std::cout << "x = ";
+        fnc_printvec(x, n);
+        std::cout << " ";
 
-        printf("x = [ ");
-        for(i = 0; i < n; ++i) {
-            printf("%lf ", x[i]);
-        }
-        printf(" ] ");
+        std::cout << "cb = ";
+        fnc_printvec(cb, n);
+        std::cout << std::endl;
 
-        printf("cb = [ ");
-        for(i = 0; i < n; ++i) {
-            printf("%lf ", cb[i]);
-        }
-        printf(" ] ");
-
-        printf("\n");
 #endif
 
+        // update B
         B[t] = s;
-        // sort B
-        for(i = 0; i < n - m - 1; ++i) {
-            if(B[i+1] < B[i]) {
-                tmp = B[i+1];
-                B[i+1] = B[i];
-                B[i] = tmp;
-            }
-        }
+        //// sort B
+        //for(i = 0; i < n - m - 1; ++i) {
+        //    if(B[i+1] < B[i]) {
+        //        tmp = B[i+1];
+        //        B[i+1] = B[i];
+        //        B[i] = tmp;
+        //    }
+        //}
 
         // update $A_B^{-1}$
         ut = 1. / u[t];
@@ -151,11 +146,9 @@ void fnc_simplex(double * x, double * c, double * A, double * b, int n, int m) {
 
 #ifdef VERBOSE
         for(i = 0; i < m; ++i) {
-            printf("A[%d]: [ ", i);
-            for(j = 0; j < m; ++j) {
-                printf("%lf ", Ai[i * m + j]);
-            }
-            printf(" ]\n");
+            std::cout << "Ai[" << i << "] = ";
+            fnc_printvec(Ai + i*m, m);
+            std::cout << std::endl;
         }
 #endif
 
