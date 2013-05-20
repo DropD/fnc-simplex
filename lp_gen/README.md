@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-fnc-simplex
-===========
-
-Simplex Algorithm FNC course project
-=======
 lp_gen
 ======
 
@@ -28,4 +22,3 @@ to generate an lp with specific size:
 
 * compile the templates with cheetah
 * then run the gen_lp.py script (run without arguments for usage hints).
->>>>>>> 0f2ad5bdfb4b6424e52af723d2e14d771bbad794
