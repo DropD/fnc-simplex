@@ -34,6 +34,7 @@ if __name__ == '__main__':
     import os.path as path
     from cplexlp import cplexlp
     from donjlp import donjlp
+    from cpplexlp import cpplexlp
 
     usage = 'usage: python gen_lp.py <int: size> <path: output_file_name>'
 
@@ -47,6 +48,7 @@ if __name__ == '__main__':
     f = path.splitext(f)[0]
     fclp = f+'.lp'
     fdlp = f+'.dlp'
+    fcpplp = f+'.cpplp'
 
     interest = np.random.uniform(1.0, 1.1, 1)[0]
 
@@ -59,3 +61,6 @@ if __name__ == '__main__':
 
     with open(fdlp, 'w') as out:
         out.write(str(donjlp(searchList = [{'problem' : p}])))
+
+    with open(fcpplp, 'w') as out:
+        out.write(str(cpplexlp(searchList = [{'problem' : p}])))

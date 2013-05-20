@@ -47,7 +47,7 @@ add_custom_command(
 )
 
 #---------- gen target ----------
-add_custom_target(gen DEPENDS gen_lp.py donjlp.py cplexlp.py)
+add_custom_target(gen DEPENDS gen_lp.py donjlp.py cplexlp.py cpplexlp.py)
 
 #---------- generator scripts ----------
 add_custom_command(
@@ -73,6 +73,14 @@ add_custom_command(
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/donjlp.tmpl
 )
 
+add_custom_command(
+    OUTPUT cpplexlp.py
+    COMMAND cheetah compile cpplexlp.tmpl
+    COMMENT "cheetah compile cpplexlp.tmpl --> cpplexlp.py"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/cpplexlp.tmpl
+)
+
 #---------- templates ----------
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/cplexlp.tmpl
@@ -88,6 +96,14 @@ add_custom_command(
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/donjlp.tmpl
 )
 
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/cpplexlp.tmpl
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/cpplexlp.tmpl cpplexlp.tmpl
+    COMMENT "copy cpplexlp.tmpl"
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cpplexlp.tmpl
+)
+
 set(cleanfiles "${cleanfiles};cplexlp.pyc")
 set(cleanfiles "${cleanfiles};donjlp.pyc")
+set(cleanfiles "${cleanfiles};cpplexlp.pyc")
 set_directory_properties(PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${cleanfiles}")

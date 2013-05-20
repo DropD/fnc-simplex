@@ -1,0 +1,28 @@
+[METADATA]
+
+name Problem of size $problem.n
+vars $problem.n
+
+
+[VARIABLES]
+
+#for $i in range($problem.n):
+0 x$i inf
+#end for
+
+
+[CONSTRAINTS]
+#for $i in range($problem.n):
+    #for $j in range($problem.n):
+${problem.A[i, j]} #slurp
+    #end for
+< ${problem.b[i]}
+#end for
+
+
+[OBJECTIVE]
+
+maximize #slurp
+#for $i in range($problem.n):
+${problem.c[i]} #slurp
+#end for
