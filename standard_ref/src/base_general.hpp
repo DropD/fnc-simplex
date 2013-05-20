@@ -170,6 +170,11 @@ class SimplexBase {
         return sol;
     }
 
+    /*
+     * Return kilobytes of memory used
+     */
+    unsigned int memusage() { return width * m * sizeof(T) / 1000; }
+
     virtual void solve() = 0;
     virtual std::string get_identifier() = 0;
 

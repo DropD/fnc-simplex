@@ -56,6 +56,7 @@ int main(int argc, char ** argv) {
         cout << endl;
     }
 
+    cout << "Memory used: " << s.memusage() << " kB" << endl;
     cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
     cout << "Memory accesses: " << s.PERFC_MEM << endl;
     cout << "Float add/mul: " << s.PERFC_ADDMUL << endl;
