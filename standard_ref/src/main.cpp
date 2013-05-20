@@ -12,7 +12,8 @@ typedef Simplex<double> s_type;
 
 
 //~ #define RDTSC_CYCLES_REQUIRED 1E1           // cold
-#define RDTSC_CYCLES_REQUIRED 1E8           // warm
+#define RDTSC_CYCLES_REQUIRED 1E6
+//~ #define RDTSC_CYCLES_REQUIRED 1E8           // warm
 #include "misc/rdtsc_testing.hpp"
 
 
@@ -44,7 +45,7 @@ int main(int argc, char ** argv) {
     }
 
     int n = rdtsc_warmup(&s, fname);
-    double cycles = rdtsc_measure(222, &s, fname);    // solve
+    double cycles = rdtsc_measure(n, &s, fname);    // solve
 
     vector<double> sol = s.solutions();
     cout << "Optimal value: " << sol[0] << endl;
@@ -59,7 +60,15 @@ int main(int argc, char ** argv) {
     cout << "Memory accesses: " << s.PERFC_MEM << endl;
     cout << "Float add/mul: " << s.PERFC_ADDMUL << endl;
     cout << "Float div: " << s.PERFC_DIV << endl;
-    cout << "FLOP/C: " << (s.PERFC_ADDMUL + s.PERFC_DIV) / cycles << endl;
+    double fpc = (s.PERFC_ADDMUL + s.PERFC_DIV) / cycles;
+    cout << "FLOP/C: " << fpc << endl;
+
+    ofstream fp("rdtsc");
+    if(fp.is_open()) {
+        fp << cycles << endl << fpc << endl;
+        fp.close();
+    } else
+        cout << "Error: unable to write to file rdtsc!" << endl;
 
     return 0;
 

@@ -147,11 +147,12 @@ class SimplexBase {
 
     void print() {
 
+        dout.precision(0);
         std::cout << "Tableau for " << n << " variables and "
                   << m << " constraints:" << std::endl;
         for(int i = 0; i < tab.size(); ++i) {
             for(int j = 0; j < width; ++j) {
-                std::cout << "\t" << tab[i][j];
+                dout << "\t" << tab[i][j];
             }
             std::cout << std::endl;
         }

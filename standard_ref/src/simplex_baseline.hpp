@@ -107,6 +107,7 @@ class Simplex : public SimplexBase<T> {
                 idx = i;
             }
         }
+        //~ if(tab[m][idx] > -0.0001) { dout.precision(13); dout_HERE dout,tab[m][idx]; return width; }
         return idx;
     }
 
