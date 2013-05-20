@@ -173,7 +173,16 @@ class SimplexBase {
     /*
      * Return kilobytes of memory used
      */
-    unsigned int memusage() { return width * m * sizeof(T) / 1000; }
+    unsigned int memusage() {
+        //~ return width * m * sizeof(T) / 1000;   // only this during solve
+                                                   // but we swamp the cache
+                                                   // with necessary loads
+
+        return ( width * m
+               + active.size() + nonstandard.size()
+               + n*m /* constraints vector */ + n /* costs vector*/
+             )  * sizeof(T) / 1000;
+    }
 
     virtual void solve() = 0;
     virtual std::string get_identifier() = 0;

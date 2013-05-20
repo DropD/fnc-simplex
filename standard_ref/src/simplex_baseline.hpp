@@ -1,24 +1,6 @@
-/*******************************************************************************
- * 
- * Simplex for standard feasible maximisation LPs
- * 
- * 
- * tableau format:
- * 
- * x1 y1 z1 s1 t1  0 | B1
- * x2 y2 z2 s2 t2  0 | B2
- * c1 c2 c3  0  0  1 |  0
- * 
- ******************************************************************************/
-
 /*
 Assumptions:
-  We have a maximisation problem
-  'Maximize' comes before 'Subject To'
-  No newlines between 'Maximize'/'Subject To' and the data, or within the data
-  All constraint inequalities are <= and rhs is positive
-  Variables determined by position (0 for empty)
-  Variables are >= 0
+    See base class.
 */
 
 
@@ -107,7 +89,7 @@ class Simplex : public SimplexBase<T> {
                 idx = i;
             }
         }
-        //~ if(tab[m][idx] > -0.0001) { dout.precision(13); dout_HERE dout,tab[m][idx]; return width; }
+        if(tab[m][idx] > -0.00000001) return width;   // prevent annihilation
         return idx;
     }
 

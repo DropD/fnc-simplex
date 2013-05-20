@@ -8,7 +8,7 @@ from fncplot import fncplot
 
 problemdir = "../../problems/gen/"
 prog = "../bin/main"
-problem_sizes = [10, 20, 50, 100, 500, 1000]
+problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 
 
 def run(prog):
@@ -35,8 +35,6 @@ for k in problem_sizes:
     avg /= len(problems)
     avgs.append(avg)
 
-
-
 pylab.figure()
 pylab.plot(problem_sizes, avgs, label="baseline")
 fncplot.title(r'Averaged performance', fontstyle='italic')
@@ -48,3 +46,8 @@ pylab.legend(loc='center right')
 #~ pylab.savefig('baseline_performance.png')
 
 pylab.show()
+
+#~ f = open("avgs_baseline", 'w')
+#~ for avg in avgs:
+    #~ f.write("%s\n" % zip(avg, avg))
+#~ f.close()
