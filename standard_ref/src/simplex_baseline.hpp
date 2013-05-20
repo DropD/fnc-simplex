@@ -89,7 +89,7 @@ class Simplex : public SimplexBase<T> {
                 idx = i;
             }
         }
-        if(tab[m][idx] > -0.00000001) return width;   // prevent annihilation
+        if(tab[m][idx] > -1e-8) return width;   // prevent annihilation
         return idx;
     }
 
@@ -124,14 +124,17 @@ class Simplex : public SimplexBase<T> {
     }
 
     inline void basis_exchange(int row, int col) {
+        ++PERFC_MEM;
         T pivot = tab[row][col];
         for(int i = 0; i < m+1; ++i) {            // m-1 iterations
             if(i == row)
                 continue;
             ++PERFC_DIV;
+            ++PERFC_MEM;
             T fac = tab[i][col]/pivot;
             for(int j = 0; j < width; ++j) {      // 2*width addmul in unit stride
                 PERFC_ADDMUL += 2;
+                ++PERFC_MEM;
                 tab[i][j] -= fac*tab[row][j];
             }
         }
