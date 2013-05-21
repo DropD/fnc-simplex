@@ -30,7 +30,7 @@ HEADEREXT = h hpp hxx
 
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic-errors -ansi
-CFLAGS += -O3 -march=native -m64
+CFLAGS += -O2 -march=native -m64
 
 #~ CC = clang++
 #~ CFLAGS = -pedantic -O3
