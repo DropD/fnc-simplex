@@ -15,7 +15,6 @@ class SimplexArray : public SimplexBase<T> {
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
     using SimplexBase<T>::width;
-    //~ using SimplexBase<T>::tab;
     using SimplexBase<T>::tabp;
     using SimplexBase<T>::nonstandard;
     using SimplexBase<T>::active;
@@ -55,7 +54,6 @@ class SimplexArray : public SimplexBase<T> {
                 for(uint i = 0; i < active.size(); ++i)
                     std::cout << " " << active[i];
                 std::cout << std::endl;
-                usleep(0.2*1000*1000);
             #endif // VERBOSE
         }
 
@@ -74,7 +72,7 @@ class SimplexArray : public SimplexBase<T> {
                 idx = i;
             }
         }
-        if(tabp[m*width+idx] > -1e-8) return width;   // prevent annihilation
+        if(tabp[m*width+idx] > -1e-9) return width;   // prevent annihilation
         return idx;
     }
 

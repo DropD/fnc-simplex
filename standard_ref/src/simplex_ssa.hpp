@@ -10,13 +10,15 @@ Assumptions:
 #include "base_general.hpp"
 
 template <typename T>
-class Simplex : public SimplexBase<T> {
+class SimplexSSA : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
+    using SimplexBase<T>::n;
     using SimplexBase<T>::width;
-    using SimplexBase<T>::tab;
+    using SimplexBase<T>::tabp;
     using SimplexBase<T>::nonstandard;
     using SimplexBase<T>::active;
+
 
     public:
 
@@ -24,30 +26,13 @@ class Simplex : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "baseline"; }
+    std::string get_identifier() { return "ssa"; }
 
     void solve() {
 
         for(uint i = 0; i < nonstandard.size(); ++i) {       // can be ignored in cost measure, as we solve highly standard problems in lpbench
-
-            int col = pivot_col_nonstandard(nonstandard[i]);
-            if(col >= width) break;  // no negative -> finished
-            int row = pivot_row(col);
-            if(row >= m) {
-                std::cerr << "Invalid pivot row (problem infeasible)" << std::endl;
-                throw;
-            }
-            basis_exchange(row, col);
-
-            #ifdef VERBOSE
-                std::cout << "Pivoting NONSTANDARD element (" << row << ", " << col << ")" << std::endl;
-                this->print();
-                std::cout << "active:";
-                for(uint i = 0; i < active.size(); ++i)
-                    std::cout << " " << active[i];
-                std::cout << std::endl;
-            #endif // VERBOSE
-
+            std::cerr << "Reduction to standard LPs." << std::endl;
+            throw;
         }
 
         while(true) {
@@ -82,23 +67,12 @@ class Simplex : public SimplexBase<T> {
         int idx = width;
         for(int i = 0; i < width-1; ++i) {
             ++PERFC_MEM;
-            if(tab[m][i] < min) {
-                min = tab[m][i];
+            if(tabp[m*width+i] < min) {
+                min = tabp[m*width+i];
                 idx = i;
             }
         }
-        if(tab[m][idx] > -1e-9) return width;   // prevent annihilation
-        return idx;
-    }
-
-    int pivot_col_nonstandard(int row) { // split from pivot_col since different optimisations might apply
-        T max = 0;
-        int idx = width;
-        for(int i = 0; i < width-1; ++i)
-            if(tab[row][i] > max) {
-                max = tab[row][i];
-                idx = i;
-            }
+        if(tabp[m*width+idx] > -1e-9) return width;   // prevent annihilation
         return idx;
     }
 
@@ -108,9 +82,9 @@ class Simplex : public SimplexBase<T> {
         int idx = m;
         for(int i = 0; i < m; ++i) {
             ++PERFC_MEM;
-            if(tab[i][col] <= 0)
+            if(tabp[i*width+col] <= 0)
                 continue;
-            T ratio = tab[i][width-1]/tab[i][col];
+            T ratio = tabp[i*width+width-1]/tabp[i*width+col];
             ++PERFC_DIV;
             if(ratio <= min || any == false) {
                 min = ratio;
@@ -123,20 +97,57 @@ class Simplex : public SimplexBase<T> {
 
     inline void basis_exchange(int row, int col) {
         ++PERFC_MEM;
-        T pivot = tab[row][col];
+        T pivot = tabp[row*width+col];
         for(int i = 0; i < m+1; ++i) {
             if(i == row)
                 continue;
-            ++PERFC_DIV;
-            ++PERFC_MEM;
-            T fac = tab[i][col]/pivot;
-            for(int j = 0; j < width; ++j) {
-                PERFC_ADDMUL += 2;
-                ++PERFC_MEM;
-                tab[i][j] -= fac*tab[row][j];
+            ++PERFC_DIV; ++PERFC_MEM;
+            T fac = tabp[i*width+col]/pivot;
+            PERFC_ADDMUL += 2*width; PERFC_MEM += width;
+            for(int j = 0; j < width-(width%4); j += 4) {
+
+                T l1 = tabp[i*width+j];
+                T r1 = tabp[row*width+j];
+                T l2 = tabp[i*width+j+1];
+                T r2 = tabp[row*width+j+1];
+                T l3 = tabp[i*width+j+2];
+                T r3 = tabp[row*width+j+2];
+                T l4 = tabp[i*width+j+3];
+                T r4 = tabp[row*width+j+3];
+
+                T p1 = l1 - fac*r1;
+                T p2 = l2 - fac*r2;
+                T p3 = l3 - fac*r3;
+                T p4 = l4 - fac*r4;
+
+                tabp[i*width+j] = p1;
+                tabp[i*width+j+1] = p2;
+                tabp[i*width+j+2] = p3;
+                tabp[i*width+j+3] = p4;
+
             }
+
+            for(int j = width-(width%4); j < width; ++j) {
+                tabp[i*width+j] -= fac*tabp[row*width+j];
+            }
+
+
+
         }
         active[row] = col;
     }
+
+    void load(std::string fname) {
+        this->load_array(fname);
+    }
+
+    void print() {
+        this->print_array();
+    }
+
+    std::vector<T> solutions() {
+        return this->solutions_array();
+    }
+
 
 };

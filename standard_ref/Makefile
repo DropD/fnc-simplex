@@ -30,7 +30,7 @@ HEADEREXT = h hpp hxx
 
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic-errors -ansi
-CFLAGS += -O2 -march=native -m64
+CFLAGS += -O3 -march=native -m64
 
 #~ CC = clang++
 #~ CFLAGS = -pedantic -O3
@@ -39,7 +39,7 @@ CFLAGS += -std=c++11
 CFLAGS += -I/opt/boost-1.53/include/
 CFLAGS += -rdynamic
 
-DBGFLAGS = -Wall -Wextra -Werror -ansi -O3 -g3 -ggdb -pg -rdynamic
+DBGFLAGS = -Wall -Wextra -Werror -ansi -O0 -g3 -ggdb -pg -rdynamic
 LIBS = 
 
 SMART_MKDIR = mkdir -p

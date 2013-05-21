@@ -272,8 +272,7 @@ class SimplexBase {
                                                    // with necessary loads
 
         return ( width * m
-               + active.size() + nonstandard.size()
-               + n*m /* constraints vector */ + n /* costs vector*/
+               + active.size()
              )  * sizeof(T) / 1000;
     }
 

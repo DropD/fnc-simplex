@@ -7,9 +7,10 @@
 #include <iostream>
 #include <string>
 
-#define RDTSC_CYCLES_REQUIRED 1E1           // cold
-//~ #define RDTSC_CYCLES_REQUIRED 1E6
-//~ #define RDTSC_CYCLES_REQUIRED 1E8           // warm
+//~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
+#define RDTSC_CYCLES_REQUIRED 1E6
+//~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
+//~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
 
 
@@ -18,6 +19,9 @@ const bool INFO = false;
 
 #include "simplex_baseline.hpp"
 #include "simplex_array.hpp"
+#include "simplex_block.hpp"
+#include "simplex_ssa.hpp"
+#include "simplex_sse.hpp"
 
 
 
@@ -56,7 +60,7 @@ void run(SimplexBase<s_type> * s, string fname) {
     cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
     cout << "Float div: " << s->PERFC_DIV << endl;
     cout << "FLOP/C: " << fpc << endl;
-    cout << "Comp Intensity: " << ci << endl;
+    cout << "Op Intensity: " << ci << endl;
 
     ofstream fp("rdtsc", fstream::app);
     if(fp.is_open()) {
@@ -84,10 +88,16 @@ int main(int argc, char ** argv) {
 
     remove("rdtsc");
 
-    Simplex<s_type> s;
-    run(&s, fname);
+    Simplex<s_type> s1;
+    run(&s1, fname);
     SimplexArray<s_type> s2;
     run(&s2, fname);
+    SimplexBlock<s_type> s3;
+    run(&s3, fname);
+    SimplexSSA<s_type> s4;
+    run(&s4, fname);
+    SimplexSSE<s_type> s5;
+    run(&s5, fname);
 
     return 0;
 

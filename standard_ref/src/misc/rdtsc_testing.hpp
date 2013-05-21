@@ -23,6 +23,7 @@
 */
 template <typename T>
 int rdtsc_warmup(SimplexBase<T> * s, std::string fname) {
+  if(RDTSC_CYCLES_REQUIRED <= 1) return 1;
   double cycles = 0;
   tsc_counter start, end;
   int i;
