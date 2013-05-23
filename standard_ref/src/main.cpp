@@ -22,6 +22,7 @@ const bool INFO = false;
 #include "simplex_block.hpp"
 #include "simplex_ssa.hpp"
 #include "simplex_sse.hpp"
+#include "simplex_avx.hpp"
 #include "simplex_nta.hpp"
 
 
@@ -99,8 +100,10 @@ int main(int argc, char ** argv) {
     run(&s4, fname);
     SimplexSSE<s_type> s5;
     run(&s5, fname);
-    SimplexNTA<s_type> s6;
+    SimplexAVX<s_type> s6;
     run(&s6, fname);
+    SimplexNTA<s_type> s7;
+    run(&s7, fname);
 
     return 0;
 
