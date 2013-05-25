@@ -32,15 +32,21 @@ CC = g++
 CFLAGS = -Wall -Wextra -pedantic-errors -ansi
 CFLAGS += -O2 -march=native -m64
 
+ifeq ($(shell uname), Darwin)
+	CC = g++-4.7
+endif
+
 #~ CC = clang++
 #~ CFLAGS = -pedantic -O3
 
 CFLAGS += -std=c++11
 CFLAGS += -I/opt/boost-1.53/include/
-CFLAGS += -rdynamic
+ifeq (!$(shell uname), Darwin)
+	CFLAGS += -rdynamic
+endif
 
 DBGFLAGS = -Wall -Wextra -Werror -ansi -O0 -g3 -ggdb -pg -rdynamic
-LIBS = 
+LIBS = -lglpk -lm
 
 SMART_MKDIR = mkdir -p
 SHELL = /bin/sh
