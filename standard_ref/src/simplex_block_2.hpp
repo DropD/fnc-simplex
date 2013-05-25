@@ -135,10 +135,10 @@ class SimplexBlock2 : public SimplexBase<T> {
                 }
                 if(i+1 != row) {
                     PERFC_MEM += 4;
-                    T l1 = tabp[i+1*width+j];
-                    T l2 = tabp[i+1*width+j+1];
-                    T l3 = tabp[i+1*width+j+2];
-                    T l4 = tabp[i+1*width+j+3];
+                    T l1 = tabp[(i+1)*width+j];
+                    T l2 = tabp[(i+1)*width+j+1];
+                    T l3 = tabp[(i+1)*width+j+2];
+                    T l4 = tabp[(i+1)*width+j+3];
 
                     PERFC_ADDMUL += 8;
                     T p1 = l1 - fac2*r1;
@@ -147,10 +147,10 @@ class SimplexBlock2 : public SimplexBase<T> {
                     T p4 = l4 - fac2*r4;
 
                     PERFC_MEM += 4; // ??
-                    tabp[i+1*width+j] = p1;
-                    tabp[i+1*width+j+1] = p2;
-                    tabp[i+1*width+j+2] = p3;
-                    tabp[i+1*width+j+3] = p4;
+                    tabp[(i+1)*width+j] = p1;
+                    tabp[(i+1)*width+j+1] = p2;
+                    tabp[(i+1)*width+j+2] = p3;
+                    tabp[(i+1)*width+j+3] = p4;
                 }
             }
 
