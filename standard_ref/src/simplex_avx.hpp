@@ -28,7 +28,7 @@ class SimplexAVX : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "sse"; }
+    std::string get_identifier() { return "avx"; }
 
     void solve() {
 
@@ -131,7 +131,6 @@ class SimplexAVX : public SimplexBase<T> {
             for(int j = width-(width%4); j < width; ++j) {
                 tabp[i*width+j] -= fac*tabp[row*width+j];
             }
-
 
 
         }
