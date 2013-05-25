@@ -127,7 +127,7 @@ class SimplexBlock2 : public SimplexBase<T> {
                     T p3 = l3 - fac1*r3;
                     T p4 = l4 - fac1*r4;
 
-                    PERFC_MEM += 4; // ??
+                    //~ PERFC_MEM += 4; // ??  // no, we have writeback cache
                     tabp[i*width+j] = p1;
                     tabp[i*width+j+1] = p2;
                     tabp[i*width+j+2] = p3;
@@ -146,7 +146,7 @@ class SimplexBlock2 : public SimplexBase<T> {
                     T p3 = l3 - fac2*r3;
                     T p4 = l4 - fac2*r4;
 
-                    PERFC_MEM += 4; // ??
+                    //~ PERFC_MEM += 4; // ??  // no, we have writeback cache
                     tabp[(i+1)*width+j] = p1;
                     tabp[(i+1)*width+j+1] = p2;
                     tabp[(i+1)*width+j+2] = p3;
