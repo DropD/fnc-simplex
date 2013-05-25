@@ -193,8 +193,6 @@ class SimplexBase {
         n = costs.size();
         m = constraints.size();
         width = n+1 + m+1;
-        //~ tab = std::vector< std::vector<T> >
-            //~ (m+1, std::vector<T>( width ));
         tabp = (T*)malloc( (m+1)*width * sizeof(T) );
         for(int i = 0; i < (m+1)*width; ++i) tabp[i] = 0;
         active = std::vector<int>(m);

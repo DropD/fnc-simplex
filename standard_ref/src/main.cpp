@@ -7,8 +7,8 @@
 #include <iostream>
 #include <string>
 
-//~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
-#define RDTSC_CYCLES_REQUIRED 1E6
+#define RDTSC_CYCLES_REQUIRED 0                 // cold
+//~ #define RDTSC_CYCLES_REQUIRED 1E6
 //~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
 //~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
@@ -99,8 +99,8 @@ int main(int argc, char ** argv) {
     run(&s4, fname);
     SimplexSSE<s_type> s5;
     run(&s5, fname);
-    SimplexNTA<s_type> s6;
-    run(&s6, fname);
+    //~ SimplexNTA<s_type> s6;
+    //~ run(&s6, fname);
 
     return 0;
 
