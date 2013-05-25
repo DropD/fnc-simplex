@@ -25,7 +25,7 @@ const bool INFO = false;
 #include "simplex_sse.hpp"
 #include "simplex_avx.hpp"
 #include "simplex_nta.hpp"
-
+#include <glpk.h>
 
 
 using namespace std;
@@ -77,6 +77,43 @@ void run(SimplexBase<s_type> * s, string fname) {
 
 }
 
+void run_glpk(string fname, SimplexBase<s_type> * s) {
+    cout << "\033[0;31m" << "Running glpk" << "\033[0m" << std::endl;
+
+    glp_term_out(GLP_OFF);
+    glp_prob *lp;
+    glp_smcp parm;
+    glp_init_smcp(&parm);
+    parm.msg_lev = GLP_MSG_OFF;
+    parm.meth = GLP_PRIMAL;
+    lp = glp_create_prob();
+    int n = rdtsc_warmup(lp, &parm, fname);
+    double cycles = rdtsc_measure(n, lp, &parm, fname);
+    double obj = glp_get_obj_val(lp);
+    cout << "Optimal value: " << obj << endl;
+    glp_delete_prob(lp);
+
+    double fpc = (s->PERFC_ADDMUL + s->PERFC_DIV) / cycles;
+    double ci = (s->PERFC_ADDMUL+s->PERFC_DIV)/8./s->PERFC_MEM;
+
+    cout << "Memory used: " << s->memusage() << " kB" << endl;
+    cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
+    cout << "Memory accesses: " << s->PERFC_MEM << endl;
+    cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
+    cout << "Float div: " << s->PERFC_DIV << endl;
+    cout << "FLOP/C: " << fpc << endl;
+    cout << "Op Intensity: " << ci << endl;
+
+    ofstream fp("rdtsc", fstream::app);
+    if(fp.is_open()) {
+        fp << "glpk" << ','
+           << cycles << ','
+           << fpc << ','
+           << ci << endl;
+        fp.close();
+    } else
+        cout << "Error: unable to write to file rdtsc!" << endl;
+}
 
 int main(int argc, char ** argv) {
 
@@ -103,10 +140,16 @@ int main(int argc, char ** argv) {
     run(&s4, fname);
     SimplexSSE<s_type> s5;
     run(&s5, fname);
-    SimplexAVX<s_type> s6;
-    run(&s6, fname);
+    //SimplexAVX<s_type> s6;
+    //run(&s6, fname);
     SimplexNTA<s_type> s7;
     run(&s7, fname);
+
+    //replace file extension
+    string lname = fname.substr(0, fname.length()-3);
+    lname.append("lp");
+
+    run_glpk(lname, &s1);
 
     return 0;
 

@@ -29,11 +29,12 @@ SOURCEEXT = cpp
 HEADEREXT = h hpp hxx
 
 CC = g++
+CFLAGS = -Wall -Wextra -pedantic-errors -ansi
+CFLAGS += -O2 -march=native -m64
+
 ifeq ($(shell uname), Darwin)
 	CC = g++-4.7
 endif
-CFLAGS = -Wall -Wextra -pedantic-errors -ansi
-CFLAGS += -O2 -march=native -m64
 
 #~ CC = clang++
 #~ CFLAGS = -pedantic -O3
@@ -45,7 +46,7 @@ ifeq (!$(shell uname), Darwin)
 endif
 
 DBGFLAGS = -Wall -Wextra -Werror -ansi -O0 -g3 -ggdb -pg -rdynamic
-LIBS = 
+LIBS = -lglpk -lm
 
 SMART_MKDIR = mkdir -p
 SHELL = /bin/sh
