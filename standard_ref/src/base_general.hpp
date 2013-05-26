@@ -193,9 +193,9 @@ class SimplexBase {
 
         n = costs.size();
         m = constraints.size();
-        width = n+1 + m+1;
+        width = n+1 + m + 1;                  // #variables + cost col + #constraints + (<= col)
         tabp = (T*)malloc( (m+1)*width * sizeof(T) );
-        for(int i = 0; i < (m+1)*width; ++i) tabp[i] = 0;
+        for(int i = 0; i < (m+1)*width; ++i) tabp[i] = 0;     // zero out the table
         active = std::vector<int>(m);
 
         tabp[m*width+n+m] = 1.;                               // set last row (obj)

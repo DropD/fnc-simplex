@@ -7,8 +7,8 @@ Assumptions:
 
 #pragma once
 
-#include <immintrin.h>  // AVX, but we're aligining to 128 bits
-//#include <x86intrin.h>  // pulls depending on march
+//~ #include <immintrin.h>  // AVX, but we're aligining to 128 bits
+#include <x86intrin.h>  // pulls depending on march
 #include "base_general.hpp"
 
 template <typename T>
@@ -20,6 +20,7 @@ class SimplexAVX : public SimplexBase<T> {
     using SimplexBase<T>::tabp;
     using SimplexBase<T>::nonstandard;
     using SimplexBase<T>::active;
+    using SimplexBase<T>::iter;
 
 
     public:
@@ -38,6 +39,8 @@ class SimplexAVX : public SimplexBase<T> {
         }
 
         while(true) {
+
+            ++iter;
 
             int col = pivot_col();        // width unit-stride memory accesses and comparisons
             if(col >= width) break;       // no negative -> finished
@@ -109,29 +112,30 @@ class SimplexAVX : public SimplexBase<T> {
             __m256d l, r, f;
             f = _mm256_set1_pd(fac);
 
-            int peel = (long long)tabp & 0x0f; /* tabp % 16 */
+            int peel = (long long)tabp & 0x1f; /* tabp % 32 */
             if (peel != 0) {
-                peel = 16 - peel;
+                peel = (32 - peel)/sizeof(T);
                 for (int j = 0; j < peel; j++)
                     tabp[i*width+j] -= fac*tabp[row*width+j];
             }
 
-            for(int j = peel; j < width-(width%4); j += 4) {
+            int aligned_end = width - (width%4) - peel;
 
-                l = _mm256_load_pd(tabp+i*width+j);
-                r = _mm256_load_pd(tabp+row*width+j);
+            for(int j = peel; j < aligned_end; j += 4) {
+
+                l = _mm256_loadu_pd(tabp+i*width+j);
+                r = _mm256_loadu_pd(tabp+row*width+j);
 
                 r = _mm256_mul_pd(r, f);
                 l = _mm256_sub_pd(l, r);
 
-                _mm256_store_pd(tabp + i*width+j, l);
+                _mm256_storeu_pd(tabp + i*width+j, l);
 
             }
 
-            for(int j = width-(width%4); j < width; ++j) {
+            for(int j = aligned_end; j < width; ++j) {
                 tabp[i*width+j] -= fac*tabp[row*width+j];
             }
-
 
         }
         active[row] = col;

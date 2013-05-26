@@ -111,12 +111,14 @@ class SimplexSSE : public SimplexBase<T> {
 
             int peel = (long long)tabp & 0x0f; /* tabp % 16 */
             if (peel != 0) {
-                peel = 16 - peel;
+                peel = (16 - peel)/sizeof(T);
                 for (int j = 0; j < peel; j++)
                     tabp[i*width+j] -= fac*tabp[row*width+j];
             }
 
-            for(int j = peel; j < width-(width%4); j += 4) {
+            int aligned_end = width - (width%4) - peel;
+
+            for(int j = peel; j < aligned_end; j += 4) {
 
                 l1 = _mm_load_pd(tabp+i*width+j);
                 r1 = _mm_load_pd(tabp+row*width+j);
@@ -133,7 +135,7 @@ class SimplexSSE : public SimplexBase<T> {
 
             }
 
-            for(int j = width-(width%4); j < width; ++j) {
+            for(int j = aligned_end; j < width; ++j) {
                 tabp[i*width+j] -= fac*tabp[row*width+j];
             }
 
