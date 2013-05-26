@@ -276,6 +276,7 @@ class SimplexBase {
     }
 
     int get_iter() { return iter; }
+    int get_tabn() { return (m+1)*width; }
 
     virtual void solve() = 0;
     virtual std::string get_identifier() = 0;

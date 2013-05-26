@@ -19,6 +19,7 @@ class SimplexNTA : public SimplexBase<T> {
     using SimplexBase<T>::tabp;
     using SimplexBase<T>::nonstandard;
     using SimplexBase<T>::active;
+    using SimplexBase<T>::iter;
 
 
     public:
@@ -37,6 +38,8 @@ class SimplexNTA : public SimplexBase<T> {
         }
 
         while(true) {
+
+            ++iter;
 
             int col = pivot_col();        // width unit-stride memory accesses and comparisons
             if(col >= width) break;       // no negative -> finished
