@@ -156,11 +156,11 @@ class SimplexBlock2 : public SimplexBase<T> {
 
             for(int j = width-(width%4); j < width; ++j) {
                 if(i != row) {
-                    PERFC_ADDMUL+=2; PERFC_MEM+=2;
+                    PERFC_ADDMUL+=2; PERFC_MEM+=1;
                     tabp[i*width+j] -= fac1*tabp[row*width+j];
                 }
                 if(i+1 != row) {
-                    PERFC_ADDMUL+=2; PERFC_MEM+=2;
+                    PERFC_ADDMUL+=2; PERFC_MEM+=1;
                     tabp[(i+1)*width+j] -= fac2*tabp[row*width+j];
                 }
             }
