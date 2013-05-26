@@ -46,6 +46,7 @@ class SimplexBase {
     std::vector< std::vector<T> > tab;
     T * tabp;
     int n, m, width;
+    int iter = 0;
 
     inline std::vector<double> split_vars(const std::string str, int nr = -1) {
 
@@ -273,6 +274,8 @@ class SimplexBase {
                + active.size()
              )  * sizeof(T) / 1000;
     }
+
+    int get_iter() { return iter; }
 
     virtual void solve() = 0;
     virtual std::string get_identifier() = 0;
