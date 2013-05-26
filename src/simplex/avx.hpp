@@ -7,10 +7,13 @@ Assumptions:
 
 #pragma once
 
-#include "base_general.hpp"
+//~ #include <immintrin.h>  // AVX, but we're aligining to 128 bits
+#include <x86intrin.h>  // pulls depending on march
+
+#include "Simplex.hpp"
 
 template <typename T>
-class SimplexArray : public SimplexBase<T> {
+class SimplexAVX : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -18,6 +21,7 @@ class SimplexArray : public SimplexBase<T> {
     using SimplexBase<T>::tabp;
     using SimplexBase<T>::nonstandard;
     using SimplexBase<T>::active;
+    using SimplexBase<T>::iter;
 
 
     public:
@@ -26,7 +30,7 @@ class SimplexArray : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "array"; }
+    std::string get_identifier() { return "avx"; }
 
     void solve() {
 
@@ -36,6 +40,8 @@ class SimplexArray : public SimplexBase<T> {
         }
 
         while(true) {
+
+            ++iter;
 
             int col = pivot_col();        // width unit-stride memory accesses and comparisons
             if(col >= width) break;       // no negative -> finished
@@ -101,14 +107,37 @@ class SimplexArray : public SimplexBase<T> {
         for(int i = 0; i < m+1; ++i) {
             if(i == row)
                 continue;
-            ++PERFC_DIV;
-            ++PERFC_MEM;
+            ++PERFC_DIV; ++PERFC_MEM;
             T fac = tabp[i*width+col]/pivot;
-            for(int j = 0; j < width; ++j) {
-                PERFC_ADDMUL += 2;
-                ++PERFC_MEM;
+            PERFC_ADDMUL += 2*width; PERFC_MEM += width;
+            __m256d l, r, f;
+            f = _mm256_set1_pd(fac);
+
+            int peel = (long long)tabp & 0x1f; /* tabp % 32 */
+            if (peel != 0) {
+                peel = (32 - peel)/sizeof(T);
+                for (int j = 0; j < peel; j++)
+                    tabp[i*width+j] -= fac*tabp[row*width+j];
+            }
+
+            int aligned_end = width - (width%4) - peel;
+
+            for(int j = peel; j < aligned_end; j += 4) {
+
+                l = _mm256_loadu_pd(tabp+i*width+j);
+                r = _mm256_loadu_pd(tabp+row*width+j);
+
+                r = _mm256_mul_pd(r, f);
+                l = _mm256_sub_pd(l, r);
+
+                _mm256_storeu_pd(tabp + i*width+j, l);
+
+            }
+
+            for(int j = aligned_end; j < width; ++j) {
                 tabp[i*width+j] -= fac*tabp[row*width+j];
             }
+
         }
         active[row] = col;
     }

@@ -18,12 +18,12 @@ DEFAULT_TARGET=
 .PHONY: all what
 
 all:
-	cd $(TARGETDIR) && \
+	@cd $(TARGETDIR) && \
 	`which time` -f "\treal: %e \tuser: %U \tsys: %S  \twall clock: %e" \
 	make $(CUSTOM_MAKEFLAGS) $(DEFAULT_TARGET)
 
 %:
-	cd $(TARGETDIR) && \
+	@cd $(TARGETDIR) && \
 	`which time` -f "\treal: %e \tuser: %U \tsys: %S  \twall clock: %e" \
 	make $(CUSTOM_MAKEFLAGS) $@
 

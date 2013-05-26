@@ -1,9 +1,10 @@
 *.swp
 *.pyc
-build/
 *.o
 *.a
-standard_ref/bin
+build/
+bin/
 problems/gen
-baseline/main
-lpbench/lpb_*
+timing/rdtsc
+#baseline/main
+#lpbench/lpb_*

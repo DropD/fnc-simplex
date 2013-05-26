@@ -10,7 +10,7 @@
 #define RDTSC_TESTING_H
 
 #include "rdtsc.h"  /* actual timing macros */
-#include "../base_general.hpp"
+#include "../simplex/Simplex.hpp"
 #include <glpk.h>
 #include <iostream>
 

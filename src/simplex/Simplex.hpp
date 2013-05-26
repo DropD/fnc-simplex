@@ -31,7 +31,7 @@ Assumptions:
 #include <iostream>
 #include <unistd.h>
 
-#include "misc/DebugPrinter.hpp"
+#include "../misc/DebugPrinter.hpp"
 
 typedef unsigned int uint;
 
@@ -46,6 +46,7 @@ class SimplexBase {
     std::vector< std::vector<T> > tab;
     T * tabp;
     int n, m, width;
+    int iter = 0;
 
     inline std::vector<double> split_vars(const std::string str, int nr = -1) {
 
@@ -192,11 +193,9 @@ class SimplexBase {
 
         n = costs.size();
         m = constraints.size();
-        width = n+1 + m+1;
-        //~ tab = std::vector< std::vector<T> >
-            //~ (m+1, std::vector<T>( width ));
+        width = n+1 + m + 1;                  // #variables + cost col + #constraints + (<= col)
         tabp = (T*)malloc( (m+1)*width * sizeof(T) );
-        for(int i = 0; i < (m+1)*width; ++i) tabp[i] = 0;
+        for(int i = 0; i < (m+1)*width; ++i) tabp[i] = 0;     // zero out the table
         active = std::vector<int>(m);
 
         tabp[m*width+n+m] = 1.;                               // set last row (obj)
@@ -275,6 +274,8 @@ class SimplexBase {
                + active.size()
              )  * sizeof(T) / 1000;
     }
+
+    int get_iter() { return iter; }
 
     virtual void solve() = 0;
     virtual std::string get_identifier() = 0;

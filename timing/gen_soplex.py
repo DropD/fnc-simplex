@@ -3,28 +3,28 @@
 from math import *
 import subprocess
 import os
+import time
 import pylab
 from fncplot import fncplot
 
-problemdir = "../../problems/gen/"
+problemdir = "../problems/gen/"
 prog = "../bin/main"
+prog2 = "../../soplex-1.7.1/bin/soplex"
 # problem_sizes should reflect the available *_nn_*.dlp problems
-problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
+#~ problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
+problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300]
 
 
 def run(prog):
+    start = time.time()
     subprocess.call(prog, shell=True)
-    with open('rdtsc', 'r')as f:
-        lines = f.read().split('\n')
-    data = []
-    for line in lines:
-        if line != "":
-            data.append( line.split(',') )
-    return data
+    return (time.time() - start)
 
 
 files = [f for f in os.listdir(problemdir) if os.path.splitext(f)[1] == ".dlp"]
 files.sort()
+files2 = [f for f in os.listdir(problemdir) if os.path.splitext(f)[1] == ".lp"]
+files2.sort()
 avgs = {}
 avgs2 = {}
 
@@ -35,7 +35,8 @@ for k in problem_sizes:
     problems = [ f for f in files if tok in f ]
     for p in problems:
         print("_______________________\n"+problemdir + p)
-        data = run(prog + " " + problemdir + p)
+        t = run(prog + " " + problemdir + p)
+        t2 = run(prog2 + " " + problemdir + p)
         for line in data:
             key = line[0]
             if not avg.get(key):

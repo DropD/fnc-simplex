@@ -7,12 +7,11 @@ Assumptions:
 
 #pragma once
 
-#include <immintrin.h>  // AVX, but we're aligining to 128 bits
-//#include <x86intrin.h>  // pulls depending on march
-#include "base_general.hpp"
+#include <x86intrin.h>  // pulls depending on march
+#include "Simplex.hpp"
 
 template <typename T>
-class SimplexAVX : public SimplexBase<T> {
+class SimplexNTA : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +27,7 @@ class SimplexAVX : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "avx"; }
+    std::string get_identifier() { return "nta"; }
 
     void solve() {
 
@@ -103,37 +102,17 @@ class SimplexAVX : public SimplexBase<T> {
         for(int i = 0; i < m+1; ++i) {
             if(i == row)
                 continue;
-            ++PERFC_DIV; ++PERFC_MEM;
+            ++PERFC_DIV;
+            ++PERFC_MEM;
+            _mm_prefetch(tabp+i*width+col, _MM_HINT_NTA);
             T fac = tabp[i*width+col]/pivot;
-            PERFC_ADDMUL += 2*width; PERFC_MEM += width;
-            __m256d l, r, f;
-            f = _mm256_set1_pd(fac);
-
-            int peel = (long long)tabp & 0x0f; /* tabp % 16 */
-            if (peel != 0) {
-                peel = 16 - peel;
-                for (int j = 0; j < peel; j++)
-                    tabp[i*width+j] -= fac*tabp[row*width+j];
-            }
-
-            for(int j = peel; j < width-(width%4); j += 4) {
-
-                l = _mm256_load_pd(tabp+i*width+j);
-                r = _mm256_load_pd(tabp+row*width+j);
-
-                r = _mm256_mul_pd(r, f);
-                l = _mm256_sub_pd(l, r);
-
-                _mm256_store_pd(tabp + i*width+j, l);
-
-            }
-
-            for(int j = width-(width%4); j < width; ++j) {
+            for(int j = 0; j < width; ++j) {
+                PERFC_ADDMUL += 2;
+                ++PERFC_MEM;
                 tabp[i*width+j] -= fac*tabp[row*width+j];
             }
-
-
         }
+        _mm_prefetch(&active[row], _MM_HINT_NTA);
         active[row] = col;
     }
 

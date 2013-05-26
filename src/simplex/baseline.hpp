@@ -7,19 +7,16 @@ Assumptions:
 
 #pragma once
 
-#include <x86intrin.h>  // pulls depending on march
-#include "base_general.hpp"
+#include "Simplex.hpp"
 
 template <typename T>
-class SimplexNTA : public SimplexBase<T> {
+class Simplex : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
-    using SimplexBase<T>::n;
     using SimplexBase<T>::width;
-    using SimplexBase<T>::tabp;
+    using SimplexBase<T>::tab;
     using SimplexBase<T>::nonstandard;
     using SimplexBase<T>::active;
-
 
     public:
 
@@ -27,13 +24,30 @@ class SimplexNTA : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "nta"; }
+    std::string get_identifier() { return "baseline"; }
 
     void solve() {
 
         for(uint i = 0; i < nonstandard.size(); ++i) {       // can be ignored in cost measure, as we solve highly standard problems in lpbench
-            std::cerr << "Reduction to standard LPs." << std::endl;
-            throw;
+
+            int col = pivot_col_nonstandard(nonstandard[i]);
+            if(col >= width) break;  // no negative -> finished
+            int row = pivot_row(col);
+            if(row >= m) {
+                std::cerr << "Invalid pivot row (problem infeasible)" << std::endl;
+                throw;
+            }
+            basis_exchange(row, col);
+
+            #ifdef VERBOSE
+                std::cout << "Pivoting NONSTANDARD element (" << row << ", " << col << ")" << std::endl;
+                this->print();
+                std::cout << "active:";
+                for(uint i = 0; i < active.size(); ++i)
+                    std::cout << " " << active[i];
+                std::cout << std::endl;
+            #endif // VERBOSE
+
         }
 
         while(true) {
@@ -68,12 +82,23 @@ class SimplexNTA : public SimplexBase<T> {
         int idx = width;
         for(int i = 0; i < width-1; ++i) {
             ++PERFC_MEM;
-            if(tabp[m*width+i] < min) {
-                min = tabp[m*width+i];
+            if(tab[m][i] < min) {
+                min = tab[m][i];
                 idx = i;
             }
         }
-        if(tabp[m*width+idx] > -1e-9) return width;   // prevent annihilation
+        if(tab[m][idx] > -1e-9) return width;   // prevent annihilation
+        return idx;
+    }
+
+    int pivot_col_nonstandard(int row) { // split from pivot_col since different optimisations might apply
+        T max = 0;
+        int idx = width;
+        for(int i = 0; i < width-1; ++i)
+            if(tab[row][i] > max) {
+                max = tab[row][i];
+                idx = i;
+            }
         return idx;
     }
 
@@ -83,9 +108,9 @@ class SimplexNTA : public SimplexBase<T> {
         int idx = m;
         for(int i = 0; i < m; ++i) {
             ++PERFC_MEM;
-            if(tabp[i*width+col] <= 0)
+            if(tab[i][col] <= 0)
                 continue;
-            T ratio = tabp[i*width+width-1]/tabp[i*width+col];
+            T ratio = tab[i][width-1]/tab[i][col];
             ++PERFC_DIV;
             if(ratio <= min || any == false) {
                 min = ratio;
@@ -98,35 +123,20 @@ class SimplexNTA : public SimplexBase<T> {
 
     inline void basis_exchange(int row, int col) {
         ++PERFC_MEM;
-        T pivot = tabp[row*width+col];
+        T pivot = tab[row][col];
         for(int i = 0; i < m+1; ++i) {
             if(i == row)
                 continue;
             ++PERFC_DIV;
             ++PERFC_MEM;
-            _mm_prefetch(tabp+i*width+col, _MM_HINT_NTA);
-            T fac = tabp[i*width+col]/pivot;
+            T fac = tab[i][col]/pivot;
             for(int j = 0; j < width; ++j) {
                 PERFC_ADDMUL += 2;
                 ++PERFC_MEM;
-                tabp[i*width+j] -= fac*tabp[row*width+j];
+                tab[i][j] -= fac*tab[row][j];
             }
         }
-        _mm_prefetch(&active[row], _MM_HINT_NTA);
         active[row] = col;
     }
-
-    void load(std::string fname) {
-        this->load_array(fname);
-    }
-
-    void print() {
-        this->print_array();
-    }
-
-    std::vector<T> solutions() {
-        return this->solutions_array();
-    }
-
 
 };

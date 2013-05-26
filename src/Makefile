@@ -13,16 +13,16 @@
 # Config
 
 # The directories (except SOURCEDIR & INFODIR) will be generated if not existing
-SOURCEDIR = src
-OBJDIR = objs
-BINDIR = bin
+SOURCEDIR = ./
+OBJDIR = ../bin/objs
+BINDIR = ../bin
 BINARY = main
 DESTDIR = ./
 INFODIR = doc
 
 # Path to headers for which (when changed) all objects should be recompiled
 # Required if there is no source file with the same basename
-SHAREDHEADERS = src/simplex_*.hpp src/base_*.hpp
+SHAREDHEADERS = simplex/*.hpp
 
 # Only one SOURCEEXT is supported, but as many HEADEREXT as you wish
 SOURCEEXT = cpp

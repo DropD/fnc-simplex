@@ -132,22 +132,20 @@ int main(int argc, char ** argv) {
 
     Simplex<s_type> s1;
     run(&s1, fname);
-    SimplexArray<s_type> s2;
-    run(&s2, fname);
-    //SimplexBlock<s_type> s3;
-    //run(&s3, fname);
-    SimplexBlock2<s_type> s8;
-    run(&s8, fname);
-    SimplexSSA<s_type> s4;
-    run(&s4, fname);
-    SimplexSSE<s_type> s5;
-    run(&s5, fname);
-    SimplexBlockSSE<s_type> s6;
+    //~ SimplexArray<s_type> s2;
+    //~ run(&s2, fname);
+    //~ SimplexBlock<s_type> s3;
+    //~ run(&s3, fname);
+    //~ SimplexBlock2<s_type> s8;
+    //~ run(&s8, fname);
+    //~ SimplexSSA<s_type> s4;
+    //~ run(&s4, fname);
+    //~ SimplexSSE<s_type> s5;
+    //~ run(&s5, fname);
+    SimplexAVX<s_type> s6;
     run(&s6, fname);
-    //SimplexAVX<s_type> s6;
-    //run(&s6, fname);
-    SimplexNTA<s_type> s7;
-    run(&s7, fname);
+    //~ SimplexNTA<s_type> s7;
+    //~ run(&s7, fname);
 
     //replace file extension
     string lname = fname.substr(0, fname.length()-3);
