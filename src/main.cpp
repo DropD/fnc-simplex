@@ -138,7 +138,7 @@ int main(int argc, char ** argv) {
     //~ run(&s2, fname);
     //~ SimplexBlock<s_type> s3;
     //~ run(&s3, fname);
-    SimplexBlock2<s_type> s8;
+    SimplexBlock_2<s_type> s8;
     run(&s8, fname);
     SimplexBlockSSE<s_type> s9;
     run(&s9, fname);
