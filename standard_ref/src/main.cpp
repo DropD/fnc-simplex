@@ -24,6 +24,8 @@ const bool INFO = false;
 #include "simplex_ssa.hpp"
 #include "simplex_sse.hpp"
 #include "simplex_avx.hpp"
+#include "simplex_block_avx.hpp"
+#include "simplex_block_sse.hpp"
 #include "simplex_nta.hpp"
 #include <glpk.h>
 
@@ -132,14 +134,16 @@ int main(int argc, char ** argv) {
     run(&s1, fname);
     SimplexArray<s_type> s2;
     run(&s2, fname);
-    SimplexBlock<s_type> s3;
-    run(&s3, fname);
+    //SimplexBlock<s_type> s3;
+    //run(&s3, fname);
     SimplexBlock2<s_type> s8;
     run(&s8, fname);
     SimplexSSA<s_type> s4;
     run(&s4, fname);
     SimplexSSE<s_type> s5;
     run(&s5, fname);
+    SimplexBlockSSE<s_type> s6;
+    run(&s6, fname);
     //SimplexAVX<s_type> s6;
     //run(&s6, fname);
     SimplexNTA<s_type> s7;
