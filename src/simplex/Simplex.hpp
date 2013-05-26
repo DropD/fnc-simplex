@@ -31,7 +31,7 @@ Assumptions:
 #include <iostream>
 #include <unistd.h>
 
-#include "misc/DebugPrinter.hpp"
+#include "../misc/DebugPrinter.hpp"
 
 typedef unsigned int uint;
 

@@ -17,14 +17,14 @@
 const bool INFO = false;
 //~ #define VERBOSE         // in-algorithm info
 
-#include "simplex_baseline.hpp"
-#include "simplex_array.hpp"
-#include "simplex_block.hpp"
-#include "simplex_block_2.hpp"
-#include "simplex_ssa.hpp"
-#include "simplex_sse.hpp"
-#include "simplex_avx.hpp"
-#include "simplex_nta.hpp"
+#include "simplex/baseline.hpp"
+#include "simplex/array.hpp"
+#include "simplex/block.hpp"
+#include "simplex/block_2.hpp"
+#include "simplex/ssa.hpp"
+#include "simplex/sse.hpp"
+#include "simplex/avx.hpp"
+#include "simplex/nta.hpp"
 #include <glpk.h>
 
 

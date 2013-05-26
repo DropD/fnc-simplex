@@ -7,10 +7,13 @@ Assumptions:
 
 #pragma once
 
-#include "base_general.hpp"
+//~ #include <immintrin.h>  // AVX, but we're aligining to 128 bits
+#include <x86intrin.h>  // pulls depending on march
+
+#include "Simplex.hpp"
 
 template <typename T>
-class SimplexArray : public SimplexBase<T> {
+class SimplexSSE : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -26,7 +29,7 @@ class SimplexArray : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "array"; }
+    std::string get_identifier() { return "sse"; }
 
     void solve() {
 
@@ -101,14 +104,44 @@ class SimplexArray : public SimplexBase<T> {
         for(int i = 0; i < m+1; ++i) {
             if(i == row)
                 continue;
-            ++PERFC_DIV;
-            ++PERFC_MEM;
+            ++PERFC_DIV; ++PERFC_MEM;
             T fac = tabp[i*width+col]/pivot;
-            for(int j = 0; j < width; ++j) {
-                PERFC_ADDMUL += 2;
-                ++PERFC_MEM;
+            PERFC_ADDMUL += 2*width; PERFC_MEM += width;
+            __m128d l1, r1, l2, r2, f;
+            f = _mm_set1_pd(fac);
+
+            int peel = (long long)tabp & 0x0f; /* tabp % 16 */
+            if (peel != 0) {
+                peel = (16 - peel)/sizeof(T);
+                for (int j = 0; j < peel; j++)
+                    tabp[i*width+j] -= fac*tabp[row*width+j];
+            }
+
+            int aligned_end = width - (width%4) - peel;
+
+            for(int j = peel; j < aligned_end; j += 4) {
+
+                l1 = _mm_load_pd(tabp+i*width+j);
+                r1 = _mm_load_pd(tabp+row*width+j);
+                l2 = _mm_load_pd(tabp+i*width+j+2);
+                r2 = _mm_load_pd(tabp+row*width+j+2);
+
+                r1 = _mm_mul_pd(r1, f);
+                l1 = _mm_sub_pd(l1, r1);
+                r2 = _mm_mul_pd(r2, f);
+                l2 = _mm_sub_pd(l2, r2);
+
+                _mm_store_pd(tabp + i*width+j, l1);
+                _mm_store_pd(tabp + i*width+j+2, l2);
+
+            }
+
+            for(int j = aligned_end; j < width; ++j) {
                 tabp[i*width+j] -= fac*tabp[row*width+j];
             }
+
+
+
         }
         active[row] = col;
     }

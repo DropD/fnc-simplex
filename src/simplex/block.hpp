@@ -8,7 +8,7 @@ Assumptions:
 
 #pragma once
 
-#include "base_general.hpp"
+#include "Simplex.hpp"
 
 template <typename T>
 class SimplexBlock : public SimplexBase<T> {
