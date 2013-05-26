@@ -142,6 +142,8 @@ int main(int argc, char ** argv) {
     run(&s8, fname);
     SimplexBlockSSE<s_type> s9;
     run(&s9, fname);
+    SimplexBlockAVX<s_type> s10;
+    run(&s10, fname);
     //~ SimplexSSA<s_type> s4;
     //~ run(&s4, fname);
     //~ SimplexSSE<s_type> s5;
