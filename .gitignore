@@ -5,6 +5,7 @@
 build/
 bin/
 problems/gen
-timing/rdtsc
+problems/gen_prev/
+*timing/rdtsc
 #baseline/main
 #lpbench/lpb_*

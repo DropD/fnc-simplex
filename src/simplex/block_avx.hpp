@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class SimplexBlock_2 : public SimplexBase<T> {
+class SimplexBlockAVX : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -19,7 +19,6 @@ class SimplexBlock_2 : public SimplexBase<T> {
     using SimplexBase<T>::tabp;
     using SimplexBase<T>::nonstandard;
     using SimplexBase<T>::active;
-    using SimplexBase<T>::iter;
 
 
     public:
@@ -28,7 +27,7 @@ class SimplexBlock_2 : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block_2"; }
+    std::string get_identifier() { return "block-avx"; }
 
     void solve() {
 
@@ -38,8 +37,6 @@ class SimplexBlock_2 : public SimplexBase<T> {
         }
 
         while(true) {
-
-            ++iter;
 
             int col = pivot_col();        // width unit-stride memory accesses and comparisons
             if(col >= width) break;       // no negative -> finished
@@ -108,62 +105,66 @@ class SimplexBlock_2 : public SimplexBase<T> {
             PERFC_MEM+=2; PERFC_ADDMUL+=2;
             T fac1 = tabp[i*width+col] * ipiv;
             T fac2 = tabp[(i+1)*width+col] * ipiv;
+            PERFC_MEM+=2;
+            //__m256d f1 = _mm256_set1_pd(fac1);
+            //__m256d f2 = _mm256_set1_pd(fac2);
+            __m128d f1 = _mm_set1_pd(fac1);
+            __m128d f2 = _mm_set1_pd(fac2);
 
             for(int j = 0; j < width-(width%4); j += 4) {
 
                 PERFC_MEM += 4;
-                T r1 = tabp[row*width+j];
-                T r2 = tabp[row*width+j+1];
-                T r3 = tabp[row*width+j+2];
-                T r4 = tabp[row*width+j+3];
+                //__m256d r = _mm256_load_pd(tabp+row*width+j);
+                __m128d r1 = _mm_load_pd(tabp+row*width+j);
+                __m128d r2 = _mm_load_pd(tabp+row*width+j+2);
 
                 if(i != row) {
                     PERFC_MEM += 4;
-                    T l1 = tabp[i*width+j];
-                    T l2 = tabp[i*width+j+1];
-                    T l3 = tabp[i*width+j+2];
-                    T l4 = tabp[i*width+j+3];
+                    //__m256d l = _mm256_load_pd(tabp+i*width+j);
+                    __m128d l1 = _mm_load_pd(tabp+i*width+j);
+                    __m128d l2 = _mm_load_pd(tabp+i*width+j+2);
 
                     PERFC_ADDMUL += 8;
-                    T p1 = l1 - fac1*r1;
-                    T p2 = l2 - fac1*r2;
-                    T p3 = l3 - fac1*r3;
-                    T p4 = l4 - fac1*r4;
+                    //__m256d p1 = _mm256_mul_pd(f1, r);
+                    //__m256d p2 = _mm256_sub_pd(l, p1);
+                    __m128d p1 = _mm_mul_pd(f1, r1);
+                    __m128d p2 = _mm_mul_pd(f1, r2);
+                    __m128d p3 = _mm_sub_pd(l1, p1);
+                    __m128d p4 = _mm_sub_pd(l2, p2);
 
-                    //~ PERFC_MEM += 4; // ??  // no, we have writeback cache
-                    tabp[i*width+j] = p1;
-                    tabp[i*width+j+1] = p2;
-                    tabp[i*width+j+2] = p3;
-                    tabp[i*width+j+3] = p4;
+                    PERFC_MEM += 4; // ??
+                    //_mm256_store_pd(tabp+i*width+j, p2); // segfaults
+                    _mm_store_pd(tabp+i*width+j, p3);
+                    _mm_store_pd(tabp+i*width+j+2, p4);
                 }
                 if(i+1 != row) {
                     PERFC_MEM += 4;
-                    T l1 = tabp[(i+1)*width+j];
-                    T l2 = tabp[(i+1)*width+j+1];
-                    T l3 = tabp[(i+1)*width+j+2];
-                    T l4 = tabp[(i+1)*width+j+3];
+                    //__m256d l = _mm256_load_pd(tabp+(i+1)*width+j);
+                    __m128d l1 = _mm_load_pd(tabp+(i+1)*width+j);
+                    __m128d l2 = _mm_load_pd(tabp+(i+1)*width+j+2);
 
                     PERFC_ADDMUL += 8;
-                    T p1 = l1 - fac2*r1;
-                    T p2 = l2 - fac2*r2;
-                    T p3 = l3 - fac2*r3;
-                    T p4 = l4 - fac2*r4;
+                    //__m256d p1 = _mm256_mul_pd(f2, r);
+                    //__m256d p2 = _mm256_sub_pd(l, p1);
+                    __m128d p1 = _mm_mul_pd(f2, r1);
+                    __m128d p2 = _mm_mul_pd(f2, r2);
+                    __m128d p3 = _mm_sub_pd(l1, p1);
+                    __m128d p4 = _mm_sub_pd(l2, p2);
 
-                    //~ PERFC_MEM += 4; // ??  // no, we have writeback cache
-                    tabp[(i+1)*width+j] = p1;
-                    tabp[(i+1)*width+j+1] = p2;
-                    tabp[(i+1)*width+j+2] = p3;
-                    tabp[(i+1)*width+j+3] = p4;
+                    PERFC_MEM += 4; // ??
+                    //_mm256_store_pd(tabp+(i+1)*width+j, p2);
+                    _mm_store_pd(tabp+(i+1)*width+j, p3);
+                    _mm_store_pd(tabp+(i+1)*width+j+2, p4);
                 }
             }
 
             for(int j = width-(width%4); j < width; ++j) {
                 if(i != row) {
-                    PERFC_ADDMUL+=2; PERFC_MEM+=1;
+                    PERFC_ADDMUL+=2; PERFC_MEM+=2;
                     tabp[i*width+j] -= fac1*tabp[row*width+j];
                 }
                 if(i+1 != row) {
-                    PERFC_ADDMUL+=2; PERFC_MEM+=1;
+                    PERFC_ADDMUL+=2; PERFC_MEM+=2;
                     tabp[(i+1)*width+j] -= fac2*tabp[row*width+j];
                 }
             }
