@@ -58,7 +58,8 @@ std::pair<double, double> rdtsc_measure(int num_runs, SimplexBase<T> * s, std::s
   int i;
 
   for(i = 0; i < num_runs; i++) {
-    s->load(fname);
+    if( s->restore_tableau() == false )
+      s->load(fname);
     tim.reset();
     CPUID(); RDTSC(start);
     s->solve();
