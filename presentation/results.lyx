@@ -116,7 +116,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/ricoh/ETH/RW/FNC/Project/gh_fnc-simplex/RESULTS/final_perf.png
+	filename /home/bryonak/ETH/Fast Numerical Code/Project/gitsvn/RESULTS/perf1.png
 	scale 40
 
 \end_inset
@@ -126,6 +126,76 @@ status open
 
 \begin_layout Plain Layout
 performance comparison
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Wall Time
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/bryonak/ETH/Fast Numerical Code/Project/gitsvn/RESULTS/wall1.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+wall time comparison
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Roofline
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/bryonak/ETH/Fast Numerical Code/Project/gitsvn/RESULTS/roof1.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+roofline
 \end_layout
 
 \end_inset

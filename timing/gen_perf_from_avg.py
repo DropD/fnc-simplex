@@ -20,7 +20,7 @@ with open(os.path.join(outdir, 'fpc_avg')) as fpcpi:
 pylab.figure()
 #~ keep = [ 'avx', 'baseline', 'block_swap', 'block_avx', 'block_2', 'soplex', 'gurobi', 'glpk', 'ssa' ]
 for key in avgs:
-  if key not in [ 'array', 'block_2', 'sse', 'block-sse', 'nta' ]:
+  if key not in [ 'array', 'avx', 'block_2', 'sse', 'block-sse', 'nta' ]:
     pylab.plot(problem_sizes, avgs[key], label=key)
 fncplot.title(r'Average performance', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')

@@ -175,7 +175,7 @@ status open
 \end_inset
 
 Computational intensity 
-\begin_inset Formula $I=\frac{2m^{2}+2mn+4m+2n}{8(m^{2}+n)}\sim\frac{1}{2}$
+\begin_inset Formula $I=\frac{2m^{2}+2mn+4m+2n}{8(m^{2}+mn)}\sim\frac{1}{4}$
 \end_inset
 
 
