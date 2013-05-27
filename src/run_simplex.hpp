@@ -20,7 +20,6 @@ void run(SimplexBase<s_type> * s, string fname) {
     }
 
     int n = rdtsc_warmup(s, fname);
-    //~ double cycles = rdtsc_measure(n, s, fname);    // solve
     std::pair<double, double> res = rdtsc_measure(n, s, fname);    // solve
     double cycles = res.first;
     double walltime = res.second;

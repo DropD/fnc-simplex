@@ -21,7 +21,6 @@ void run_glpk(string fname, SimplexBase<s_type> * s) {
     parm.meth = GLP_PRIMAL;
     lp = glp_create_prob();
     int n = rdtsc_warmup(lp, &parm, fname);
-    //~ double cycles = rdtsc_measure(n, lp, &parm, fname);
     std::pair<double, double> res = rdtsc_measure(n, lp, &parm, fname);
     double cycles = res.first;
     double walltime = res.second;

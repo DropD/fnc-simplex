@@ -102,7 +102,6 @@ int rdtsc_warmup(GRBEnv & env, std::string fname) {
 
 
 template <typename T>
-//~ double rdtsc_measure(int num_runs, SimplexBase<T> * s, std::string fname) {
 std::pair<double, double> rdtsc_measure(int num_runs, SimplexBase<T> * s, std::string fname) {
   double cycles = 0;
   double walltime = 0;
@@ -121,11 +120,9 @@ std::pair<double, double> rdtsc_measure(int num_runs, SimplexBase<T> * s, std::s
   }
   cycles = cycles / ((double) num_runs);
   walltime = walltime / ((double) num_runs);
-  //~ return cycles;
   return std::make_pair(cycles, walltime);
 }
 
-//~ double rdtsc_measure(int num_runs, glp_prob * lp, glp_smcp * parm, std::string fname) {
 std::pair<double, double> rdtsc_measure(int num_runs, glp_prob * lp, glp_smcp * parm, std::string fname) {
   double cycles = 0;
   double walltime = 0;
@@ -144,11 +141,9 @@ std::pair<double, double> rdtsc_measure(int num_runs, glp_prob * lp, glp_smcp * 
   }
   cycles = cycles / ((double) num_runs);
   walltime = walltime / ((double) num_runs);
-  //~ return cycles;
   return std::make_pair(cycles, walltime);
 }
 
-//~ double rdtsc_measure(int num_runs, GRBEnv & env, std::string fname) {
 std::pair<double, double> rdtsc_measure(int num_runs, GRBEnv & env, std::string fname) {
   double cycles = 0;
   double walltime = 0;
@@ -167,7 +162,6 @@ std::pair<double, double> rdtsc_measure(int num_runs, GRBEnv & env, std::string 
   }
   cycles = cycles / ((double) num_runs);
   walltime = walltime / ((double) num_runs);
-  //~ return cycles;
   return std::make_pair(cycles, walltime);
 }
 

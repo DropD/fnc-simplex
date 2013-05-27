@@ -29,10 +29,7 @@ void run_gurobi(string fname, SimplexBase<s_type> * s) {
         env.set(GRB_IntParam_Presolve, 0);
         //~ env.set(GRB_IntParam_LogToConsole, 0);
 
-        //~ GRBModel model = GRBModel(env, fname);
-        //~ model.optimize();
         int n = rdtsc_warmup(env, fname);
-        //~ double cycles = rdtsc_measure(n, env, fname);    // solve
         std::pair<double, double> res = rdtsc_measure(n, env, fname);    // solve
         double cycles = res.first;
         double walltime = res.second;
