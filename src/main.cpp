@@ -27,98 +27,14 @@ const bool INFO = false;
 #include "simplex/block_avx.hpp"
 #include "simplex/block_sse.hpp"
 #include "simplex/nta.hpp"
-#include <glpk.h>
-
 
 using namespace std;
 typedef double s_type;
 typedef unsigned int uint;
 
-void run(SimplexBase<s_type> * s, string fname) {
-
-    string id = s->get_identifier();
-    cout << "\033[0;31m" << "Running " << id  << "\033[0m" << std::endl;
-
-    if(INFO) {
-        s->load(fname);
-        s->print();
-    }
-
-    int n = rdtsc_warmup(s, fname);
-    double cycles = rdtsc_measure(n, s, fname);    // solve
-
-    vector<double> sol = s->solutions();
-    cout << "Optimal value: " << sol[0] << endl;
-    if(INFO) {
-        cout << "Variables:";
-        for(uint i = 1; i < sol.size(); ++i)
-            cout << "  " << sol[i];
-        cout << endl;
-    }
-
-    double fpc = (s->PERFC_ADDMUL + s->PERFC_DIV) / cycles;
-    double ci = (s->PERFC_ADDMUL+s->PERFC_DIV)/8./s->PERFC_MEM;
-
-    cout << "Iterations: " << s->get_iter() << endl;
-    cout << "Memory used: " << s->memusage() << " kB" << endl;
-    cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
-    cout << "Memory accesses: " << s->PERFC_MEM
-         << " (theory: " << s->get_iter() * s->get_tabn() << ")" << endl;
-    cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
-    cout << "Float div: " << s->PERFC_DIV << endl;
-    cout << "FLOP/C: " << fpc << endl;
-    cout << "Op Intensity: " << ci << endl;
-
-    ofstream fp("rdtsc", fstream::app);
-    if(fp.is_open()) {
-        fp << id << ','
-           << cycles << ','
-           << fpc << ','
-           << ci << endl;
-        fp.close();
-    } else
-        cout << "Error: unable to write to file rdtsc!" << endl;
-
-}
-
-void run_glpk(string fname, SimplexBase<s_type> * s) {
-    cout << "\033[0;31m" << "Running glpk" << "\033[0m" << std::endl;
-
-    glp_term_out(GLP_OFF);
-    glp_prob *lp;
-    glp_smcp parm;
-    glp_init_smcp(&parm);
-    parm.msg_lev = GLP_MSG_OFF;
-    parm.meth = GLP_PRIMAL;
-    lp = glp_create_prob();
-    int n = rdtsc_warmup(lp, &parm, fname);
-    double cycles = rdtsc_measure(n, lp, &parm, fname);
-    double obj = glp_get_obj_val(lp);
-    cout << "Optimal value: " << obj << endl;
-    glp_delete_prob(lp);
-
-    double fpc = (s->PERFC_ADDMUL + s->PERFC_DIV) / cycles;
-    double ci = (s->PERFC_ADDMUL+s->PERFC_DIV)/8./s->PERFC_MEM;
-
-    cout << "Memory used: " << s->memusage() << " kB" << endl;
-    cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
-    cout << "Memory accesses: " << s->PERFC_MEM
-         << " (theory: " << s->get_iter() * s->get_tabn() << ")" << endl;
-    cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
-    cout << "Float div: " << s->PERFC_DIV << endl;
-    cout << "FLOP/C: " << fpc << endl;
-    cout << "Op Intensity: " << ci << endl;
-
-    ofstream fp("rdtsc", fstream::app);
-    if(fp.is_open()) {
-        fp << "glpk" << ','
-           << cycles << ','
-           << fpc << ','
-           << ci << endl;
-        fp.close();
-    } else
-        cout << "Error: unable to write to file rdtsc!" << endl;
-}
+#include "run_simplex.hpp"
+#include "run_glpk.hpp"
+#include "run_gurobi.hpp"
 
 int main(int argc, char ** argv) {
 
@@ -161,6 +77,7 @@ int main(int argc, char ** argv) {
     lname.append("lp");
 
     run_glpk(lname, &s1);
+    run_gurobi(lname, &s1);
 
     return 0;
 
