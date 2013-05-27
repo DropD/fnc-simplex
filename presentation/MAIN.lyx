@@ -183,65 +183,6 @@ Donjan Rodic
 
 \begin_layout Standard
 \begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-The following causes the table of contents to be shown at the beginning
- of every subsection.
- Comment if you do not want it.
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-AtBeginSubsection[]{
-\end_layout
-
-\begin_layout Plain Layout
-
-  
-\backslash
-frame<beamer>{ 
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-frametitle{Outline}   
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-tableofcontents[currentsection,currentsubsection] 
-\end_layout
-
-\begin_layout Plain Layout
-
-  }
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
@@ -264,23 +205,6 @@ beamerdefaultoverlayspecification{<+->}
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout BeginFrame
-Overview
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset toc
-LatexCommand tableofcontents
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
 
 \end_layout
 
