@@ -15,7 +15,7 @@
 #include <iostream>
 
 #ifndef RDTSC_CYCLES_REQUIRED
-#define RDTSC_CYCLES_REQUIRED 1E9
+#define RDTSC_CYCLES_REQUIRED 1
 #endif
 
 /*

@@ -148,6 +148,8 @@ class SimplexBase {
 
     }
 
+    //--TODO: add a load_from_tableau method to prevent file io from slowing down timings (rdtsc warmup phase).
+
     void load_array(std::string fname) {
 
         std::ifstream fp(fname.c_str());
@@ -156,6 +158,7 @@ class SimplexBase {
             throw;
         }
 
+        iter = -1;
         PERFC_MEM = 0;
         PERFC_ADDMUL = 0;
         PERFC_DIV = 0;

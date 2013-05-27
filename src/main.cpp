@@ -81,8 +81,8 @@ int main(int argc, char ** argv) {
     run(&s4, fname);
     //~ SimplexSSE<s_type> s5;
     //~ run(&s5, fname);
-    SimplexAVX<s_type> s6;
-    run(&s6, fname);
+    //SimplexAVX<s_type> s6;
+    //run(&s6, fname);
     //SimplexNTA<s_type> s7;
     //run(&s7, fname);
 

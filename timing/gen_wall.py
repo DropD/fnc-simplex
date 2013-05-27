@@ -5,6 +5,7 @@ import subprocess
 import os
 import pylab
 from fncplot import fncplot
+import cPickle
 
 #~ problemdir = "../problems/gen/"
 problemdir = "../problems/gen_verylight/"
@@ -47,12 +48,13 @@ for k in problem_sizes:
         avgs[key].append(val);
 
 pylab.figure()
+cPickle.dump(avgs, 'wall_avgs')
 for key in avgs:
     pylab.plot(problem_sizes, avgs[key], label=key)
 fncplot.title(r'Average performance', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
 fncplot.ylabel('Walltime')
-pylab.xscale('log')
+#pylab.xscale('log')
 pylab.grid(True)
 pylab.legend(loc='upper left')
 #~ pylab.savefig('baseline_performance.png')

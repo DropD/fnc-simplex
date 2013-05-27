@@ -108,47 +108,34 @@ Plots
 \end_layout
 
 \begin_layout BeginFrame
-Cycles
-\end_layout
-
-\begin_layout Standard
-plot
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
 Performance
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/ricoh/ETH/RW/FNC/Project/gh_fnc-simplex/RESULTS/final_perf.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+performance comparison
 \end_layout
 
-\begin_layout Standard
-plot
-\end_layout
+\end_inset
 
-\begin_layout EndFrame
 
 \end_layout
 
-\begin_layout BeginFrame
-Computational Intensity
-\end_layout
+\end_inset
 
-\begin_layout Standard
-plot
-\end_layout
 
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-Roofline
-\end_layout
-
-\begin_layout Standard
-plot
 \end_layout
 
 \begin_layout EndFrame
