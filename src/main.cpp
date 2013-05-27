@@ -20,6 +20,7 @@ const bool INFO = false;
 #include "simplex/baseline.hpp"
 #include "simplex/array.hpp"
 #include "simplex/block_2.hpp"
+#include "simplex/block_3.hpp"
 #include "simplex/ssa.hpp"
 #include "simplex/sse.hpp"
 #include "simplex/avx.hpp"
