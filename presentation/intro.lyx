@@ -202,7 +202,7 @@ Subject To
 
 \begin_layout Plain Layout
 
-2x  +  y - z <= 10
+2x  +  y - z <= 6
 \end_layout
 
 \begin_layout Plain Layout
@@ -250,7 +250,22 @@ status open
 
 \end_inset
 
-Tableau form
+Tableau form 
+\begin_inset space \qquad{}
+\end_inset
+
+ 
+\size tiny
+
+\begin_inset Formula $\left[\begin{array}{cccccccc}
+1 & 1 & 1 & 1 & 0 & 0 & 0 & 10\\
+4 & -3 & 1 & 0 & 1 & 0 & 0 & 3\\
+2 & 1 & -1 & 0 & 0 & 1 & 0 & 6\\
+2 & -3 & 1 & 0 & 0 & 0 & 1 & 0
+\end{array}\right]$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -264,7 +279,7 @@ status open
 
 \end_inset
 
-Objective cost
+Pivoting, reduced cost (objective function)
 \end_layout
 
 \begin_layout Itemize
@@ -278,7 +293,15 @@ status open
 
 \end_inset
 
-Termination, runtime
+Termination, worst runtime 
+\begin_inset Formula $O(e^{m})$
+\end_inset
+
+, but often 
+\begin_inset Formula $O(m)$
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame

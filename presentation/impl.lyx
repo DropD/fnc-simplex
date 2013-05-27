@@ -122,7 +122,45 @@ status open
 
 \end_inset
 
-Op counts
+Tableau: 
+\begin_inset Formula $(m+1)\times(m+n+2)$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+\SpecialChar \-
+
+\begin_inset space ~
+\end_inset
+
+ (requires full access each iteration)
+\begin_inset Newline newline
+\end_inset
+
+Memory reads: 
+\begin_inset Formula $m(m+n)+2m+n$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+\SpecialChar \-
+
+\begin_inset space ~
+\end_inset
+
+ (all capacity misses for bigger problems)
+\begin_inset Newline newline
+\end_inset
+
+Flops: 
+\begin_inset Formula $m(m+n)+m$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -136,7 +174,11 @@ status open
 
 \end_inset
 
-computational intensity
+Computational intensity 
+\begin_inset Formula $I=\frac{m^{2}+mn+2m+n}{8(m^{2}+n)}\sim\frac{1}{4}$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection

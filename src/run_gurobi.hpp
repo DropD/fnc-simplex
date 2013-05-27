@@ -26,8 +26,8 @@ void run_gurobi(string fname, SimplexBase<s_type> * s) {
 
         GRBEnv env = GRBEnv();
         env.set(GRB_IntParam_Threads, 1);
-        env.set(GRB_IntParam_Presolve, -1);
-        //~ env.set(GRB_IntParam_Presolve, 0);
+        //~ env.set(GRB_IntParam_Presolve, -1);
+        env.set(GRB_IntParam_Presolve, 0);
         //~ env.set(GRB_IntParam_Presolve, 2);
         env.set(GRB_IntParam_LogToConsole, 0);
 
