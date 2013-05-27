@@ -236,6 +236,23 @@ end{frame}
 \end_layout
 
 \begin_layout BeginFrame
+Restrictions
+\end_layout
+
+\begin_layout Itemize
+\noindent
+all coefficients positive (simplicity)
+\end_layout
+
+\begin_layout Itemize
+all coefficients 
+\begin_inset Formula $\leq10^{6}$
+\end_inset
+
+ (stability)
+\end_layout
+
+\begin_layout BeginFrame
 Steps
 \end_layout
 
