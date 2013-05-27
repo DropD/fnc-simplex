@@ -38,7 +38,7 @@ for k in problem_sizes:
             key = line[0]
             if not avg.get(key):
                 avg[key] = 0
-            avg[key] += float(line[2])  # line[2] == fpc
+            avg[key] += float(line[4])  # line[4] == walltime
     for key in avg:
         val = avg[key] / len(problems)
         if not avgs.get(key):
@@ -50,7 +50,7 @@ for key in avgs:
     pylab.plot(problem_sizes, avgs[key], label=key)
 fncplot.title(r'Average performance', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
-fncplot.ylabel('flop/cycle')
+fncplot.ylabel('Walltime')
 pylab.ylim([0,2])
 pylab.xscale('log')
 pylab.grid(True)

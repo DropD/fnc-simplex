@@ -32,15 +32,15 @@ void run_glpk(string fname, SimplexBase<s_type> * s) {
     double fpc = (s->PERFC_ADDMUL + s->PERFC_DIV) / cycles;
     double ci = (s->PERFC_ADDMUL+s->PERFC_DIV)/8./s->PERFC_MEM;
 
-    cout << "Memory used: " << s->memusage() << " kB" << endl;
     cout << "Wall time: " << walltime << endl;
-    cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
-    cout << "Memory accesses: " << s->PERFC_MEM
-         << " (theory: " << s->get_iter() * s->get_tabn() << ")" << endl;
-    cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
-    cout << "Float div: " << s->PERFC_DIV << endl;
-    cout << "FLOP/C: " << fpc << endl;
-    cout << "Op Intensity: " << ci << endl;
+    //~ cout << "Memory used: " << s->memusage() << " kB" << endl;
+    cout << "(pseudo) RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
+    //~ cout << "Memory accesses: " << s->PERFC_MEM
+         //~ << " (theory: " << s->get_iter() * s->get_tabn() << ")" << endl;
+    //~ cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
+    //~ cout << "Float div: " << s->PERFC_DIV << endl;
+    cout << "(pseudo) FLOP/C: " << fpc << endl;
+    cout << "(pseudo) Op Intensity: " << ci << endl;
 
     ofstream fp("rdtsc", fstream::app);
     if(fp.is_open()) {
