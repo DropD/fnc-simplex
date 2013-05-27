@@ -7,13 +7,13 @@
 #include <iostream>
 #include <string>
 
-//~ #define NO_GLPK
-//~ #define NO_GUROBI
-//~ #define NO_SOPLEX
+#define NO_GLPK
+#define NO_GUROBI
+#define NO_SOPLEX
 
 //~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
-#define RDTSC_CYCLES_REQUIRED 1E6
-//~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
+//~ #define RDTSC_CYCLES_REQUIRED 1E6
+#define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
 //~ #define RDTSC_CYCLES_REQUIRED 1E8
 //~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
@@ -67,24 +67,24 @@ int main(int argc, char ** argv) {
 
     Simplex<s_type> s1;
     run(&s1, fname);
-    //~ SimplexArray<s_type> s2;
-    //~ run(&s2, fname);
+    SimplexArray<s_type> s2;
+    run(&s2, fname);
     SimplexBlock_2<s_type> s3;
     run(&s3, fname);
     SimplexBlock_swap<s_type> s10;
     run(&s10, fname);
-    //SimplexBlockSSE<s_type> s9;
-    //run(&s9, fname);
-    //SimplexBlockAVX<s_type> s11;
-    //run(&s11, fname);
+    SimplexBlockSSE<s_type> s9;
+    run(&s9, fname);
+    SimplexBlockAVX<s_type> s11;
+    run(&s11, fname);
     SimplexSSA<s_type> s4;
     run(&s4, fname);
-    //~ SimplexSSE<s_type> s5;
-    //~ run(&s5, fname);
-    //SimplexAVX<s_type> s6;
-    //run(&s6, fname);
-    //SimplexNTA<s_type> s7;
-    //run(&s7, fname);
+    SimplexSSE<s_type> s5;
+    run(&s5, fname);
+    SimplexAVX<s_type> s6;
+    run(&s6, fname);
+    SimplexNTA<s_type> s7;
+    run(&s7, fname);
 
     //replace file extension
     string lname = fname.substr(0, fname.length()-3);

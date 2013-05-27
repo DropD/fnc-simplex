@@ -7,6 +7,7 @@ import pylab
 from fncplot import fncplot
 import cPickle
 
+outdir = "tmp"
 problemdir = "../problems/gen/"
 prog = "../bin/main"
 # problem_sizes should reflect the available *_nn_*.dlp problems
@@ -73,11 +74,11 @@ for k in problem_sizes:
         avgs2[key].append(val2);
         avgs3[key].append(val3);
 
-with open('cycles_avg', 'w') as cycpi:
+with open(os.path.join(outdir, 'cycles_avg'), 'w') as cycpi:
     cPickle.dump(avgs0, cycpi)
-with open('fpc_avg', 'w') as fpcpi:
+with open(os.path.join(outdir, 'fpc_avg'), 'w') as fpcpi:
     cPickle.dump(avgs1, fpcpi)
-with open('ci_avg', 'w') as cipi:
+with open(os.path.join(outdir, 'ci_avg'), 'w') as cipi:
     cPickle.dump(avgs2, cipi)
-with open('wall_avg', 'w') as wapi:
+with open(os.path.join(outdir, 'wall_avg'), 'w') as wapi:
     cPickle.dump(avgs3, wapi)
