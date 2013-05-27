@@ -153,6 +153,10 @@ class SimplexSSE : public SimplexBase<T> {
         this->load_array(fname);
     }
 
+    virtual bool restore_tableau() {
+        return this->restore_tableau_array();
+    }
+
     void print() {
         this->print_array();
     }

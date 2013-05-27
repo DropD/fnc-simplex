@@ -135,7 +135,6 @@ class SimplexBlockSSE : public SimplexBase<T> {
                     __m128d p3 = _mm_sub_pd(l1, p1);
                     __m128d p4 = _mm_sub_pd(l2, p2);
 
-                    PERFC_MEM += 4; // ??
                     //_mm256_store_pd(tabp+i*width+j, p2); // segfaults
                     _mm_store_pd(tabp+i*width+j, p3);
                     _mm_store_pd(tabp+i*width+j+2, p4);
@@ -154,7 +153,6 @@ class SimplexBlockSSE : public SimplexBase<T> {
                     __m128d p3 = _mm_sub_pd(l1, p1);
                     __m128d p4 = _mm_sub_pd(l2, p2);
 
-                    PERFC_MEM += 4; // ??
                     //_mm256_store_pd(tabp+(i+1)*width+j, p2);
                     _mm_store_pd(tabp+(i+1)*width+j, p3);
                     _mm_store_pd(tabp+(i+1)*width+j+2, p4);
@@ -186,6 +184,10 @@ class SimplexBlockSSE : public SimplexBase<T> {
 
     void load(std::string fname) {
         this->load_array(fname);
+    }
+
+    virtual bool restore_tableau() {
+        return this->restore_tableau_array();
     }
 
     void print() {

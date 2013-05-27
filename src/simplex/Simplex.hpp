@@ -45,7 +45,7 @@ class SimplexBase {
     std::vector< int > nonstandard;
 
     std::vector< std::vector<T> > tab, backup_tab;
-    T * tabp, * backup_tabp;
+    T * tabp, * backup_tabp = NULL;
     int n, m, width;
     int iter = 0;
 
@@ -146,7 +146,6 @@ class SimplexBase {
         }
         for(uint i = 0; i < nonstandard.size(); ++i)
             tab[nonstandard[i]][n+nonstandard[i]] *= -1;
-
         backup_tableau();
 
     }
@@ -157,6 +156,9 @@ class SimplexBase {
         tab = backup_tab;
         active = backup_active;
         iter = -1;
+        PERFC_MEM = 0;
+        PERFC_ADDMUL = 0;
+        PERFC_DIV = 0;
         return true;
     }
 
@@ -240,13 +242,20 @@ class SimplexBase {
     bool restore_tableau_array() {
         if(backup_tabp == NULL)
             return false;
+        free(tabp);
+        tabp = (T*)malloc( (m+1)*width * sizeof(T) );
         memcpy(tabp, backup_tabp, sizeof(T)*width*(m+1));
         active = backup_active;
         iter = -1;
+        PERFC_MEM = 0;
+        PERFC_ADDMUL = 0;
+        PERFC_DIV = 0;
         return true;
     }
 
     void backup_tableau_array() {
+        free(backup_tabp);
+        backup_tabp = (T*)malloc( (m+1)*width * sizeof(T) );
         memcpy(backup_tabp, tabp, sizeof(T)*width*(m+1));
         backup_active = active;
     }

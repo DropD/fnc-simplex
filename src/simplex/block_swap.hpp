@@ -136,7 +136,6 @@ class SimplexBlock_swap : public SimplexBase<T> {
                 T pa3 = la3 - fac1*r3;
                 T pa4 = la4 - fac1*r4;
 
-                //~ PERFC_MEM += 4; // ??  // no, we have writeback cache
                 tabp[i*width+j]   = pa1;
                 tabp[i*width+j+1] = pa2;
                 tabp[i*width+j+2] = pa3;
@@ -154,7 +153,6 @@ class SimplexBlock_swap : public SimplexBase<T> {
                 T pb3 = lb3 - fac2*r3;
                 T pb4 = lb4 - fac2*r4;
 
-                //~ PERFC_MEM += 4; // ??  // no, we have writeback cache
                 tabp[(i+1)*width+j]   = pb1;
                 tabp[(i+1)*width+j+1] = pb2;
                 tabp[(i+1)*width+j+2] = pb3;
@@ -181,6 +179,10 @@ class SimplexBlock_swap : public SimplexBase<T> {
 
     void load(std::string fname) {
         this->load_array(fname);
+    }
+
+    virtual bool restore_tableau() {
+        return this->restore_tableau_array();
     }
 
     void print() {
