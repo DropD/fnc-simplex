@@ -149,6 +149,28 @@ class SimplexBase {
     }
 
     //--TODO: add a load_from_tableau method to prevent file io from slowing down timings (rdtsc warmup phase).
+    void load_from_tableau(std::vector<T> & tab_in, int m_in, int width_in) {
+        iter = -1;
+        m = m_in;
+        width = width_in;
+        n = width - m - 2;
+        for(int i = 0; i < (m+1)*width; ++i) {
+            tabp[i] = tab_in[i];
+        }
+        for(int i = 0; i < m; ++i) {
+            active[i] = n+i;                            // set active
+        }
+    }
+
+    std::vector<T> write_tableau(int & m_out, int & width_out) {
+        m_out = m;
+        width_out = width;
+        std::vector<T> tab_out(m*width);
+        for(int i = 0; i < m*width; ++i) {
+            tab_out[i] = tabp[i];
+        }
+        return tab_out;
+    }
 
     void load_array(std::string fname) {
 
