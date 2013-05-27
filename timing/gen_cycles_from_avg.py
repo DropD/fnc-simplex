@@ -5,6 +5,7 @@ import subprocess
 import os
 import pylab
 from fncplot import fncplot
+import cPickle
 
 problemdir = "../problems/gen/"
 prog = "../bin/main"
@@ -44,17 +45,18 @@ problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 #        if not avgs.get(key):
 #            avgs[key] = []
 #        avgs[key].append(val);
-avgs = cPickle.load('cyces_pickle')
+with open('cycles_avg') as cycpi:
+    avgs = cPickle.load(cycpi)
 
 pylab.figure()
 for key in avgs:
     pylab.plot(problem_sizes, avgs[key], label=key)
-fncplot.title(r'Average performance', fontstyle='italic')
+fncplot.title(r'Average Runtime', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
 fncplot.ylabel('Cycles')
-#pylab.xscale('log')
+pylab.yscale('log')
 pylab.grid(True)
-pylab.legend(loc='upper right')
+pylab.legend(loc='lower right')
 #~ pylab.savefig('baseline_performance.png')
 
 pylab.show()

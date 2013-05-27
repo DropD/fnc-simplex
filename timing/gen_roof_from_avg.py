@@ -55,8 +55,10 @@ problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 #        avgs[key].append(val);
 #        avgs2[key].append(val2);
 
-avgs = cPickle.load('fpc_pickle')
-avgs2 = cPickle.load('ci_pickle')
+with open('fpc_avg') as fpcpi:
+    avgs = cPickle.load(fpcpi)
+with open('ci_avg') as cipi:
+    avgs2 = cPickle.load(cipi)
 
 sizepi = [0.01, 3]
 pi = [2, 2]

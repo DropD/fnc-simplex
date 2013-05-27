@@ -47,7 +47,8 @@ problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 #            avgs[key] = []
 #        avgs[key].append(val);
 
-cPickle.load('fpc_pickle')
+with open('fpc_avg') as fpcpi:
+    avgs = cPickle.load(fpcpi)
 
 pylab.figure()
 for key in avgs:

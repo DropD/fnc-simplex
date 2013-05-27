@@ -73,7 +73,11 @@ for k in problem_sizes:
         avgs2[key].append(val2);
         avgs3[key].append(val3);
 
-cPickle.dump(avgs0, 'cycles_pickle')
-cPickle.dump(avgs1, 'fpc_pickle')
-cPickle.dump(avgs2, 'ci_pickle')
-cPickle.dump(avgs3, 'wall_pickle')
+with open('cycles_avg', 'w') as cycpi:
+    cPickle.dump(avgs0, cycpi)
+with open('fpc_avg', 'w') as fpcpi:
+    cPickle.dump(avgs1, fpcpi)
+with open('ci_avg', 'w') as cipi:
+    cPickle.dump(avgs2, cipi)
+with open('wall_avg', 'w') as wapi:
+    cPickle.dump(avgs3, wapi)

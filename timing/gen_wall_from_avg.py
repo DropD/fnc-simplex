@@ -47,18 +47,18 @@ problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 #            avgs[key] = []
 #        avgs[key].append(val);
 
-avgs = cPickle.load('wall_pickle')
+with open('wall_avg') as wallpi:
+    avgs = cPickle.load(wallpi)
 
 pylab.figure()
-cPickle.dump(avgs, 'wall_avgs')
 for key in avgs:
     pylab.plot(problem_sizes, avgs[key], label=key)
-fncplot.title(r'Average performance', fontstyle='italic')
+fncplot.title(r'Average Runtime', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
 fncplot.ylabel('Walltime')
-#pylab.xscale('log')
+pylab.yscale('log')
 pylab.grid(True)
-pylab.legend(loc='upper left')
+pylab.legend(loc='lower right')
 #~ pylab.savefig('baseline_performance.png')
 
 pylab.show()
