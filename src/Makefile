@@ -22,7 +22,7 @@ INFODIR = doc
 
 # Path to headers for which (when changed) all objects should be recompiled
 # Required if there is no source file with the same basename
-SHAREDHEADERS = simplex/*.hpp
+SHAREDHEADERS = simplex/*.hpp misc/*.hpp *.hpp
 
 # Only one SOURCEEXT is supported, but as many HEADEREXT as you wish
 SOURCEEXT = cpp
@@ -45,8 +45,11 @@ ifeq (!$(shell uname), Darwin)
 	CFLAGS += -rdynamic
 endif
 
+CFLAGS += -I"../../gurobi/include"
+
 DBGFLAGS = -Wall -Wextra -Werror -ansi -O0 -g3 -ggdb -pg -rdynamic
 LIBS = -lglpk -lm
+LIBS += -L"../../gurobi/lib/" -lgurobi_c++ -lgurobi55 -lpthread
 
 SMART_MKDIR = mkdir -p
 SHELL = /bin/sh
