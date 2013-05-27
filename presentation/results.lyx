@@ -116,7 +116,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /home/bryonak/ETH/Fast Numerical Code/Project/gitsvn/RESULTS/perf1.png
+	filename ../RESULTS/perf1.png
 	scale 40
 
 \end_inset
@@ -151,7 +151,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /home/bryonak/ETH/Fast Numerical Code/Project/gitsvn/RESULTS/wall1.png
+	filename ../RESULTS/wall1.png
 	scale 40
 
 \end_inset
@@ -186,7 +186,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /home/bryonak/ETH/Fast Numerical Code/Project/gitsvn/RESULTS/roof1.png
+	filename ../RESULTS/roof1.png
 	scale 40
 
 \end_inset

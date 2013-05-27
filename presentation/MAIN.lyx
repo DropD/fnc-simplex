@@ -84,13 +84,12 @@
 \end_index
 \secnumdepth 3
 \tocdepth 3
-\paragraph_separation skip
-\defskip smallskip
+\paragraph_separation indent
+\paragraph_indentation default
 \quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "basicstyle={\ttfamily},language={C++},numbersep=5pt,numberstyle={\tiny},stepnumber={1}"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
