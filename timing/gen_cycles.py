@@ -38,7 +38,7 @@ for k in problem_sizes:
             key = line[0]
             if not avg.get(key):
                 avg[key] = 0
-            avg[key] += float(line[2])  # line[2] == fpc
+            avg[key] += float(line[1])  # line[1] == cycles
     for key in avg:
         val = avg[key] / len(problems)
         if not avgs.get(key):
@@ -50,11 +50,10 @@ for key in avgs:
     pylab.plot(problem_sizes, avgs[key], label=key)
 fncplot.title(r'Average performance', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
-fncplot.ylabel('flop/cycle')
-pylab.ylim([0,2])
+fncplot.ylabel('Cycles')
 pylab.xscale('log')
 pylab.grid(True)
-pylab.legend(loc='upper right')
+pylab.legend(loc='upper left')
 #~ pylab.savefig('baseline_performance.png')
 
 pylab.show()

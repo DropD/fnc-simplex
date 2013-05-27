@@ -29,30 +29,33 @@ void run_gurobi(string fname, SimplexBase<s_type> * s) {
         env.set(GRB_IntParam_Presolve, 0);
         //~ env.set(GRB_IntParam_LogToConsole, 0);
 
-        //~ GRBModel model = GRBModel(env, fname);
-        //~ model.optimize();
         int n = rdtsc_warmup(env, fname);
-        double cycles = rdtsc_measure(n, env, fname);    // solve
+        std::pair<double, double> res = rdtsc_measure(n, env, fname);    // solve
+        double cycles = res.first;
+        double walltime = res.second;
 
         double fpc = (s->PERFC_ADDMUL + s->PERFC_DIV) / cycles;
         double ci = (s->PERFC_ADDMUL+s->PERFC_DIV)/8./s->PERFC_MEM;
 
-        cout << "Iterations: " << s->get_iter() << endl;
-        cout << "Memory used: " << s->memusage() << " kB" << endl;
-        cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
-        cout << "Memory accesses: " << s->PERFC_MEM
-             << " (theory: " << s->get_iter() * s->get_tabn() << ")" << endl;
-        cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
-        cout << "Float div: " << s->PERFC_DIV << endl;
-        cout << "FLOP/C: " << fpc << endl;
-        cout << "Op Intensity: " << ci << endl;
+        //~ cout << "Iterations: " << s->get_iter() << endl;
+        cout << "Wall time: " << walltime << endl;
+        //~ cout << "Memory used: " << s->memusage() << " kB" << endl;
+        cout << "(pseudo) RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
+        //~ cout << "Memory accesses: " << s->PERFC_MEM
+             //~ << " (theory: " << s->get_iter() * s->get_tabn() << ")" << endl;
+        //~ cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
+        //~ cout << "Float div: " << s->PERFC_DIV << endl;
+        cout << "(pseudo) FLOP/C: " << fpc << endl;
+        cout << "(pseudo) Op Intensity: " << ci << endl;
 
         ofstream fp("rdtsc", fstream::app);
         if(fp.is_open()) {
             fp << "gurobi" << ','
                << cycles << ','
                << fpc << ','
-               << ci << endl;
+               << ci << ','
+               << walltime
+               << endl;
             fp.close();
         } else
             cout << "Error: unable to write to file rdtsc!" << endl;

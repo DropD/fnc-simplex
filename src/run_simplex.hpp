@@ -20,7 +20,9 @@ void run(SimplexBase<s_type> * s, string fname) {
     }
 
     int n = rdtsc_warmup(s, fname);
-    double cycles = rdtsc_measure(n, s, fname);    // solve
+    std::pair<double, double> res = rdtsc_measure(n, s, fname);    // solve
+    double cycles = res.first;
+    double walltime = res.second;
 
     vector<double> sol = s->solutions();
     cout << "Optimal value: " << sol[0] << endl;
@@ -35,6 +37,7 @@ void run(SimplexBase<s_type> * s, string fname) {
     double ci = (s->PERFC_ADDMUL+s->PERFC_DIV)/8./s->PERFC_MEM;
 
     cout << "Iterations: " << s->get_iter() << endl;
+    cout << "Wall time: " << walltime << endl;
     cout << "Memory used: " << s->memusage() << " kB" << endl;
     cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
     cout << "Memory accesses: " << s->PERFC_MEM
@@ -49,7 +52,9 @@ void run(SimplexBase<s_type> * s, string fname) {
         fp << id << ','
            << cycles << ','
            << fpc << ','
-           << ci << endl;
+           << ci << ','
+           << walltime
+           << endl;
         fp.close();
     } else
         cout << "Error: unable to write to file rdtsc!" << endl;

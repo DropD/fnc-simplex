@@ -55,20 +55,16 @@ int main(int argc, char ** argv) {
     //~ run(&s2, fname);
     //~ SimplexBlock<s_type> s3;
     //~ run(&s3, fname);
-    SimplexBlock_2<s_type> s8;
-    run(&s8, fname);
-    SimplexBlockSSE<s_type> s9;
-    run(&s9, fname);
-    SimplexBlockAVX<s_type> s10;
-    run(&s10, fname);
-    SimplexBlock_3<s_type> s11;
-    run(&s11, fname);
+    //~ SimplexBlock_2<s_type> s8;
+    //~ run(&s8, fname);
+    //~ SimplexBlockSSE<s_type> s9;
+    //~ run(&s9, fname);
     //~ SimplexSSA<s_type> s4;
     //~ run(&s4, fname);
     //~ SimplexSSE<s_type> s5;
     //~ run(&s5, fname);
-    SimplexAVX<s_type> s6;
-    run(&s6, fname);
+    //~ SimplexAVX<s_type> s6;
+    //~ run(&s6, fname);
     //~ SimplexNTA<s_type> s7;
     //~ run(&s7, fname);
 
