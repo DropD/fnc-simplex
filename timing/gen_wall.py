@@ -51,7 +51,6 @@ for key in avgs:
 fncplot.title(r'Average performance', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
 fncplot.ylabel('Walltime')
-pylab.ylim([0,2])
 pylab.xscale('log')
 pylab.grid(True)
 pylab.legend(loc='upper right')
