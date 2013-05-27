@@ -34,8 +34,8 @@ for k in problem_sizes:
     tok = "%04d" % (k)
     problems = [ f for f in files if tok in f ]
     for p in problems:
-        print("_______________________\n"+problemdir + p)
-        data = run(prog + " " + problemdir + p)
+        print("_______________________\n"+os.path.join(problemdir, p))
+        data = run(prog + " " + os.path.join(problemdir, p))
         for line in data:
             key = line[0]
             if not avg.get(key):
