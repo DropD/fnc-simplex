@@ -36,7 +36,8 @@ int rdtsc_warmup(SimplexBase<T> * s, std::string fname) {
   CPUID(); RDTSC(start); RDTSC(end);
   while(1) {
     for(i = 0; i < num_runs; i++) {
-      s->load(fname);
+      if( s->restore_tableau() == false )
+        s->load(fname);
       CPUID(); RDTSC(start);
       s->solve();
       RDTSC(end); CPUID();

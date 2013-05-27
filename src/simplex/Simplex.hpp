@@ -30,6 +30,7 @@ Assumptions:
 #include <sstream>
 #include <iostream>
 #include <unistd.h>
+#include <cstring>
 
 #include "../misc/DebugPrinter.hpp"
 
@@ -40,11 +41,11 @@ class SimplexBase {
 
     protected:
 
-    std::vector< int > active;
+    std::vector< int > active, backup_active;
     std::vector< int > nonstandard;
 
-    std::vector< std::vector<T> > tab;
-    T * tabp;
+    std::vector< std::vector<T> > tab, backup_tab;
+    T * tabp, * backup_tabp;
     int n, m, width;
     int iter = 0;
 
@@ -146,30 +147,23 @@ class SimplexBase {
         for(uint i = 0; i < nonstandard.size(); ++i)
             tab[nonstandard[i]][n+nonstandard[i]] *= -1;
 
+        backup_tableau();
+
     }
 
-    //--TODO: add a load_from_tableau method to prevent file io from slowing down timings (rdtsc warmup phase).
-    void load_from_tableau(std::vector<T> & tab_in, int m_in, int width_in) {
+    virtual bool restore_tableau() {
+        if(backup_tab.size() == 0)
+            return false;
+        tab = backup_tab;
+        active = backup_active;
         iter = -1;
-        m = m_in;
-        width = width_in;
-        n = width - m - 2;
-        for(int i = 0; i < (m+1)*width; ++i) {
-            tabp[i] = tab_in[i];
-        }
-        for(int i = 0; i < m; ++i) {
-            active[i] = n+i;                            // set active
-        }
+        return true;
     }
 
-    std::vector<T> write_tableau(int & m_out, int & width_out) {
-        m_out = m;
-        width_out = width;
-        std::vector<T> tab_out(m*width);
-        for(int i = 0; i < m*width; ++i) {
-            tab_out[i] = tabp[i];
-        }
-        return tab_out;
+
+    virtual void backup_tableau() {
+        backup_tab = tab;
+        backup_active = active;
     }
 
     void load_array(std::string fname) {
@@ -239,6 +233,22 @@ class SimplexBase {
         for(uint i = 0; i < nonstandard.size(); ++i)
             tabp[nonstandard[i]*width+n+nonstandard[i]] *= -1;
 
+        backup_tableau_array();
+
+    }
+
+    bool restore_tableau_array() {
+        if(backup_tabp == NULL)
+            return false;
+        memcpy(tabp, backup_tabp, sizeof(T)*width*(m+1));
+        active = backup_active;
+        iter = -1;
+        return true;
+    }
+
+    void backup_tableau_array() {
+        memcpy(backup_tabp, tabp, sizeof(T)*width*(m+1));
+        backup_active = active;
     }
 
     virtual void print() {
