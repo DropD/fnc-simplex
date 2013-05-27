@@ -157,7 +157,7 @@ Memory reads:
 \end_inset
 
 Flops: 
-\begin_inset Formula $m(m+n)+m$
+\begin_inset Formula $2*m(m+n)+m$
 \end_inset
 
 
@@ -175,7 +175,7 @@ status open
 \end_inset
 
 Computational intensity 
-\begin_inset Formula $I=\frac{m^{2}+mn+2m+n}{8(m^{2}+n)}\sim\frac{1}{4}$
+\begin_inset Formula $I=\frac{2m^{2}+2mn+4m+2n}{8(m^{2}+n)}\sim\frac{1}{2}$
 \end_inset
 
 
@@ -200,7 +200,7 @@ status open
 
 \end_inset
 
-array
+baseline
 \end_layout
 
 \begin_layout Itemize
@@ -214,7 +214,7 @@ status open
 
 \end_inset
 
-ssa
+nta: cache control (inhibit polluting tableau data, prefetch next row)
 \end_layout
 
 \begin_layout Itemize
@@ -228,7 +228,7 @@ status open
 
 \end_inset
 
-block
+ssa: static scalar assignment
 \end_layout
 
 \begin_layout Itemize
@@ -242,7 +242,21 @@ status open
 
 \end_inset
 
+block: reuse pivot row
+\end_layout
 
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<5->
+\end_layout
+
+\end_inset
+
+block_swap: swap pivot row at the end of tableau
 \end_layout
 
 \begin_layout EndFrame

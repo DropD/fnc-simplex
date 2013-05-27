@@ -6,7 +6,8 @@ import os
 import pylab
 from fncplot import fncplot
 
-problemdir = "../problems/gen/"
+#~ problemdir = "../problems/gen/"
+problemdir = "../problems/gen_verylight/"
 prog = "../bin/main"
 # problem_sizes should reflect the available *_nn_*.dlp problems
 problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
