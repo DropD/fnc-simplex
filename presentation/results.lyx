@@ -155,6 +155,160 @@ plot
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{frame}[fragile] 
+\backslash
+frametitle{Profiling (gprof)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size tiny
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "50col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\size tiny
+\begin_inset listings
+lstparams "basicstyle={\tiny}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+7.69     0.02    block_swap.hpp:122
+\end_layout
+
+\begin_layout Plain Layout
+
+3.85     0.01    block_swap.hpp:123
+\end_layout
+
+\begin_layout Plain Layout
+
+3.85     0.01    block_swap.hpp:124
+\end_layout
+
+\begin_layout Plain Layout
+
+3.85     0.01    block_swap.hpp:125
+\end_layout
+
+\begin_layout Plain Layout
+
+[...]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\size tiny
+\begin_inset listings
+lstparams "basicstyle={\tiny}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+T la1 = tabp[i*width+j];
+\end_layout
+
+\begin_layout Plain Layout
+
+T la2 = tabp[i*width+j+1];
+\end_layout
+
+\begin_layout Plain Layout
+
+T la3 = tabp[i*width+j+2];
+\end_layout
+
+\begin_layout Plain Layout
+
+T la4 = tabp[i*width+j+3];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{frame}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout BeginFrame
 Questions?
 \end_layout
