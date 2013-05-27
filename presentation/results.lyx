@@ -90,7 +90,6 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "backgroundcolor={\color{yellow!20}},basicstyle={\tiny\ttfamily},language={C++},numbers={left},numbersep=5pt,numberstyle={\tiny},stepnumber={1}"
 \tracking_changes false
 \output_changes false
 \html_math_output 0

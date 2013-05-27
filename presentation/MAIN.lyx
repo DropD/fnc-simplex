@@ -9,7 +9,7 @@
 %\usetheme{JuanLesPins}	% like Antibes, with shading
 %\usetheme{Bergen}		% outline on side
 %\usetheme{Luebeck}		% like Warsaw, square sides
-  \usetheme{Berkeley}		% interesting left bar outline
+  %\usetheme{Berkeley}		% interesting left bar outline
   %\usetheme{Madrid}		% clean, nice.  7/12 page numbers
 %\usetheme{Berlin}		% dots show slide number
   %\usetheme{Malmoe}		% OK, plain, unshaded
@@ -24,7 +24,7 @@
 %\usetheme{default}
 %\usetheme{Rochester}	% like boxy, unshaded warsaw
 %\usetheme{Dresden}		% circle outline on top
-  %\usetheme{Singapore}	% purple gradient top
+  \usetheme{Singapore}	% purple gradient top
 %\usetheme{Frankfurt}		% like Warsaw with circle outline on top
 %\usetheme{Szeged}
 %\usetheme{Goettingen}	% light purple right bar outline
@@ -90,7 +90,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "backgroundcolor={\color{yellow!20}},basicstyle={\tiny\ttfamily},keywordstyle={\color{blue}},language={C++},numbers={left},numbersep=5pt,numberstyle={\tiny},stepnumber={1}"
+\listings_params "basicstyle={\ttfamily},language={C++},numbersep=5pt,numberstyle={\tiny},stepnumber={1}"
 \tracking_changes false
 \output_changes false
 \html_math_output 0

@@ -90,7 +90,6 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "backgroundcolor={\color{yellow!20}},basicstyle={\tiny\ttfamily},language={C++},numbers={left},numbersep=5pt,numberstyle={\tiny},stepnumber={1}"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -108,39 +107,131 @@ Introduction
 The Simplex Algorithm
 \end_layout
 
-\begin_layout BeginFrame
-Linear Programming
-\end_layout
-
-\begin_layout Itemize
+\begin_layout Standard
 \begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-<1->
+
+\backslash
+begin{frame}[fragile] 
+\backslash
+frametitle{Linear Programming}
 \end_layout
 
 \end_inset
 
-Optimise LP
+
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
+Optimising a Linear Program in standard form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "25col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\SpecialChar \-
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Maximize
+\end_layout
+
+\begin_layout Plain Layout
+
+2x - 3y + z
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Subject To
+\end_layout
+
+\begin_layout Plain Layout
+
+ x  +  y + z <= 10
+\end_layout
+
+\begin_layout Plain Layout
+
+4x  - 3y + z <=  3
+\end_layout
+
+\begin_layout Plain Layout
+
+2x  +  y - z <= 10
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-<2->
+
+\backslash
+end{frame}
 \end_layout
 
 \end_inset
 
-Oil and fuel example?
-\end_layout
-
-\begin_layout EndFrame
 
 \end_layout
 
@@ -213,7 +304,7 @@ status open
 
 \end_inset
 
-GLPK
+GLPK (GNU linear programming kit), solid standard solver
 \end_layout
 
 \begin_layout Itemize
@@ -227,7 +318,7 @@ status open
 
 \end_inset
 
-CPPLEX
+CPPLEX, mathematical OO-implementation
 \end_layout
 
 \begin_layout Itemize
@@ -241,7 +332,7 @@ status open
 
 \end_inset
 
-SoPlex
+Gurobi (CPLEX), fastest (multithreaded) solver available
 \end_layout
 
 \begin_layout Itemize
@@ -255,7 +346,7 @@ status open
 
 \end_inset
 
-Gurobi (CPLEX)
+SoPlex, fastest FOSS solver available
 \end_layout
 
 \begin_layout EndFrame
