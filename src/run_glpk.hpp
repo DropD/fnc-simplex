@@ -21,7 +21,10 @@ void run_glpk(string fname, SimplexBase<s_type> * s) {
     parm.meth = GLP_PRIMAL;
     lp = glp_create_prob();
     int n = rdtsc_warmup(lp, &parm, fname);
-    double cycles = rdtsc_measure(n, lp, &parm, fname);
+    //~ double cycles = rdtsc_measure(n, lp, &parm, fname);
+    std::pair<double, double> res = rdtsc_measure(n, lp, &parm, fname);
+    double cycles = res.first;
+    double walltime = res.second;
     double obj = glp_get_obj_val(lp);
     cout << "Optimal value: " << obj << endl;
     glp_delete_prob(lp);
@@ -30,6 +33,7 @@ void run_glpk(string fname, SimplexBase<s_type> * s) {
     double ci = (s->PERFC_ADDMUL+s->PERFC_DIV)/8./s->PERFC_MEM;
 
     cout << "Memory used: " << s->memusage() << " kB" << endl;
+    cout << "Wall time: " << walltime << endl;
     cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
     cout << "Memory accesses: " << s->PERFC_MEM
          << " (theory: " << s->get_iter() * s->get_tabn() << ")" << endl;
@@ -43,7 +47,9 @@ void run_glpk(string fname, SimplexBase<s_type> * s) {
         fp << "glpk" << ','
            << cycles << ','
            << fpc << ','
-           << ci << endl;
+           << ci << ','
+           << walltime
+           << endl;
         fp.close();
     } else
         cout << "Error: unable to write to file rdtsc!" << endl;

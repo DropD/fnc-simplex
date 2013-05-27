@@ -10,9 +10,12 @@
 #define RDTSC_TESTING_H
 
 #include "rdtsc.h"  /* actual timing macros */
+#include "Timer.hpp"
+
 #include "../simplex/Simplex.hpp"
 #include <glpk.h>
 #include <gurobi_c++.h>
+
 #include <iostream>
 
 #ifndef RDTSC_CYCLES_REQUIRED
@@ -99,52 +102,73 @@ int rdtsc_warmup(GRBEnv & env, std::string fname) {
 
 
 template <typename T>
-double rdtsc_measure(int num_runs, SimplexBase<T> * s, std::string fname) {
+//~ double rdtsc_measure(int num_runs, SimplexBase<T> * s, std::string fname) {
+std::pair<double, double> rdtsc_measure(int num_runs, SimplexBase<T> * s, std::string fname) {
   double cycles = 0;
+  double walltime = 0;
+  Timer tim;
   tsc_counter start, end;
   int i;
 
   for(i = 0; i < num_runs; i++) {
     s->load(fname);
+    tim.reset();
     CPUID(); RDTSC(start);
     s->solve();
     RDTSC(end); CPUID();
+    walltime += tim.check();
     cycles += ((double)COUNTER_DIFF(end, start));
   }
   cycles = cycles / ((double) num_runs);
-  return cycles;
+  walltime = walltime / ((double) num_runs);
+  //~ return cycles;
+  return std::make_pair(cycles, walltime);
 }
 
-double rdtsc_measure(int num_runs, glp_prob * lp, glp_smcp * parm, std::string fname) {
+//~ double rdtsc_measure(int num_runs, glp_prob * lp, glp_smcp * parm, std::string fname) {
+std::pair<double, double> rdtsc_measure(int num_runs, glp_prob * lp, glp_smcp * parm, std::string fname) {
   double cycles = 0;
+  double walltime = 0;
+  Timer tim;
   tsc_counter start, end;
   int i;
 
   for(i = 0; i < num_runs; i++) {
     glp_read_lp(lp, NULL, fname.c_str());
+    tim.reset();
     CPUID(); RDTSC(start);
     glp_simplex(lp, parm);
     RDTSC(end); CPUID();
+    walltime += tim.check();
     cycles += ((double)COUNTER_DIFF(end, start));
   }
   cycles = cycles / ((double) num_runs);
-  return cycles;
+  walltime = walltime / ((double) num_runs);
+  //~ return cycles;
+  return std::make_pair(cycles, walltime);
 }
 
-double rdtsc_measure(int num_runs, GRBEnv & env, std::string fname) {
+//~ double rdtsc_measure(int num_runs, GRBEnv & env, std::string fname) {
+std::pair<double, double> rdtsc_measure(int num_runs, GRBEnv & env, std::string fname) {
   double cycles = 0;
+  double walltime = 0;
+  Timer tim;
   tsc_counter start, end;
   int i;
 
   for(i = 0; i < num_runs; i++) {
     GRBModel model = GRBModel(env, fname);
+    tim.reset();
     CPUID(); RDTSC(start);
     model.optimize();
     RDTSC(end); CPUID();
+    walltime += tim.check();
     cycles += ((double)COUNTER_DIFF(end, start));
   }
   cycles = cycles / ((double) num_runs);
-  return cycles;
+  walltime = walltime / ((double) num_runs);
+  //~ return cycles;
+  return std::make_pair(cycles, walltime);
 }
 
 #endif /* RDTSC_TESTING_H */
