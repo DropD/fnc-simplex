@@ -83,8 +83,8 @@ int main(int argc, char ** argv) {
     //~ run(&s5, fname);
     SimplexAVX<s_type> s6;
     run(&s6, fname);
-    //~ SimplexNTA<s_type> s7;
-    //~ run(&s7, fname);
+    //SimplexNTA<s_type> s7;
+    //run(&s7, fname);
 
     //replace file extension
     string lname = fname.substr(0, fname.length()-3);
