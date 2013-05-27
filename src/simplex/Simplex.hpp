@@ -156,6 +156,7 @@ class SimplexBase {
             throw;
         }
 
+        iter = -1;
         PERFC_MEM = 0;
         PERFC_ADDMUL = 0;
         PERFC_DIV = 0;
