@@ -5,13 +5,15 @@ import subprocess
 import os
 import pylab
 from fncplot import fncplot
+import cPickle
 
-problemdir = "../problems/gen/"
+#~ problemdir = "../problems/gen/"
+problemdir = "../problems/gen_verylight/"
 prog = "../bin/main"
 # problem_sizes should reflect the available *_nn_*.dlp problems
 problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 
-
+#
 #def run(prog):
 #    subprocess.call(prog, shell=True)
 #    with open('rdtsc', 'r')as f:
@@ -38,23 +40,25 @@ problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
 #            key = line[0]
 #            if not avg.get(key):
 #                avg[key] = 0
-#            avg[key] += float(line[1])  # line[1] == cycles
+#            avg[key] += float(line[4])  # line[4] == walltime
 #    for key in avg:
 #        val = avg[key] / len(problems)
 #        if not avgs.get(key):
 #            avgs[key] = []
 #        avgs[key].append(val);
-avgs = cPickle.load('cyces_pickle')
+
+with open('wall_avg') as wallpi:
+    avgs = cPickle.load(wallpi)
 
 pylab.figure()
 for key in avgs:
     pylab.plot(problem_sizes, avgs[key], label=key)
-fncplot.title(r'Average performance', fontstyle='italic')
+fncplot.title(r'Average Runtime', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
-fncplot.ylabel('Cycles')
-#pylab.xscale('log')
+fncplot.ylabel('Walltime')
+pylab.yscale('log')
 pylab.grid(True)
-pylab.legend(loc='upper right')
+pylab.legend(loc='lower right')
 #~ pylab.savefig('baseline_performance.png')
 
 pylab.show()
