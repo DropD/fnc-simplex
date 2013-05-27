@@ -8,7 +8,7 @@
 #include <string>
 
 #include "simplex/baseline.hpp"
-#include "../../gurobi/include/gurobi_c++.h"
+#include <gurobi_c++.h>
 
 using namespace std;
 typedef double s_type;

@@ -46,10 +46,12 @@ ifeq (!$(shell uname), Darwin)
 endif
 
 CFLAGS += -I"../../gurobi/include"
+CFLAGS += -I"../../soplex/src"
 
 DBGFLAGS = -Wall -Wextra -Werror -ansi -O0 -g3 -ggdb -pg -rdynamic
 LIBS = -lglpk -lm
 LIBS += -L"../../gurobi/lib/" -lgurobi_c++ -lgurobi55 -lpthread
+LIBS += -L"../../soplex/lib/" -lsoplex -lz
 
 SMART_MKDIR = mkdir -p
 SHELL = /bin/sh

@@ -35,6 +35,7 @@ typedef unsigned int uint;
 #include "run_simplex.hpp"
 #include "run_glpk.hpp"
 #include "run_gurobi.hpp"
+#include "run_soplex.hpp"
 
 int main(int argc, char ** argv) {
 
@@ -74,6 +75,7 @@ int main(int argc, char ** argv) {
 
     run_glpk(lname, &s1);
     run_gurobi(lname, &s1);
+    run_soplex(lname, &s1);
 
     return 0;
 
