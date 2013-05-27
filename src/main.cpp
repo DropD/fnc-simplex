@@ -11,8 +11,8 @@
 #define NO_GUROBI
 #define NO_SOPLEX
 
-#define RDTSC_CYCLES_REQUIRED 0                 // cold
-//~ #define RDTSC_CYCLES_REQUIRED 1E6
+//~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
+#define RDTSC_CYCLES_REQUIRED 1E6
 //~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
 //~ #define RDTSC_CYCLES_REQUIRED 1E8
 //~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
