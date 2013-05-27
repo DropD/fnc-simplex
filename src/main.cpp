@@ -7,9 +7,14 @@
 #include <iostream>
 #include <string>
 
+//~ #define NO_GLPK
+//~ #define NO_GUROBI
+//~ #define NO_SOPLEX
+
 //~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
 #define RDTSC_CYCLES_REQUIRED 1E6
 //~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
+//~ #define RDTSC_CYCLES_REQUIRED 1E8
 //~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
 
@@ -33,9 +38,19 @@ typedef double s_type;
 typedef unsigned int uint;
 
 #include "run_simplex.hpp"
+
+#ifndef NO_GLPK
 #include "run_glpk.hpp"
+#endif // NO_GLPK
+
+#ifndef NO_GUROBI
 #include "run_gurobi.hpp"
+#endif // NO_GUROBI
+
+#ifndef NO_SOPLEX
 #include "run_soplex.hpp"
+#endif // NO_SOPLEX
+
 
 int main(int argc, char ** argv) {
 
@@ -73,9 +88,15 @@ int main(int argc, char ** argv) {
     string lname = fname.substr(0, fname.length()-3);
     lname.append("lp");
 
+#ifndef NO_GLPK
     run_glpk(lname, &s1);
+#endif // NO_GLPK
+#ifndef NO_GUROBI
     run_gurobi(lname, &s1);
+#endif // NO_GUROBI
+#ifndef NO_SOPLEX
     run_soplex(lname, &s1);
+#endif // NO_SOPLEX
 
     return 0;
 
