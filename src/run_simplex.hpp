@@ -1,6 +1,6 @@
 /*******************************************************************************
  * 
- * Running Gurobi on specified input file
+ * Running our Simplex implementation on specified input file
  * 
  ******************************************************************************/
 

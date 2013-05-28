@@ -47,7 +47,7 @@ class SimplexBase {
     std::vector< std::vector<T> > tab, backup_tab;
     T * tabp, * backup_tabp = NULL;
     int n, m, width;
-    int iter = 0;
+    int iter;
 
     inline std::vector<double> split_vars(const std::string str, int nr = -1) {
 
@@ -74,6 +74,12 @@ class SimplexBase {
 
     }
 
+    void reset_counting() {
+        iter = -1;
+        PERFC_MEM = 0;
+        PERFC_ADDMUL = 0;
+        PERFC_DIV = 0;
+    }
 
 
     public:
@@ -88,10 +94,7 @@ class SimplexBase {
             throw;
         }
 
-        iter = -1;
-        PERFC_MEM = 0;
-        PERFC_ADDMUL = 0;
-        PERFC_DIV = 0;
+        reset_counting();
 
         std::vector<T> costs;
         std::vector< std::vector<T> > constraints;
@@ -155,10 +158,7 @@ class SimplexBase {
             return false;
         tab = backup_tab;
         active = backup_active;
-        iter = -1;
-        PERFC_MEM = 0;
-        PERFC_ADDMUL = 0;
-        PERFC_DIV = 0;
+        reset_counting();
         return true;
     }
 
@@ -176,10 +176,7 @@ class SimplexBase {
             throw;
         }
 
-        iter = -1;
-        PERFC_MEM = 0;
-        PERFC_ADDMUL = 0;
-        PERFC_DIV = 0;
+        reset_counting();
 
         std::vector<T> costs;
         std::vector< std::vector<T> > constraints;
@@ -246,10 +243,7 @@ class SimplexBase {
         tabp = (T*)malloc( (m+1)*width * sizeof(T) );
         memcpy(tabp, backup_tabp, sizeof(T)*width*(m+1));
         active = backup_active;
-        iter = -1;
-        PERFC_MEM = 0;
-        PERFC_ADDMUL = 0;
-        PERFC_DIV = 0;
+        reset_counting();
         return true;
     }
 
@@ -319,6 +313,7 @@ class SimplexBase {
                + active.size()
              )  * sizeof(T) / 1000;
     }
+
 
     int get_iter() { return iter; }
     int get_tabn() { return (m+1)*width; }
