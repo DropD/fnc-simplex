@@ -62,5 +62,5 @@ if __name__ == '__main__':
     with open(fdlp, 'w') as out:
         out.write(str(donjlp(searchList = [{'problem' : p}])))
 
-    with open(fcpplp, 'w') as out:
-        out.write(str(cpplexlp(searchList = [{'problem' : p}])))
+    #~ with open(fcpplp, 'w') as out:
+        #~ out.write(str(cpplexlp(searchList = [{'problem' : p}])))
