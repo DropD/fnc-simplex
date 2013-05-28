@@ -33,6 +33,9 @@ Assumptions:
 #include <cstring>
 #include <cstdlib>
 
+#include <immintrin.h>
+
+
 #include "../misc/DebugPrinter.hpp"
 
 typedef unsigned int uint;
@@ -85,9 +88,9 @@ class SimplexBase {
     }
 
     T * malloc32T(int size) {
-        //~ T __attribute__((aligned(32))) * x = (T*)aligned_alloc(32, size*sizeof(T));
-        //~ return x;
-        return (T*)aligned_alloc(32, size*sizeof(T));
+        //~ return (T*) malloc(sizeof(T)*size);
+        //~ return (T*)aligned_alloc(32, size*sizeof(T));
+        return (T*) _mm_malloc(sizeof(T)*size, 32 );
     }
 
     public:
@@ -223,8 +226,7 @@ class SimplexBase {
         width = n+1 + m + 1;                    // #variables + cost col + #constraints + (<= col)
         width += WPADDING - (width % WPADDING); // pad width to intrinsics alignment
 
-        free(tabp);
-        //~ tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        _mm_free(tabp);
         tabp = malloc32T( (m+1)*width );
         for(int i = 0; i < (m+1)*width; ++i) tabp[i] = 0;     // zero out the table
         active = std::vector<int>(m);
@@ -251,8 +253,7 @@ class SimplexBase {
     bool restore_tableau_array() {
         if(backup_tabp == NULL)
             return false;
-        free(tabp);
-        //~ tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        _mm_free(tabp);
         tabp = malloc32T( (m+1)*width );
         memcpy(tabp, backup_tabp, sizeof(T)*width*(m+1));
         active = backup_active;
@@ -261,8 +262,7 @@ class SimplexBase {
     }
 
     void backup_tableau_array() {
-        free(backup_tabp);
-        //~ backup_tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        _mm_free(backup_tabp);
         backup_tabp = malloc32T( (m+1)*width );
         memcpy(backup_tabp, tabp, sizeof(T)*width*(m+1));
         backup_active = active;
