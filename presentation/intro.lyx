@@ -151,14 +151,14 @@ status open
 \end_inset
 
 
-\begin_inset Box Frameless
+\begin_inset Box Doublebox
 position "t"
 hor_pos "c"
 has_inner_box 1
 inner_pos "t"
 use_parbox 0
 use_makebox 0
-width "45col%"
+width "46col%"
 special "none"
 height "1in"
 height_special "totalheight"
@@ -173,12 +173,12 @@ status open
 
 \begin_layout Plain Layout
 
-Maximize
+  Maximize
 \end_layout
 
 \begin_layout Plain Layout
 
-2x - 3y + z
+  2x - 3y + z
 \end_layout
 
 \begin_layout Plain Layout
@@ -187,22 +187,22 @@ Maximize
 
 \begin_layout Plain Layout
 
-Subject To
+  Subject To
 \end_layout
 
 \begin_layout Plain Layout
 
- x  +  y + z <= 10
+   x  +  y + z <= 10
 \end_layout
 
 \begin_layout Plain Layout
 
-4x  - 3y + z <=  3
+  4x  - 3y + z <=  3
 \end_layout
 
 \begin_layout Plain Layout
 
-2x  +  y - z <= 6
+  2x  +  y - z <=  6
 \end_layout
 
 \begin_layout Plain Layout
@@ -283,6 +283,13 @@ Tableau form
 \end_inset
 
 
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+\SpecialChar \-
+
 \end_layout
 
 \begin_layout Itemize
@@ -296,7 +303,7 @@ status open
 
 \end_inset
 
-Pivoting, reduced cost (objective function)
+Pivoting, reduced cost (objective function), termination
 \end_layout
 
 \begin_layout Itemize
@@ -310,7 +317,7 @@ status open
 
 \end_inset
 
-Termination, worst runtime 
+Worst runtime 
 \begin_inset Formula $O(e^{m})$
 \end_inset
 
