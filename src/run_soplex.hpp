@@ -14,11 +14,6 @@ void run_soplex(string fname, SimplexBase<s_type> * s) {
 
     cout << "\033[0;31m" << "Running " << "soplex" << "\033[0m" << std::endl;
 
-    if(INFO) {
-        s->load(fname);
-        s->print();
-    }
-
     soplex::SoPlex soplex;
     std::pair<double, double> res = std::make_pair(0, 0);
     int n = 0;

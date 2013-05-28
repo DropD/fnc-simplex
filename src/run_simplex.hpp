@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-#include "simplex/baseline.hpp"
+#include "simplex/Simplex.hpp"
 
 void run(SimplexBase<s_type> * s, string fname) {
 

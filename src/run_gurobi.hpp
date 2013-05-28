@@ -18,10 +18,6 @@ void run_gurobi(string fname, SimplexBase<s_type> * s) {
 
     cout << "\033[0;31m" << "Running " << "gurobi" << "\033[0m" << std::endl;
 
-    if(INFO) {
-        s->load(fname);
-        s->print();
-    }
     try {
 
         GRBEnv env = GRBEnv();
