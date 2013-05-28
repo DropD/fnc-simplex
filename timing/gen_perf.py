@@ -1,27 +1,38 @@
 #!/usr/bin/env python
 
 from math import *
-import subprocess
 import os
 import pylab
 from fncplot import fncplot
 import cPickle
 
+# algorithms filtered by intersection of keep and ignore, keep can be left undefined
+keep = [ 'avx', 'baseline', 'block_swap', 'block_avx', 'block_2', 'soplex', 'gurobi', 'glpk' ]
+ignore = [ ]
+
 outdir = "tmp"
-problemdir = "../problems/gen/"
-#problemdir = "../problems/gen_verylight/"
 prog = "../bin/main"
-# problem_sizes should reflect the available *_nn_*.dlp problems
-problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
+
+with open(os.path.join(outdir, 'problem_sizes')) as cycpi:
+    problem_sizes = cPickle.load(cycpi)
 
 with open(os.path.join(outdir, 'fpc_avg')) as fpcpi:
     avgs = cPickle.load(fpcpi)
+print('Available algorithms: ' + str([key for key in avgs]) )
+
+try:
+  keep
+except NameError:
+  keep = avgs
+
 
 pylab.figure()
-#~ keep = [ 'avx', 'baseline', 'block_swap', 'block_avx', 'block_2', 'soplex', 'gurobi', 'glpk', 'ssa' ]
+
 for key in avgs:
-  if key not in [ 'array', 'avx', 'block_2', 'sse', 'block-sse', 'nta' ]:
-    pylab.plot(problem_sizes, avgs[key], label=key)
+    if key in keep and key not in ignore:
+        print('Plotting ' + key)
+        pylab.plot(problem_sizes, avgs[key], label=key)
+
 fncplot.title(r'Average performance', fontstyle='italic')
 fncplot.xlabel('Number of variables $n$')
 fncplot.ylabel('flop/cycle')

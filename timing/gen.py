@@ -3,16 +3,16 @@
 from math import *
 import subprocess
 import os
-import pylab
-from fncplot import fncplot
 import cPickle
+import re
+
+#~ problemdir = "../problems/gen_light/"
+#~ problemdir = "../problems/gen_std"
+#~ problemdir = "../problems/gen_heavy/"
+problemdir = "../problems/gen_upper/"
 
 outdir = "tmp"
-problemdir = "../problems/gen/"
 prog = "../bin/main"
-# problem_sizes should reflect the available *_nn_*.dlp problems
-problem_sizes = [10, 20, 30, 50, 80, 100, 150, 200, 300, 400, 600, 1000]
-
 
 def run(prog):
     subprocess.call(prog, shell=True)
@@ -26,19 +26,22 @@ def run(prog):
 
 
 files = [f for f in os.listdir(problemdir) if os.path.splitext(f)[1] == ".dlp"]
-files.sort()
+problem_sizes = [ re.search(r"_[0-9_]+_", f).group() for f in files ]
+problem_sizes = list(set(problem_sizes))  # make unique
+problem_sizes.sort()
+#~ print(problem_sizes)
+
 avgs0 = {}
 avgs1 = {}
 avgs2 = {}
 avgs3 = {}
 
-for k in problem_sizes:
+for token in problem_sizes:
     avg0 = {};
     avg1 = {};
     avg2= {};
     avg3= {};
-    tok = "%04d" % (k)
-    problems = [ f for f in files if tok in f ]
+    problems = [ f for f in files if token in f ]
     for p in problems:
         print("_______________________\n"+os.path.join(problemdir, p))
         data = run(prog + " " + os.path.join(problemdir, p))
@@ -73,6 +76,11 @@ for k in problem_sizes:
         avgs1[key].append(val1);
         avgs2[key].append(val2);
         avgs3[key].append(val3);
+
+
+problem_sizes = [ s.replace('_', '') for s in problem_sizes ]
+with open(os.path.join(outdir, 'problem_sizes'), 'w') as cycpi:
+    cPickle.dump(problem_sizes, cycpi)
 
 with open(os.path.join(outdir, 'cycles_avg'), 'w') as cycpi:
     cPickle.dump(avgs0, cycpi)
