@@ -26,7 +26,7 @@ def run(prog):
 
 
 files = [f for f in os.listdir(problemdir) if os.path.splitext(f)[1] == ".dlp"]
-problem_sizes = [ re.search(r"_[0-9_]+_", f).group() for f in files ]
+problem_sizes = [ re.search(r"_[0-9]+_", f).group() for f in files ]
 problem_sizes = list(set(problem_sizes))  # make unique
 problem_sizes.sort()
 #~ print(problem_sizes)
@@ -43,7 +43,7 @@ for token in problem_sizes:
     avg3= {};
     problems = [ f for f in files if token in f ]
     for p in problems:
-        print("_______________________\n"+os.path.join(problemdir, p))
+        print("_______________________\n"+os.path.join(problemdir, p)+"\n")
         data = run(prog + " " + os.path.join(problemdir, p))
         for line in data:
             key = line[0]

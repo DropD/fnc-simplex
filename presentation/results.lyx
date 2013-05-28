@@ -231,20 +231,18 @@ frametitle{Profiling (gprof)}
 \end_layout
 
 \begin_layout Standard
-Memory load lines use most time
+The main work routine has 24 memory access lines (12 shown):
 \end_layout
 
 \begin_layout Standard
-
-\size tiny
-\begin_inset Box Frameless
+\begin_inset Box Shadowbox
 position "t"
 hor_pos "c"
 has_inner_box 1
 inner_pos "t"
 use_parbox 0
 use_makebox 0
-width "50col%"
+width "44col%"
 special "none"
 height "1in"
 height_special "totalheight"
@@ -253,8 +251,6 @@ status open
 \begin_layout Plain Layout
 \noindent
 \align center
-
-\size tiny
 \begin_inset listings
 lstparams "basicstyle={\tiny}"
 inline false
@@ -262,33 +258,87 @@ status open
 
 \begin_layout Plain Layout
 
-7.69     0.02    block_swap.hpp:122
+   %   sec   line
 \end_layout
 
 \begin_layout Plain Layout
 
-3.85     0.01    block_swap.hpp:123
 \end_layout
 
 \begin_layout Plain Layout
 
-3.85     0.01    block_swap.hpp:124
+3.97  0.67   block_swap.hpp:122
 \end_layout
 
 \begin_layout Plain Layout
 
-3.85     0.01    block_swap.hpp:125
+6.17  1.04   block_swap.hpp:123
 \end_layout
 
 \begin_layout Plain Layout
 
-[...
- x16 ...
- ]
+4.05  0.68   block_swap.hpp:124
 \end_layout
 
 \begin_layout Plain Layout
 
+4.53  0.76   block_swap.hpp:125
+\end_layout
+
+\end_inset
+
+
+\begin_inset listings
+lstparams "basicstyle={\tiny}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+3.37  0.57   block_swap.hpp:128
+\end_layout
+
+\begin_layout Plain Layout
+
+4.00  0.67   block_swap.hpp:129
+\end_layout
+
+\begin_layout Plain Layout
+
+3.94  0.66   block_swap.hpp:130
+\end_layout
+
+\begin_layout Plain Layout
+
+4.47  0.75   block_swap.hpp:131
+\end_layout
+
+\end_inset
+
+
+\begin_inset listings
+lstparams "basicstyle={\tiny}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+4.41  0.74   block_swap.hpp:139
+\end_layout
+
+\begin_layout Plain Layout
+
+5.07  0.85   block_swap.hpp:140
+\end_layout
+
+\begin_layout Plain Layout
+
+3.46  0.58   block_swap.hpp:141
+\end_layout
+
+\begin_layout Plain Layout
+
+2.98  0.50   block_swap.hpp:142
 \end_layout
 
 \end_inset
@@ -298,8 +348,15 @@ status open
 
 \end_inset
 
+ 
 
-\begin_inset Box Frameless
+\begin_inset space ~
+\end_inset
+
+ 
+\lang english
+
+\begin_inset Box Shadowbox
 position "t"
 hor_pos "c"
 has_inner_box 1
@@ -315,8 +372,6 @@ status open
 \begin_layout Plain Layout
 \noindent
 \align center
-
-\size tiny
 \begin_inset listings
 lstparams "basicstyle={\tiny}"
 inline false
@@ -324,26 +379,87 @@ status open
 
 \begin_layout Plain Layout
 
-T la1 = tabp[i*width+j];
+src/simplex/block_swap.hpp
 \end_layout
 
 \begin_layout Plain Layout
 
-T la2 = tabp[i*width+j+1];
 \end_layout
 
 \begin_layout Plain Layout
 
-T la3 = tabp[i*width+j+2];
+122   T r1 = tabp[m*width+j];
 \end_layout
 
 \begin_layout Plain Layout
 
-T la4 = tabp[i*width+j+3];
+123   T r2 = tabp[m*width+j+1];
 \end_layout
 
 \begin_layout Plain Layout
 
+124   T r3 = tabp[m*width+j+2];
+\end_layout
+
+\begin_layout Plain Layout
+
+125   T r4 = tabp[m*width+j+3];
+\end_layout
+
+\end_inset
+
+
+\begin_inset listings
+lstparams "basicstyle={\tiny}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+128   T la1 = tabp[i*width+j];
+\end_layout
+
+\begin_layout Plain Layout
+
+129   T la2 = tabp[i*width+j+1];
+\end_layout
+
+\begin_layout Plain Layout
+
+130   T la3 = tabp[i*width+j+2];
+\end_layout
+
+\begin_layout Plain Layout
+
+131   T la4 = tabp[i*width+j+3];
+\end_layout
+
+\end_inset
+
+
+\begin_inset listings
+lstparams "basicstyle={\tiny}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+139   tabp[i*width+j]   = pa1;
+\end_layout
+
+\begin_layout Plain Layout
+
+140   tabp[i*width+j+1] = pa2;
+\end_layout
+
+\begin_layout Plain Layout
+
+141   tabp[i*width+j+2] = pa3;
+\end_layout
+
+\begin_layout Plain Layout
+
+142   tabp[i*width+j+3] = pa4;
 \end_layout
 
 \end_inset

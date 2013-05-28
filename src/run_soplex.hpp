@@ -14,7 +14,15 @@ void run_soplex(string fname, SimplexBase<s_type> * s) {
 
     cout << "\033[0;31m" << "Running " << "soplex" << "\033[0m" << std::endl;
 
-    soplex::SoPlex soplex;
+    soplex::SoPlex soplex(soplex::SPxSolver::LEAVE, soplex::SPxSolver::COLUMN);
+    soplex.setUtype             ( soplex::SLUFactor::FOREST_TOMLIN );
+    soplex.setFeastol           ( DEFAULT_BND_VIOL );
+    soplex.setOpttol            ( DEFAULT_BND_VIOL );
+    soplex.setIrthreshold       ( DEFAULT_BND_VIOL * 1e-6 );
+    soplex.setTerminationTime   ( 10.0 );
+    soplex.setTerminationIter   ( -1 );
+
+
     std::pair<double, double> res = std::make_pair(0, 0);
     int n = 0;
     try {
