@@ -181,82 +181,222 @@ Computational intensity
 
 \end_layout
 
-\begin_layout Subsection
-Optimisation techniques
-\end_layout
-
 \begin_layout BeginFrame
 Implementation
 \end_layout
 
-\begin_layout Itemize
-\begin_inset ERT
+\begin_layout Standard
+Elementary optimisations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
 status open
 
 \begin_layout Plain Layout
 
-<1->
+\series bold
+\size footnotesize
+\color blue
+array
+\series default
+\color inherit
+: use raw pointers in place of std::vector<std::vector>
 \end_layout
 
 \end_inset
 
-baseline
-\end_layout
+ 
+\begin_inset space ~
+\end_inset
 
-\begin_layout Itemize
-\begin_inset ERT
+ 
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
 status open
 
 \begin_layout Plain Layout
 
-<2->
+\series bold
+\size footnotesize
+\color blue
+ssa
+\series default
+\color inherit
+: increase ILP via static assignment
 \end_layout
 
 \end_inset
 
-nta: cache control (inhibit polluting tableau data, prefetch next row)
+
 \end_layout
 
-\begin_layout Itemize
-\begin_inset ERT
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
 status open
 
 \begin_layout Plain Layout
 
-<3->
+\series bold
+\size footnotesize
+\color blue
+nta
+\series default
+\color inherit
+: cache control to inhibit polluting tableau data, prefetch rows
 \end_layout
 
 \end_inset
 
-ssa: static scalar assignment
-\end_layout
+ 
+\begin_inset space ~
+\end_inset
 
-\begin_layout Itemize
-\begin_inset ERT
+ 
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
 status open
 
 \begin_layout Plain Layout
 
-<4->
+\series bold
+\size footnotesize
+\color blue
+blockX
+\series default
+\color inherit
+: reuse pivot row for X concurrent updates
 \end_layout
 
 \end_inset
 
-block: reuse pivot row
+
 \end_layout
 
-\begin_layout Itemize
-\begin_inset ERT
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
 status open
 
 \begin_layout Plain Layout
 
-<5->
+\series bold
+\size footnotesize
+\color blue
+swap
+\series default
+\color inherit
+: store pivot row at a fixed location (end of tableau)
 \end_layout
 
 \end_inset
 
-block_swap: swap pivot row at the end of tableau
+ 
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+\size footnotesize
+\color blue
+sse/avx
+\series default
+\color inherit
+: use alignment & intrinsics to speed up float arithmetic
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame

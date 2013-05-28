@@ -7,7 +7,6 @@ bin/
 problems/gen
 problems/gen_prev/
 problems/gen_heavy/
-problems/hand_gen_dlp/
 *timing/rdtsc
 timing/*avg
 #baseline/main
