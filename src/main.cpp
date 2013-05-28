@@ -65,8 +65,8 @@ int main(int argc, char ** argv) {
 
     remove("rdtsc");
 
-    Simplex<s_type> s1;
-    run(&s1, fname);
+    //~ Simplex<s_type> s1;
+    //~ run(&s1, fname);
     //~ SimplexArray<s_type> s2;
     //~ run(&s2, fname);
     //~ SimplexBlock_2<s_type> s3;
@@ -75,14 +75,14 @@ int main(int argc, char ** argv) {
     //~ run(&s10, fname);
     //~ SimplexBlockSSE<s_type> s9;
     //~ run(&s9, fname);
-    //~ SimplexBlockAVX<s_type> s11;
-    //~ run(&s11, fname);
+    SimplexBlockAVX<s_type> s11;
+    run(&s11, fname);
     //~ SimplexSSA<s_type> s4;
     //~ run(&s4, fname);
     //~ SimplexSSE<s_type> s5;
     //~ run(&s5, fname);
-    SimplexAVX<s_type> s6;
-    run(&s6, fname);
+    //~ SimplexAVX<s_type> s6;
+    //~ run(&s6, fname);
     //~ SimplexNTA<s_type> s7;
     //~ run(&s7, fname);
 

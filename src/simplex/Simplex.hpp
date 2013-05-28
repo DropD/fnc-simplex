@@ -31,7 +31,7 @@ Assumptions:
 #include <iostream>
 #include <unistd.h>
 #include <cstring>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "../misc/DebugPrinter.hpp"
 
