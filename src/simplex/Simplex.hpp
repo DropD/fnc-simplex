@@ -31,6 +31,8 @@ Assumptions:
 #include <iostream>
 #include <unistd.h>
 #include <cstring>
+//~ #define __USE_ISOC11  // for aligned_alloc
+#include <stdlib.h>
 
 #include "../misc/DebugPrinter.hpp"
 
@@ -81,6 +83,11 @@ class SimplexBase {
         PERFC_DIV = 0;
     }
 
+    //~ T * malloc32T(int size) {
+        //~ return 
+            //~ T __attribute__((aligned(32))) *
+                //~ x = (T*)aligned_alloc(32, size*sizeof(T));
+    //~ }
 
     public:
 

@@ -9,6 +9,8 @@
 
 #include "simplex/Simplex.hpp"
 
+typedef double s_type;
+
 void run(SimplexBase<s_type> * s, string fname) {
 
     string id = s->get_identifier();
@@ -24,7 +26,7 @@ void run(SimplexBase<s_type> * s, string fname) {
     double cycles = res.first;
     double walltime = res.second;
 
-    vector<double> sol = s->solutions();
+    vector<s_type> sol = s->solutions();
     cout << "Optimal value: " << sol[0] << endl;
     if(INFO) {
         cout << "Variables:";
