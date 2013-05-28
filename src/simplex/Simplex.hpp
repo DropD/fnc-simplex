@@ -31,7 +31,6 @@ Assumptions:
 #include <iostream>
 #include <unistd.h>
 #include <cstring>
-//~ #define __USE_ISOC11  // for aligned_alloc
 #include <stdlib.h>
 
 #include "../misc/DebugPrinter.hpp"
@@ -43,11 +42,13 @@ class SimplexBase {
 
     protected:
 
+    const int WPADDING = 32;
+
     std::vector< int > active, backup_active;
     std::vector< int > nonstandard;
 
     std::vector< std::vector<T> > tab, backup_tab;
-    T * tabp, * backup_tabp = NULL;
+    T * tabp = NULL, * backup_tabp = NULL;
     int n, m, width;
     int iter;
 
@@ -83,11 +84,11 @@ class SimplexBase {
         PERFC_DIV = 0;
     }
 
-    //~ T * malloc32T(int size) {
-        //~ return 
-            //~ T __attribute__((aligned(32))) *
-                //~ x = (T*)aligned_alloc(32, size*sizeof(T));
-    //~ }
+    T * malloc32T(int size) {
+        //~ T __attribute__((aligned(32))) * x = (T*)aligned_alloc(32, size*sizeof(T));
+        //~ return x;
+        return (T*)aligned_alloc(32, size*sizeof(T));
+    }
 
     public:
 
@@ -219,8 +220,12 @@ class SimplexBase {
 
         n = costs.size();
         m = constraints.size();
-        width = n+1 + m + 1;                  // #variables + cost col + #constraints + (<= col)
-        tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        width = n+1 + m + 1;                    // #variables + cost col + #constraints + (<= col)
+        width += WPADDING - (width % WPADDING); // pad width to intrinsics alignment
+
+        free(tabp);
+        //~ tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        tabp = malloc32T( (m+1)*width );
         for(int i = 0; i < (m+1)*width; ++i) tabp[i] = 0;     // zero out the table
         active = std::vector<int>(m);
 
@@ -247,7 +252,8 @@ class SimplexBase {
         if(backup_tabp == NULL)
             return false;
         free(tabp);
-        tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        //~ tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        tabp = malloc32T( (m+1)*width );
         memcpy(tabp, backup_tabp, sizeof(T)*width*(m+1));
         active = backup_active;
         reset_counting();
@@ -256,7 +262,8 @@ class SimplexBase {
 
     void backup_tableau_array() {
         free(backup_tabp);
-        backup_tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        //~ backup_tabp = (T*)malloc( (m+1)*width * sizeof(T) );
+        backup_tabp = malloc32T( (m+1)*width );
         memcpy(backup_tabp, tabp, sizeof(T)*width*(m+1));
         backup_active = active;
     }

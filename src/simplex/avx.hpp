@@ -124,13 +124,13 @@ class SimplexAVX : public SimplexBase<T> {
 
             for(int j = peel; j < aligned_end; j += 4) {
 
-                l = _mm256_loadu_pd(tabp+i*width+j);
-                r = _mm256_loadu_pd(tabp+row*width+j);
+                l = _mm256_load_pd(tabp+i*width+j);
+                r = _mm256_load_pd(tabp+row*width+j);
 
                 r = _mm256_mul_pd(r, f);
                 l = _mm256_sub_pd(l, r);
 
-                _mm256_storeu_pd(tabp + i*width+j, l);
+                _mm256_store_pd(tabp + i*width+j, l);
 
             }
 

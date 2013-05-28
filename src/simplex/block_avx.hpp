@@ -134,21 +134,21 @@ class SimplexBlockAVX : public SimplexBase<T> {
 
             for(int j = peel; j < aligned_end; j += 4) {
 
-                __m256d r = _mm256_loadu_pd(tabp+m*width+j);
+                __m256d r = _mm256_load_pd(tabp+m*width+j);
 
-                __m256d la = _mm256_loadu_pd(tabp+i*width+j);
+                __m256d la = _mm256_load_pd(tabp+i*width+j);
 
                 __m256d pa1 = _mm256_mul_pd(f1, r);
                 __m256d pa2 = _mm256_sub_pd(la, pa1);
 
-                _mm256_storeu_pd(tabp+i*width+j, pa2); // segfaults
+                _mm256_store_pd(tabp+i*width+j, pa2); // segfaults
 
-                __m256d lb = _mm256_loadu_pd(tabp+(i+1)*width+j);
+                __m256d lb = _mm256_load_pd(tabp+(i+1)*width+j);
 
                 __m256d pb1 = _mm256_mul_pd(f2, r);
                 __m256d pb2 = _mm256_sub_pd(lb, pb1);
 
-                _mm256_storeu_pd(tabp+(i+1)*width+j, pb2);
+                _mm256_store_pd(tabp+(i+1)*width+j, pb2);
             }
 
             for(int j = aligned_end; j < width; ++j) {
