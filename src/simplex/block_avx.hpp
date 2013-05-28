@@ -28,7 +28,7 @@ class SimplexBlockAVX : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block-avx"; }
+    std::string get_identifier() { return "block_avx"; }
 
     void solve() {
 

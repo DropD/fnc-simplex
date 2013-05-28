@@ -28,7 +28,7 @@ class SimplexBlockSSE : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block-sse"; }
+    std::string get_identifier() { return "block_sse"; }
 
     void solve() {
 
