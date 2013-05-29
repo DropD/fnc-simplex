@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class SimplexBlock2 : public SimplexBase<T> {
+class Simplex_block2 : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;

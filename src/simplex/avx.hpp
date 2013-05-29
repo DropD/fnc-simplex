@@ -13,7 +13,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class SimplexAVX : public SimplexBase<T> {
+class Simplex_avx : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;

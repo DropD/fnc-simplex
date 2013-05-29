@@ -13,7 +13,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class SimplexSSE : public SimplexBase<T> {
+class Simplex_sse : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;

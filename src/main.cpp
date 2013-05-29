@@ -25,12 +25,12 @@ const bool INFO = false;
 #include "simplex/baseline.hpp"
 #include "simplex/array.hpp"
 #include "simplex/block2.hpp"
-#include "simplex/block_swap.hpp"
+#include "simplex/block2_swap.hpp"
 #include "simplex/ssa.hpp"
 #include "simplex/sse.hpp"
 #include "simplex/avx.hpp"
-#include "simplex/block_avx.hpp"
-#include "simplex/block_sse.hpp"
+#include "simplex/block2_swap_avx.hpp"
+#include "simplex/block2_sse.hpp"
 #include "simplex/nta.hpp"
 
 using namespace std;
@@ -65,25 +65,25 @@ int main(int argc, char ** argv) {
 
     remove("rdtsc");
 
-    Simplex<s_type> s1;
+    Simplex_baseline<s_type> s1;
     run(&s1, fname);
-    SimplexArray<s_type> s2;
+    Simplex_array<s_type> s2;
     run(&s2, fname);
-    SimplexBlock2<s_type> s3;
+    Simplex_block2<s_type> s3;
     run(&s3, fname);
-    SimplexBlock_swap<s_type> s10;
+    Simplex_block2_swap<s_type> s10;
     run(&s10, fname);
-    //~ SimplexBlockSSE<s_type> s9;
-    //~ run(&s9, fname);
-    SimplexBlockAVX<s_type> s11;
+    Simplex_block2_sse<s_type> s9;
+    run(&s9, fname);
+    Simplex_block2_swap_avx<s_type> s11;
     run(&s11, fname);
-    SimplexSSA<s_type> s4;
+    Simplex_ssa<s_type> s4;
     run(&s4, fname);
-    //~ SimplexSSE<s_type> s5;
-    //~ run(&s5, fname);
-    SimplexAVX<s_type> s6;
+    Simplex_sse<s_type> s5;
+    run(&s5, fname);
+    Simplex_avx<s_type> s6;
     run(&s6, fname);
-    SimplexNTA<s_type> s7;
+    Simplex_nta<s_type> s7;
     run(&s7, fname);
 
     //replace file extension

@@ -10,7 +10,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class Simplex : public SimplexBase<T> {
+class Simplex_baseline : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::width;

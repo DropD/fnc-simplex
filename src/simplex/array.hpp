@@ -10,7 +10,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class SimplexArray : public SimplexBase<T> {
+class Simplex_array : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;

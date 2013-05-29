@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class SimplexBlockAVX : public SimplexBase<T> {
+class Simplex_block2_swap : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +28,7 @@ class SimplexBlockAVX : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block_avx"; }
+    std::string get_identifier() { return "block2_swap"; }
 
     void solve() {
 
@@ -111,47 +111,59 @@ class SimplexBlockAVX : public SimplexBase<T> {
         }
         ++PERFC_DIV;
         T ipiv = 1. / pivot;
-        for(int i = 0; i < m; i += 2) {     // peel off m+1, as we temporarily store the pivot row there
+        for(int i = 0; i < m; i += 2) {     // peel off m+1, as we expect an even amount of dofs
             PERFC_MEM+=2; PERFC_ADDMUL+=2;
             T fac1 = tabp[i*width+col] * ipiv;
             T fac2 = tabp[(i+1)*width+col] * ipiv;
-            PERFC_MEM+=2;
-            __m256d f1 = _mm256_set1_pd(fac1);
-            __m256d f2 = _mm256_set1_pd(fac2);
 
-            PERFC_ADDMUL += 4*width; PERFC_MEM += 2*width;
+            for(int j = 0; j < width-(width%4); j += 4) {
 
-            int peel = (long long)tabp & 0x1f; /* tabp % 32 */
-            if(peel != 0) {
-                peel = (32 - peel)/sizeof(T);
-                for (int j = 0; j < peel; j++) {
-                    tabp[i*width+j] -= fac1*tabp[m*width+j];
-                    tabp[(i+1)*width+j] -= fac2*tabp[m*width+j];
-                }
+                //~ PERFC_MEM += 4;  // not from memory, as width*sizeof(T) ~ 1-24 kB should easily fit into L2/L3
+                //~ PERFC_MEM += 4; // for cachegrind
+                T r1 = tabp[m*width+j];
+                T r2 = tabp[m*width+j+1];
+                T r3 = tabp[m*width+j+2];
+                T r4 = tabp[m*width+j+3];
+
+                PERFC_MEM += 4;
+                T la1 = tabp[i*width+j];
+                T la2 = tabp[i*width+j+1];
+                T la3 = tabp[i*width+j+2];
+                T la4 = tabp[i*width+j+3];
+
+                PERFC_ADDMUL += 8;
+                T pa1 = la1 - fac1*r1;
+                T pa2 = la2 - fac1*r2;
+                T pa3 = la3 - fac1*r3;
+                T pa4 = la4 - fac1*r4;
+
+                //~ PERFC_MEM += 4; // for cachegrind
+                tabp[i*width+j]   = pa1;
+                tabp[i*width+j+1] = pa2;
+                tabp[i*width+j+2] = pa3;
+                tabp[i*width+j+3] = pa4;
+
+                PERFC_MEM += 4;
+                T lb1 = tabp[(i+1)*width+j];
+                T lb2 = tabp[(i+1)*width+j+1];
+                T lb3 = tabp[(i+1)*width+j+2];
+                T lb4 = tabp[(i+1)*width+j+3];
+
+                PERFC_ADDMUL += 8;
+                T pb1 = lb1 - fac2*r1;
+                T pb2 = lb2 - fac2*r2;
+                T pb3 = lb3 - fac2*r3;
+                T pb4 = lb4 - fac2*r4;
+
+                //~ PERFC_MEM += 4; // for cachegrind
+                tabp[(i+1)*width+j]   = pb1;
+                tabp[(i+1)*width+j+1] = pb2;
+                tabp[(i+1)*width+j+2] = pb3;
+                tabp[(i+1)*width+j+3] = pb4;
             }
 
-            int aligned_end = width - (width%4) - peel;
-
-            for(int j = peel; j < aligned_end; j += 4) {
-
-                __m256d r = _mm256_load_pd(tabp+m*width+j);
-
-                __m256d la = _mm256_load_pd(tabp+i*width+j);
-
-                __m256d pa1 = _mm256_mul_pd(f1, r);
-                __m256d pa2 = _mm256_sub_pd(la, pa1);
-
-                _mm256_store_pd(tabp+i*width+j, pa2);
-
-                __m256d lb = _mm256_load_pd(tabp+(i+1)*width+j);
-
-                __m256d pb1 = _mm256_mul_pd(f2, r);
-                __m256d pb2 = _mm256_sub_pd(lb, pb1);
-
-                _mm256_store_pd(tabp+(i+1)*width+j, pb2);
-            }
-
-            for(int j = aligned_end; j < width; ++j) {
+            for(int j = width-(width%4); j < width; ++j) {
+                PERFC_ADDMUL+=4; PERFC_MEM+=2;
                 tabp[i*width+j] -= fac1*tabp[m*width+j];
                 tabp[(i+1)*width+j] -= fac2*tabp[m*width+j];
             }
@@ -164,8 +176,8 @@ class SimplexBlockAVX : public SimplexBase<T> {
             tabp[row*width+i] = tabp[m*width+i];
             tabp[m*width+i] = tmp;
         }
-        active[row] = col;
 
+        active[row] = col;
     }
 
     void load(std::string fname) {
