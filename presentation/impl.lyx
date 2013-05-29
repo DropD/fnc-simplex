@@ -518,7 +518,7 @@ preview
 \begin_inset Text
 
 \begin_layout Plain Layout
-(162 LPs, 145 MB)
+(92 LPs, 135 MB)
 \end_layout
 
 \end_inset
@@ -549,7 +549,7 @@ standard
 \begin_inset Text
 
 \begin_layout Plain Layout
-(282 LPs, 260 MB)
+(288 LPs, 352 MB)
 \end_layout
 
 \end_inset
@@ -580,7 +580,7 @@ heavy
 \begin_inset Text
 
 \begin_layout Plain Layout
-(852 LPs, 785 MB)
+(864 LPs, 1100 MB)
 \end_layout
 
 \end_inset
@@ -611,7 +611,7 @@ high
 \begin_inset Text
 
 \begin_layout Plain Layout
-(50LPs, 3800 MB)
+(25 LPs, 3800 MB)
 \end_layout
 
 \end_inset
@@ -627,6 +627,47 @@ correctness & profiling
 </cell>
 </row>
 </lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+standard for plots since lines beyond 1000 don't increase in informative
+ value
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+heavy is used to prove the previous assertation, also to verify that smaller
+ samples are representative of sets with many LPs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+high generates LPs useful for profiling
+\end_layout
 
 \end_inset
 

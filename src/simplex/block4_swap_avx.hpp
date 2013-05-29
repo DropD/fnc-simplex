@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class Simplex_block2_swap_avx : public SimplexBase<T> {
+class Simplex_block4_swap_avx : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +28,7 @@ class Simplex_block2_swap_avx : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block2_swap_avx"; }
+    std::string get_identifier() { return "block4_swap_avx"; }
 
     void solve() {
 
@@ -102,6 +102,7 @@ class Simplex_block2_swap_avx : public SimplexBase<T> {
     inline void basis_exchange(int row, int col) {
         ++PERFC_MEM;
         T pivot = tabp[row*width+col];
+
         // swap pivot row and last
         PERFC_MEM += 2 * width;
         for(int i = 0; i < width; ++i) {
@@ -109,17 +110,22 @@ class Simplex_block2_swap_avx : public SimplexBase<T> {
             tabp[row*width+i] = tabp[m*width+i];
             tabp[m*width+i] = tmp;
         }
+
         ++PERFC_DIV;
         T ipiv = 1. / pivot;
-        for(int i = 0; i < m; i += 2) {     // peel off m+1, as we temporarily store the pivot row there
-            PERFC_MEM+=2; PERFC_ADDMUL+=2;
+        for(int i = 0; i < m-(m%4); i += 4) {     // peel off m+1, as we temporarily store the pivot row there
+            PERFC_MEM+=4; PERFC_ADDMUL+=4;
             T fac1 = tabp[i*width+col] * ipiv;
             T fac2 = tabp[(i+1)*width+col] * ipiv;
-            PERFC_MEM+=2;
+            T fac3 = tabp[(i+2)*width+col] * ipiv;
+            T fac4 = tabp[(i+3)*width+col] * ipiv;
+            PERFC_MEM+=4;
             __m256d f1 = _mm256_set1_pd(fac1);
             __m256d f2 = _mm256_set1_pd(fac2);
+            __m256d f3 = _mm256_set1_pd(fac3);
+            __m256d f4 = _mm256_set1_pd(fac4);
 
-            PERFC_ADDMUL += 4*width; PERFC_MEM += 2*width;
+            PERFC_ADDMUL += 8*width; PERFC_MEM += 4*width;
 
             int peel = (long long)tabp & 0x1f; /* tabp % 32 */
             if(peel != 0) {
@@ -138,19 +144,27 @@ class Simplex_block2_swap_avx : public SimplexBase<T> {
 
                 // row 1
                 __m256d l1 = _mm256_load_pd(tabp+i*width+j);
-
                 __m256d t1a = _mm256_mul_pd(f1, r);
                 __m256d t1b = _mm256_sub_pd(l1, t1a);
-
                 _mm256_store_pd(tabp+i*width+j, t1b);
 
                 // row 2
                 __m256d l2 = _mm256_load_pd(tabp+(i+1)*width+j);
-
                 __m256d t2a = _mm256_mul_pd(f2, r);
                 __m256d t2b = _mm256_sub_pd(l2, t2a);
-
                 _mm256_store_pd(tabp+(i+1)*width+j, t2b);
+
+                // row 3
+                __m256d l3 = _mm256_load_pd(tabp+(i+2)*width+j);
+                __m256d t3a = _mm256_mul_pd(f3, r);
+                __m256d t3b = _mm256_sub_pd(l3, t3a);
+                _mm256_store_pd(tabp+(i+2)*width+j, t3b);
+
+                // row 4
+                __m256d l4 = _mm256_load_pd(tabp+(i+3)*width+j);
+                __m256d t4a = _mm256_mul_pd(f4, r);
+                __m256d t4b = _mm256_sub_pd(l4, t4a);
+                _mm256_store_pd(tabp+(i+3)*width+j, t4b);
 
             }
 
@@ -160,6 +174,16 @@ class Simplex_block2_swap_avx : public SimplexBase<T> {
             }
 
         }
+
+        for(int i = m-(m%4); i < m; ++i) {  // FIXME: we could gain a bit by SSA+AVX on this tail loop
+            T fac = tabp[i*width+col] * ipiv;
+            for(int j = 0; j < width; ++j) {
+                PERFC_ADDMUL += 2;
+                ++PERFC_MEM;
+                tabp[i*width+j] -= fac*tabp[m*width+j];
+            }
+        }
+
         // swap back
         PERFC_MEM += 2 * width;
         for(int i = 0; i < width; ++i) {

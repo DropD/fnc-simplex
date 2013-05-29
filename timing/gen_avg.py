@@ -7,8 +7,8 @@ import sys
 import cPickle
 import re
 
-#~ problemdir = "../problems/gen_light/"
-problemdir = "../problems/gen_std"
+problemdir = "../problems/gen_light/"
+#~ problemdir = "../problems/gen_std"
 #~ problemdir = "../problems/gen_heavy/"
 #~ problemdir = "../problems/gen_upper/"
 
@@ -64,6 +64,7 @@ for token in problem_sizes:
             avg2[key] += float(line[3])  # line[3] == ci
             avg3[key] += float(line[4])  # line[4] == walltime
     for key in avg0:
+        print key
         val0 = avg0[key] / len(problems)
         val1 = avg1[key] / len(problems)
         val2 = avg2[key] / len(problems)

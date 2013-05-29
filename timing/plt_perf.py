@@ -7,7 +7,7 @@ from fncplot import fncplot
 import cPickle
 
 # algorithms filtered by intersection of keep and ignore, keep can be left undefined
-#~ keep = [ 'baseline', 'block_swap', 'avx', 'block_avx', 'nta' ]
+keep = [ 'baseline', 'avx', 'block2_swap', 'block2_swap_avx', 'block4_swap_avx', 'nta' ]
 #~ keep = [ 'baseline', 'soplex', 'gurobi', 'glpk' ]
 ignore = [ ]
 
