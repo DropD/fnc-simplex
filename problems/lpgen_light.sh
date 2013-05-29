@@ -11,16 +11,17 @@ run_gen() {
     done
 }
 
-run_gen 10 10
-run_gen 10 20
-run_gen 10 30
-run_gen 10 50
-run_gen 10 80
-run_gen 5 100
-run_gen 5 150
-run_gen 5 200
-run_gen 5 300
-run_gen 5 400
-run_gen 3 500
+run_gen 5 10
+run_gen 5 20
+run_gen 5 30
+run_gen 5 50
+run_gen 5 80
+run_gen 3 100
+run_gen 3 150
+run_gen 3 200
+run_gen 3 300
+run_gen 3 400
+run_gen 2 500
 run_gen 2 600
+run_gen 1 800
 run_gen 1 1000

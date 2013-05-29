@@ -12,7 +12,7 @@ run_gen() {
 }
 
 run_gen 5 500
-run_gen 5 600
+run_gen 5 750
 run_gen 5 1000
 run_gen 5 2000
 run_gen 5 4000

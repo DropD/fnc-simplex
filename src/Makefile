@@ -31,7 +31,7 @@ HEADEREXT = h hpp hxx
 
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic-errors -ansi
-CFLAGS += -O2 -march=native -m64
+CFLAGS += -O3 -march=native -m64
 #CFLAGS += -fno-tree-vectorize -fno-tree-slp-vectorize
 
 ifeq ($(shell uname), Darwin)
