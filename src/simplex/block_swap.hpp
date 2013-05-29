@@ -118,7 +118,7 @@ class SimplexBlock_swap : public SimplexBase<T> {
 
             for(int j = 0; j < width-(width%4); j += 4) {
 
-                PERFC_MEM += 4;
+                //~ PERFC_MEM += 4;  // not from memory, as width*sizeof(T) ~ 1-24 kB should easily fit into L2/L3
                 T r1 = tabp[m*width+j];
                 T r2 = tabp[m*width+j+1];
                 T r3 = tabp[m*width+j+2];

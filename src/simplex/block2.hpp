@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class SimplexBlock_2 : public SimplexBase<T> {
+class SimplexBlock2 : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +28,7 @@ class SimplexBlock_2 : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block_2"; }
+    std::string get_identifier() { return "block2"; }
 
     void solve() {
 
@@ -111,7 +111,7 @@ class SimplexBlock_2 : public SimplexBase<T> {
 
             for(int j = 0; j < width-(width%4); j += 4) {
 
-                PERFC_MEM += 4;
+                //~ PERFC_MEM += 4;  // not from memory, as width*sizeof(T) ~ 1-24 kB should easily fit into L2/L3
                 T r1 = tabp[row*width+j];
                 T r2 = tabp[row*width+j+1];
                 T r3 = tabp[row*width+j+2];

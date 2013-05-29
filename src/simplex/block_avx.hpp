@@ -141,7 +141,7 @@ class SimplexBlockAVX : public SimplexBase<T> {
                 __m256d pa1 = _mm256_mul_pd(f1, r);
                 __m256d pa2 = _mm256_sub_pd(la, pa1);
 
-                _mm256_store_pd(tabp+i*width+j, pa2); // segfaults
+                _mm256_store_pd(tabp+i*width+j, pa2);
 
                 __m256d lb = _mm256_load_pd(tabp+(i+1)*width+j);
 

@@ -6,9 +6,9 @@ import os
 import cPickle
 import re
 
-problemdir = "../problems/gen_light/"
+#~ problemdir = "../problems/gen_light/"
 #~ problemdir = "../problems/gen_std"
-#~ problemdir = "../problems/gen_heavy/"
+problemdir = "../problems/gen_heavy/"
 #~ problemdir = "../problems/gen_upper/"
 
 outdir = "tmp"
