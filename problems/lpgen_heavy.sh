@@ -23,5 +23,7 @@ run_gen 10 300
 run_gen 10 400
 run_gen 5 500
 run_gen 5 600
+run_gen 3 800
 run_gen 3 1000
+run_gen 3 1500
 run_gen 3 2000
