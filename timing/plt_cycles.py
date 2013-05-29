@@ -28,7 +28,7 @@ except NameError:
 
 pylab.figure()
 
-for key in avgs:
+for key in sorted(avgs.keys()):
     if key in keep and key not in ignore:
         print('Plotting ' + key)
         pylab.plot(problem_sizes, avgs[key], label=key)

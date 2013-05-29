@@ -7,7 +7,7 @@ from fncplot import fncplot
 import cPickle
 
 # algorithms filtered by intersection of keep and ignore, keep can be left undefined
-keep = [ 'avx', 'baseline', 'block_swap', 'block_avx', 'block_2', 'soplex', 'gurobi', 'glpk' ]
+#~ keep = [ ]
 ignore = [ ]
 
 outdir = "tmp"
@@ -28,7 +28,7 @@ except NameError:
 
 pylab.figure()
 
-for key in avgs:
+for key in sorted(avgs.keys()):
     if key in keep and key not in ignore:
         print('Plotting ' + key)
         pylab.plot(problem_sizes, avgs[key], label=key)

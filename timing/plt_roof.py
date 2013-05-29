@@ -39,7 +39,7 @@ fig = pylab.figure()
 pylab.plot(sizepi, pi)
 pylab.plot(sizebeta, beta)
 
-for key in avgs:
+for key in sorted(avgs.keys()):
     if key in keep and key not in ignore:
         print('Plotting ' + key)
         pylab.plot(avgs2[key], avgs[key], label=key)
