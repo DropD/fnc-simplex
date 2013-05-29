@@ -8,7 +8,9 @@ run_gen() {
     echo "generate $1 lps of size $2"
     for i in $(seq 1 $1); do
         $LPGEN $2 $LPDIR/lpb_`printf '%05d' $2`_"$i" ;
+        echo -n '.'
     done
+    echo ''
 }
 
 run_gen 5 10
