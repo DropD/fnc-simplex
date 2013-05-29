@@ -22,6 +22,7 @@ void run(SimplexBase<s_type> * s, string fname) {
     }
 
     int n = rdtsc_warmup(s, fname);
+    //~ int n = 1;  // for cachegrind
     std::pair<double, double> res = rdtsc_measure(n, s, fname);    // solve
     double cycles = res.first;
     double walltime = res.second;
