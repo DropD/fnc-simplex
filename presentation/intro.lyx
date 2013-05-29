@@ -126,6 +126,19 @@ frametitle{Linear Programming}
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Briefly introduce the application area of the algorithm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Optimising a Linear Program in standard form:
 \end_layout
 
@@ -256,6 +269,22 @@ all coefficients
 Steps
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Tableau as computer representation: search pivot, update obj.
+ row accordingly, update tableau with Gauss elim.
+ step in order to pick new pivot, stop when obj.
+ function meets certain criteria.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Itemize
 \begin_inset ERT
 status open
@@ -348,6 +377,16 @@ status open
 \end_inset
 
 GLPK (GNU Linear Programming Kit), solid standard solver
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+very general
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -362,6 +401,16 @@ status open
 \end_inset
 
 CPPLEX, mathematical OO-implementation
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+nice code, educational, slow
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -376,6 +425,16 @@ status open
 \end_inset
 
 Gurobi (CPLEX), fastest (multithreaded) solver available
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+by CPLEX founders, more modern code
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -390,6 +449,16 @@ status open
 \end_inset
 
 SoPlex, fastest FOSS solver available
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+column major data structure
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame
