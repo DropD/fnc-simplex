@@ -3,6 +3,7 @@
 from math import *
 import subprocess
 import os
+import sys
 import cPickle
 import re
 
@@ -10,6 +11,9 @@ import re
 problemdir = "../problems/gen_std"
 #~ problemdir = "../problems/gen_heavy/"
 #~ problemdir = "../problems/gen_upper/"
+
+if len(sys.argv) > 1:
+    problemdir = sys.argv[1]
 
 outdir = "tmp"
 prog = "../bin/main"
