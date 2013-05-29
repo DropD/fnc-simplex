@@ -1,10 +1,11 @@
-# Lightweight & simple Makefile - build 110128
+# Lightweight & simple Makefile - build 130529
 # 2011 (C) Donjan Rodic - for free use
 #
 # Requires all source files & headers to be in one directory (SOURCEDIR)
 # Produces one binary (BINDIR/BINARY)
 #
-# usage: make [ all | OBJ | debug | clean | install | uninstall | info ]
+# usage: make [ all | OBJ | debug | assembler | clean | install | uninstall
+#                   | info ]
 #  where OBJ is the path to an object file
 # example: make
 #          make install
@@ -94,9 +95,14 @@ $(subst $(SOURCEDIR), $(OBJDIR), $(addsuffix .o,$(basename $(FILE)) )): $(FILE)\
 debug: $(SOURCES) $(HEADERS) $(SHAREDHEADERS)
 	$(CC) $(DBGFLAGS) -o $(BIN)-dbg $(SOURCES) $(LIBS)
 
+assembler: $(SOURCES) $(HEADERS) $(SHAREDHEADERS)
+	@$(SMART_MKDIR) $(BINDIR)
+	$(CC) $(CFLAGS) -S -o $(BIN).s $(SOURCES) $(LIBS)
+
 clean:
 	rm -f $(BIN)
 	rm -f $(BIN)-dbg
+	rm -f $(BIN).s
 	rm -f $(BINDIR)/gmon.out
 	rm -f $(OBJS)
 	rm -rf $(OBJDIR)

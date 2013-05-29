@@ -44,7 +44,8 @@ void run(SimplexBase<s_type> * s, string fname) {
     cout << "RDTSC cycles: " << cycles << " (avg over " << n << " runs)" << endl;
     cout << "Memory accesses: " << s->PERFC_MEM
          << " (theory: " << s->get_iter() * s->get_tabn() << "+)" << endl;
-    cout << "Float add/mul: " << s->PERFC_ADDMUL << endl;
+    cout << "Float add/mul: " << s->PERFC_ADDMUL
+         << " (theory: " << 2* s->get_iter() * s->get_tabn() << ")" << endl;
     cout << "Float div: " << s->PERFC_DIV << endl;
     cout << "FLOP/C: " << fpc << endl;
     cout << "Op Intensity: " << ci << endl;

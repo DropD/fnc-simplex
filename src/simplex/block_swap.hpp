@@ -119,6 +119,7 @@ class SimplexBlock_swap : public SimplexBase<T> {
             for(int j = 0; j < width-(width%4); j += 4) {
 
                 //~ PERFC_MEM += 4;  // not from memory, as width*sizeof(T) ~ 1-24 kB should easily fit into L2/L3
+                //~ PERFC_MEM += 4; // for cachegrind
                 T r1 = tabp[m*width+j];
                 T r2 = tabp[m*width+j+1];
                 T r3 = tabp[m*width+j+2];
@@ -136,6 +137,7 @@ class SimplexBlock_swap : public SimplexBase<T> {
                 T pa3 = la3 - fac1*r3;
                 T pa4 = la4 - fac1*r4;
 
+                //~ PERFC_MEM += 4; // for cachegrind
                 tabp[i*width+j]   = pa1;
                 tabp[i*width+j+1] = pa2;
                 tabp[i*width+j+2] = pa3;
@@ -153,6 +155,7 @@ class SimplexBlock_swap : public SimplexBase<T> {
                 T pb3 = lb3 - fac2*r3;
                 T pb4 = lb4 - fac2*r4;
 
+                //~ PERFC_MEM += 4; // for cachegrind
                 tabp[(i+1)*width+j]   = pb1;
                 tabp[(i+1)*width+j+1] = pb2;
                 tabp[(i+1)*width+j+2] = pb3;
