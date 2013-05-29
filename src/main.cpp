@@ -32,6 +32,7 @@ const bool INFO = false;
 #include "simplex/block2_sse.hpp"
 #include "simplex/block2_swap_avx.hpp"
 #include "simplex/block4_swap_avx.hpp"
+#include "simplex/block8_swap_avx.hpp"
 #include "simplex/nta.hpp"
 
 using namespace std;
@@ -80,6 +81,8 @@ int main(int argc, char ** argv) {
     run(&s11, fname);
     Simplex_block4_swap_avx<s_type> s12;
     run(&s12, fname);
+    Simplex_block8_swap_avx<s_type> s13;
+    run(&s13, fname);
     //~ Simplex_ssa<s_type> s4;
     //~ run(&s4, fname);
     //~ Simplex_sse<s_type> s5;

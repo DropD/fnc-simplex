@@ -64,7 +64,6 @@ for token in problem_sizes:
             avg2[key] += float(line[3])  # line[3] == ci
             avg3[key] += float(line[4])  # line[4] == walltime
     for key in avg0:
-        print key
         val0 = avg0[key] / len(problems)
         val1 = avg1[key] / len(problems)
         val2 = avg2[key] / len(problems)
