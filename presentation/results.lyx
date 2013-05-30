@@ -107,6 +107,114 @@ Results
 Plots
 \end_layout
 
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Comparison
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<1->
+\end_layout
+
+\end_inset
+
+GLPK (GNU Linear Programming Kit), solid standard solver
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+very general
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<2->
+\end_layout
+
+\end_inset
+
+CPPLEX, mathematical OO-implementation
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+nice code, educational, slow
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<3->
+\end_layout
+
+\end_inset
+
+Gurobi (CPLEX), fastest (multithreaded) solver available
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+by CPLEX founders, more modern code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<4->
+\end_layout
+
+\end_inset
+
+SoPlex, fastest FOSS solver available
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+column major data structure
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
 \begin_layout BeginFrame
 Hardware
 \end_layout
@@ -114,15 +222,15 @@ Hardware
 \begin_layout Itemize
 Core i5-3360M (Ivy Bridge), GNU/Linux, GCC 4.7.3 (
 \shape italic
--O2 -march=native
+-O3 -march=native
 \shape default
 )
 \end_layout
 
 \begin_layout Itemize
-Core (Sandy Bridge), OSX, GCC 4.7.2 (
+Core i7-2720QM (Sandy Bridge), OSX, GCC 4.7.2 (
 \shape italic
--O2 -march=native
+-O3 -march=native
 \shape default
 )
 \end_layout
@@ -204,7 +312,7 @@ optimisations
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -242,7 +350,7 @@ Wall Time
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -344,9 +452,6 @@ frametitle{Profiling (gprof)}
 
 \begin_layout Standard
 The main work routine has 24 memory access lines (12 shown):
-\end_layout
-
-\begin_layout Standard
 \begin_inset Note Note
 status open
 
@@ -595,7 +700,11 @@ status open
 \end_layout
 
 \begin_layout Standard
-64.98 % total
+~
+\begin_inset Formula $85$
+\end_inset
+
+% total
 \end_layout
 
 \begin_layout Standard

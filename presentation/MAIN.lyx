@@ -41,6 +41,10 @@
 
 % seems to fix typewriter font in outline header:
 \usepackage{ae,aecompl}
+\usepackage{colortbl}
+
+\newcommand\g{\only<2>{\cellcolor{red}}\only<3>{\cellcolor{blue}}}
+\newcommand\h{\only<3>{\cellcolor{blue}}}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
