@@ -451,7 +451,7 @@ frametitle{Profiling (gprof)}
 \end_layout
 
 \begin_layout Standard
-The main work routine has 24 memory access lines (12 shown):
+The main work routine has 20 memory access lines (12 shown):
 \begin_inset Note Note
 status open
 
@@ -701,10 +701,10 @@ status open
 
 \begin_layout Standard
 ~
-\begin_inset Formula $85$
+\begin_inset Formula $82$
 \end_inset
 
-% total
+% total, all 20 lines
 \end_layout
 
 \begin_layout Standard

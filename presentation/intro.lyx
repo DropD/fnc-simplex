@@ -44,8 +44,11 @@
 
 \usepackage{colortbl}
 
-\newcommand\g{\only<2>{\cellcolor{red}}\only<3>{\cellcolor{blue}}}
-\newcommand\h{\only<3>{\cellcolor{blue}}}
+\definecolor{lightred}{rgb}{0.9, 0.5, 0.5}
+\definecolor{lightblue}{rgb}{0.5, 0.5, 0.9}
+
+\newcommand\g{\only<2>{\cellcolor{lightred}}\only<3>{\cellcolor{lightblue}}}
+\newcommand\h{\only<3>{\cellcolor{lightblue}}}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
