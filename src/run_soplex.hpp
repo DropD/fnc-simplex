@@ -27,6 +27,7 @@ void run_soplex(string fname, SimplexBase<s_type> * s) {
     int n = 0;
     try {
         n = rdtsc_warmup(soplex, fname);
+        //~ n = 1;
         res = rdtsc_measure(n, soplex, fname);    // solve
     } catch(...) {
         

@@ -14,7 +14,7 @@ typedef double s_type;
 void run(SimplexBase<s_type> * s, string fname) {
 
     string id = s->get_identifier();
-    cout << "\033[0;31m" << "Running " << id  << "\033[0m" << std::endl;
+    cout << "\033[0;31m" << "Running " << id << "\033[0m" << std::endl;
 
     if(INFO) {
         s->load(fname);

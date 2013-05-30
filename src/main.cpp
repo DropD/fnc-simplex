@@ -12,7 +12,7 @@
 //~ #define NO_SOPLEX
 
 //~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
-//~ #define RDTSC_CYCLES_REQUIRED 1E6
+//~ #define RDTSC_CYCLES_REQUIRED 1E3
 #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
 //~ #define RDTSC_CYCLES_REQUIRED 1E8
 //~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
@@ -77,12 +77,12 @@ int main(int argc, char ** argv) {
     //~ run(&s10, fname);
     //~ Simplex_block2_sse<s_type> s9;
     //~ run(&s9, fname);
-    Simplex_block2_swap_avx<s_type> s11;
-    run(&s11, fname);
-    Simplex_block4_swap_avx<s_type> s12;
-    run(&s12, fname);
-    Simplex_block8_swap_avx<s_type> s13;
-    run(&s13, fname);
+    //~ Simplex_block2_swap_avx<s_type> s11;
+    //~ run(&s11, fname);
+    //~ Simplex_block4_swap_avx<s_type> s12;
+    //~ run(&s12, fname);
+    //~ Simplex_block8_swap_avx<s_type> s13;
+    //~ run(&s13, fname);
     //~ Simplex_ssa<s_type> s4;
     //~ run(&s4, fname);
     //~ Simplex_sse<s_type> s5;
@@ -99,9 +99,15 @@ int main(int argc, char ** argv) {
 //~ #ifndef NO_GLPK
     //~ run_glpk(lname, &s1);
 //~ #endif // NO_GLPK
-//~ #ifndef NO_GUROBI
-    //~ run_gurobi(lname, &s1);
-//~ #endif // NO_GUROBI
+#ifndef NO_SOPLEX
+    run_soplex(lname, &s1);
+#endif // NO_SOPLEX
+#ifndef NO_GUROBI
+    run_gurobi(lname, &s1);  // Gurobi before SoPlex makes SoPlex faster!
+#endif // NO_GUROBI
+//~ #ifndef NO_SOPLEX
+    //~ run_soplex(lname, &s1);
+//~ #endif // NO_SOPLEX
 //~ #ifndef NO_SOPLEX
     //~ run_soplex(lname, &s1);
 //~ #endif // NO_SOPLEX

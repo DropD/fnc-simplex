@@ -8,6 +8,7 @@ import cPickle
 
 # algorithms filtered by intersection of keep and ignore, keep can be left undefined
 #~ keep = [ ]
+keep = [ 'baseline', 'soplex', 'gurobi', 'glpk' ]
 ignore = [ ]
 
 outdir = "tmp"

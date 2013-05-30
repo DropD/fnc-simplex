@@ -168,7 +168,6 @@ std::pair<double, double> rdtsc_measure(int num_runs, GRBEnv & env, std::string 
 
 #ifndef NO_SOPLEX
 #include <soplex.h>
-
 int rdtsc_warmup(soplex::SoPlex& s, std::string fname) {
   if(RDTSC_CYCLES_REQUIRED <= 1) return 1;
   double cycles = 0;
@@ -180,11 +179,21 @@ int rdtsc_warmup(soplex::SoPlex& s, std::string fname) {
   CPUID(); RDTSC(start); RDTSC(end);
   CPUID(); RDTSC(start); RDTSC(end);
   CPUID(); RDTSC(start); RDTSC(end);
+soplex::SoPlex soplex(soplex::SPxSolver::LEAVE, soplex::SPxSolver::COLUMN);
+soplex.setUtype             ( soplex::SLUFactor::FOREST_TOMLIN );
+soplex.setFeastol           ( DEFAULT_BND_VIOL );
+soplex.setOpttol            ( DEFAULT_BND_VIOL );
+soplex.setIrthreshold       ( DEFAULT_BND_VIOL * 1e-6 );
+soplex.setTerminationTime   ( 10.0 );
+soplex.setTerminationIter   ( -1 );
   while(1) {
     for(i = 0; i < num_runs; i++) {
-      s.readFile(fname.c_str(), &rownames, &colnames, 0);
+      //~ s.readFile(fname.c_str(), &rownames, &colnames, 0);
+soplex.readFile(fname.c_str(), &rownames, &colnames, 0);
+
       CPUID(); RDTSC(start);
-      stat = s.solve();
+      //~ stat = s.solve();
+stat = soplex.solve();
       RDTSC(end); CPUID();
       cycles += ((double)COUNTER_DIFF(end, start));
     }
@@ -192,7 +201,8 @@ int rdtsc_warmup(soplex::SoPlex& s, std::string fname) {
     num_runs *= 2;
   }
   if( stat != soplex::SPxSolver::OPTIMAL )
-    std::cout << "Warning: soplex has no optimal solution!" << std::endl;
+    std::cout << "\033[0;31m" <<  "Warning: soplex has no optimal solution!" << "\033[0m"  << std::endl;
+dout, "n=", num_runs, "  c=", cycles/1000/1000, "M", std::endl;
   return num_runs;
 }
 std::pair<double, double> rdtsc_measure(int num_runs, soplex::SoPlex& s, std::string fname) {
@@ -203,12 +213,21 @@ std::pair<double, double> rdtsc_measure(int num_runs, soplex::SoPlex& s, std::st
   int i;
   soplex::NameSet rownames, colnames;
   soplex::SPxSolver::Status stat = soplex::SPxSolver::OPTIMAL;
-
+soplex::SoPlex soplex(soplex::SPxSolver::LEAVE, soplex::SPxSolver::COLUMN);
+soplex.setUtype             ( soplex::SLUFactor::FOREST_TOMLIN );
+soplex.setFeastol           ( DEFAULT_BND_VIOL );
+soplex.setOpttol            ( DEFAULT_BND_VIOL );
+soplex.setIrthreshold       ( DEFAULT_BND_VIOL * 1e-6 );
+soplex.setTerminationTime   ( 10.0 );
+soplex.setTerminationIter   ( -1 );
   for(i = 0; i < num_runs; i++) {
-    s.readFile(fname.c_str(), &rownames, &colnames, 0);
+    //~ s.readFile(fname.c_str(), &rownames, &colnames, 0);
+soplex.readFile(fname.c_str(), &rownames, &colnames, 0);
+
     tim.reset();
     CPUID(); RDTSC(start);
-    stat = s.solve();
+    //~ stat = s.solve();
+stat = soplex.solve();
     RDTSC(end); CPUID();
     walltime += tim.check();
     cycles += ((double)COUNTER_DIFF(end, start));
