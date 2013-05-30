@@ -11,11 +11,11 @@
 //~ #define NO_GUROBI
 //~ #define NO_SOPLEX
 
-#define RDTSC_CYCLES_REQUIRED 0                 // cold
+//~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
 //~ #define RDTSC_CYCLES_REQUIRED 1E3
 //~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
 //~ #define RDTSC_CYCLES_REQUIRED 1E8
-//~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
+#define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
 
 
@@ -67,7 +67,7 @@ int main(int argc, char ** argv) {
 
     remove("rdtsc");
 
-    Simplex_baseline<s_type> s1;
+    Simplex_baseline<s_type> s1;  // this one shouldn't go out of scope
     run(&s1, fname);
     {
     Simplex_array<s_type> s2;
@@ -108,15 +108,15 @@ int main(int argc, char ** argv) {
     string lname = fname.substr(0, fname.length()-3);
     lname.append("lp");
 
-//~ #ifndef NO_GLPK
-    //~ run_glpk(lname, &s1);
-//~ #endif // NO_GLPK
-//~ #ifndef NO_GUROBI
-    //~ run_gurobi(lname, &s1);
-//~ #endif // NO_GUROBI
-//~ #ifndef NO_SOPLEX
-    //~ run_soplex(lname, &s1);
-//~ #endif // NO_SOPLEX
+#ifndef NO_GLPK
+    run_glpk(lname, &s1);
+#endif // NO_GLPK
+#ifndef NO_GUROBI
+    run_gurobi(lname, &s1);
+#endif // NO_GUROBI
+#ifndef NO_SOPLEX
+    run_soplex(lname, &s1);
+#endif // NO_SOPLEX
 
     return 0;
 
