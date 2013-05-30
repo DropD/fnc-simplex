@@ -97,6 +97,11 @@ class SimplexBase {
 
     unsigned int PERFC_MEM, PERFC_ADDMUL, PERFC_DIV;
 
+    ~SimplexBase() {
+        free(tabp);
+        free(backup_tabp);
+    }
+
     virtual void load(std::string fname) {
 
         std::ifstream fp(fname.c_str());
