@@ -2,6 +2,7 @@
 
 from math import *
 import os
+import sys
 import pylab
 from fncplot import fncplot
 import cPickle
