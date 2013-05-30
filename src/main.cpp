@@ -99,18 +99,12 @@ int main(int argc, char ** argv) {
 //~ #ifndef NO_GLPK
     //~ run_glpk(lname, &s1);
 //~ #endif // NO_GLPK
+#ifndef NO_GUROBI
+    run_gurobi(lname, &s1);
+#endif // NO_GUROBI
 #ifndef NO_SOPLEX
     run_soplex(lname, &s1);
 #endif // NO_SOPLEX
-#ifndef NO_GUROBI
-    run_gurobi(lname, &s1);  // Gurobi before SoPlex makes SoPlex faster!
-#endif // NO_GUROBI
-//~ #ifndef NO_SOPLEX
-    //~ run_soplex(lname, &s1);
-//~ #endif // NO_SOPLEX
-//~ #ifndef NO_SOPLEX
-    //~ run_soplex(lname, &s1);
-//~ #endif // NO_SOPLEX
 
     return 0;
 

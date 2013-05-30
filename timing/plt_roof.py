@@ -14,6 +14,9 @@ ignore = [  'block_swap', 'block_avx' ]
 outdir = "tmp"
 prog = "../bin/main"
 
+if len(sys.argv) > 1:
+    outdir = sys.argv[1]
+
 with open(os.path.join(outdir, 'problem_sizes')) as cycpi:
     problem_sizes = cPickle.load(cycpi)
 
