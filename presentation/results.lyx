@@ -153,11 +153,11 @@ comparison is fairly difficult, pseudo-performance measurements given, soplex
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /home/bryonak/ETH/Fast Numerical Code/Project/gitsvn/RESULTS/perf-others.png
+	filename ../RESULTS/perf-others.png
 	scale 40
 
 \end_inset
@@ -204,7 +204,7 @@ optimisations
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -236,10 +236,13 @@ performance comparison
 
 \begin_layout BeginFrame
 Wall Time
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -589,6 +592,10 @@ status open
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+64.98 % total
 \end_layout
 
 \begin_layout Standard
