@@ -81,16 +81,28 @@ for token in problem_sizes:
         avgs2[key].append(val2);
         avgs3[key].append(val3);
 
-
 problem_sizes = [ s.replace('_', '') for s in problem_sizes ]
-with open(os.path.join(outdir, 'problem_sizes'), 'w') as cycpi:
-    cPickle.dump(problem_sizes, cycpi)
 
-with open(os.path.join(outdir, 'cycles_avg'), 'w') as cycpi:
-    cPickle.dump(avgs0, cycpi)
-with open(os.path.join(outdir, 'fpc_avg'), 'w') as fpcpi:
-    cPickle.dump(avgs1, fpcpi)
-with open(os.path.join(outdir, 'ci_avg'), 'w') as cipi:
-    cPickle.dump(avgs2, cipi)
-with open(os.path.join(outdir, 'wall_avg'), 'w') as wapi:
-    cPickle.dump(avgs3, wapi)
+if len(sys.argv) == 3:
+    all_avgs = {
+        'problem_sizes' : problem_sizes,
+        'cycles' : avgs0,
+        'perf' : avgs1,
+        'roof' : avgs2,
+        'wall' : avgs3
+    }
+    with open(os.path.abspath(os.path.join(outdir, sys.argv[2])), 'w') as allpi:
+        cPickle.dump(all_avgs, allpi)
+
+else:
+    with open(os.path.join(outdir, 'problem_sizes'), 'w') as cycpi:
+        cPickle.dump(problem_sizes, cycpi)
+
+    with open(os.path.join(outdir, 'cycles_avg'), 'w') as cycpi:
+        cPickle.dump(avgs0, cycpi)
+    with open(os.path.join(outdir, 'fpc_avg'), 'w') as fpcpi:
+        cPickle.dump(avgs1, fpcpi)
+    with open(os.path.join(outdir, 'ci_avg'), 'w') as cipi:
+        cPickle.dump(avgs2, cipi)
+    with open(os.path.join(outdir, 'wall_avg'), 'w') as wapi:
+        cPickle.dump(avgs3, wapi)
