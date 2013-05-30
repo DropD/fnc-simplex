@@ -7,10 +7,10 @@ import sys
 import cPickle
 import re
 
-problemdir = "../problems/gen_light/"
+#~ problemdir = "../problems/gen_light/"
 #~ problemdir = "../problems/gen_std"
 #~ problemdir = "../problems/gen_heavy/"
-#~ problemdir = "../problems/gen_upper/"
+problemdir = "../problems/gen_upper/"
 
 if len(sys.argv) > 1:
     problemdir = sys.argv[1]
@@ -46,6 +46,7 @@ for token in problem_sizes:
     avg2= {};
     avg3= {};
     problems = [ f for f in files if token in f ]
+    problems.sort()
     for p in problems:
         print("_______________________\n"+os.path.join(problemdir, p)+"\n")
         data = run(prog + " " + os.path.join(problemdir, p))
