@@ -14,8 +14,8 @@
 //~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
 //~ #define RDTSC_CYCLES_REQUIRED 1E3
 //~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
-//~ #define RDTSC_CYCLES_REQUIRED 1E8
-#define RDTSC_CYCLES_REQUIRED 1E9               // warm
+#define RDTSC_CYCLES_REQUIRED 1E8
+//~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
 
 
