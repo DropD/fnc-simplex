@@ -4,10 +4,12 @@
 *.a
 build/
 bin/
-problems/gen
-problems/gen_prev/
-problems/gen_heavy/
+problems/*gen*/
 *timing/rdtsc
 timing/*avg
+timing/tmp/
 #baseline/main
 #lpbench/lpb_*
+RESULTS/*.png
+RESULTS/*.pdf
+presentation/backup/
