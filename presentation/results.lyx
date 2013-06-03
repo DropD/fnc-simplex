@@ -265,7 +265,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename ../RESULTS/perf-others.png
+	filename images/avxperf.png
 	scale 40
 
 \end_inset
@@ -274,7 +274,58 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Plain Layout
-performance comparison
+Ivybridge, no vectorization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Performance
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optimisations
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename images/block_avx_perf.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Ivybridge, no vectorization
 \end_layout
 
 \end_inset
@@ -316,7 +367,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename ../RESULTS/perf2.png
+	filename images/autovec.png
 	scale 40
 
 \end_inset
@@ -325,7 +376,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-performance comparison
+Ivybridge, automatic vectorization
 \end_layout
 
 \end_inset
@@ -343,45 +394,7 @@ performance comparison
 \end_layout
 
 \begin_layout BeginFrame
-Wall Time
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename ../RESULTS/wall2.png
-	scale 40
-
-\end_inset
-
-
-\begin_inset Caption
-
-\begin_layout Plain Layout
-wall time comparison
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-Roofline
+Run Time
 \end_layout
 
 \begin_layout Standard
@@ -389,24 +402,20 @@ Roofline
 status open
 
 \begin_layout Plain Layout
-only valid for bigger problems (cache full) -> TODO: regenerate this with
- gen_upper
+optimisations
 \end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename ../RESULTS/roof2.png
+	filename images/comp_3rd_party.png
 	scale 40
 
 \end_inset
@@ -415,7 +424,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-roofline
+comparison to established solvers
 \end_layout
 
 \end_inset

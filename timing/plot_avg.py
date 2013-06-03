@@ -10,6 +10,20 @@ def load_avg(avgfile):
         avgs = cPickle.load(avgpi)
     return avgs
 
+def load_tmp(tmpdir):
+    avgs = {}
+    with open(os.path.join(tmpdir, 'problem_sizes')) as ps:
+        avgs['problem_sizes'] = cPickle.load(ps)
+    with open(os.path.join(tmpdir, 'cycles_avg')) as cy:
+        avgs['cycles'] = cPickle.load(cy)
+    with open(os.path.join(tmpdir, 'fpc_avg')) as fp:
+        avgs['perf'] = cPickle.load(fp)
+    with open(os.path.join(tmpdir, 'ci_avg')) as ci:
+        avgs['roof'] = cPickle.load(ci)
+    with open(os.path.join(tmpdir, 'wall_avg')) as wt:
+        avgs['wall'] = cPickle.load(wt)
+    return avgs
+
 def plt_perf():
     fpl.title(r'Average Performance', fontstyle='italic')
     fpl.xlabel('Number of variables $n$')
