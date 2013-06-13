@@ -13,3 +13,10 @@ timing/tmp/
 RESULTS/*.png
 RESULTS/*.pdf
 presentation/backup/
+
+*.aux
+*.out
+*.log
+*.pdf
+*.tdo
+*.synctex.gz
