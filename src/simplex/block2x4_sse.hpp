@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class Simplex_block2_sse : public SimplexBase<T> {
+class Simplex_block2x4_sse : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +28,7 @@ class Simplex_block2_sse : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block2_sse"; }
+    std::string get_identifier() { return "block2x4_sse"; }
 
     void solve() {
 

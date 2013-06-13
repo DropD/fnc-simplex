@@ -98,8 +98,8 @@ class SimplexBase {
     unsigned int PERFC_MEM, PERFC_ADDMUL, PERFC_DIV;
 
     ~SimplexBase() {
-        free(tabp);
-        free(backup_tabp);
+        _mm_free(tabp);
+        _mm_free(backup_tabp);
     }
 
     virtual void load(std::string fname) {

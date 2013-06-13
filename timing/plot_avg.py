@@ -1,6 +1,7 @@
 import os
 from matplotlib import pyplot as plt
 from fncplot import fncplot as fpl
+import numpy as np
 import cPickle
 
 avgdir = "tmp"
@@ -89,3 +90,15 @@ def plot_avg(avgs, what=['perf'], who=['baseline']):
                 plt.plot(n, avg[impl], label=impl)
         plt_what[w]()
         plt.show()
+
+def plot_blocks(avgs, what='perf', blens=[1,2,4,8,16]):
+    conts = {}
+    m = len(avgs['problem_sizes'])
+    for n in range(m):
+        tmp = np.zeros((5,5))
+        for i in range(len(blens)):
+            for j in range(len(blens)):
+                bname = 'block{0}x{1}_swap'.format(blens[i], blens[j])
+                tmp[i,j] = avgs[what][bname][n] / avgs[what]['baseline'][n]
+                conts[avgs['problem_sizes'][n]] = tmp
+    return conts

@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class Simplex_block2_swap : public SimplexBase<T> {
+class Simplex_block1x4_swap : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +28,7 @@ class Simplex_block2_swap : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block2_swap"; }
+    std::string get_identifier() { return "block1x4_swap"; }
 
     void solve() {
 
@@ -111,64 +111,53 @@ class Simplex_block2_swap : public SimplexBase<T> {
         }
         ++PERFC_DIV;
         T ipiv = 1. / pivot;
-        for(int i = 0; i < m; i += 2) {     // peel off m+1, as we expect an even amount of dofs
-            PERFC_MEM+=2; PERFC_ADDMUL+=2;
-            T fac1 = tabp[i*width+col] * ipiv;
-            T fac2 = tabp[(i+1)*width+col] * ipiv;
 
+        for(int i = 0; i < m-(m%1); i += 1) {
+            PERFC_MEM+=1; PERFC_ADDMUL+=1;
+            T fac0 = tabp[(i+0)*width+col] * ipiv;
+            
             for(int j = 0; j < width-(width%4); j += 4) {
+                T r0 = tabp[m*width+j+0];
+                T r1 = tabp[m*width+j+1];
+                T r2 = tabp[m*width+j+2];
+                T r3 = tabp[m*width+j+3];
 
-                //~ PERFC_MEM += 4;  // not from memory, as width*sizeof(T) ~ 1-24 kB should easily fit into L2/L3
-                //~ PERFC_MEM += 4; // for cachegrind
-                T r1 = tabp[m*width+j];
-                T r2 = tabp[m*width+j+1];
-                T r3 = tabp[m*width+j+2];
-                T r4 = tabp[m*width+j+3];
-
+                //---------- i + 0 ----------
                 PERFC_MEM += 4;
-                T la1 = tabp[i*width+j];
-                T la2 = tabp[i*width+j+1];
-                T la3 = tabp[i*width+j+2];
-                T la4 = tabp[i*width+j+3];
+                T l_0_0 = tabp[(i+0)*width+j+0];
+                T l_0_1 = tabp[(i+0)*width+j+1];
+                T l_0_2 = tabp[(i+0)*width+j+2];
+                T l_0_3 = tabp[(i+0)*width+j+3];
 
-                PERFC_ADDMUL += 8;
-                T pa1 = la1 - fac1*r1;
-                T pa2 = la2 - fac1*r2;
-                T pa3 = la3 - fac1*r3;
-                T pa4 = la4 - fac1*r4;
+                PERFC_ADDMUL += 2*4;
+                T p_0_0 = l_0_0 - fac0*r0;
+                T p_0_1 = l_0_1 - fac0*r1;
+                T p_0_2 = l_0_2 - fac0*r2;
+                T p_0_3 = l_0_3 - fac0*r3;
 
-                //~ PERFC_MEM += 4; // for cachegrind
-                tabp[i*width+j]   = pa1;
-                tabp[i*width+j+1] = pa2;
-                tabp[i*width+j+2] = pa3;
-                tabp[i*width+j+3] = pa4;
-
-                PERFC_MEM += 4;
-                T lb1 = tabp[(i+1)*width+j];
-                T lb2 = tabp[(i+1)*width+j+1];
-                T lb3 = tabp[(i+1)*width+j+2];
-                T lb4 = tabp[(i+1)*width+j+3];
-
-                PERFC_ADDMUL += 8;
-                T pb1 = lb1 - fac2*r1;
-                T pb2 = lb2 - fac2*r2;
-                T pb3 = lb3 - fac2*r3;
-                T pb4 = lb4 - fac2*r4;
-
-                //~ PERFC_MEM += 4; // for cachegrind
-                tabp[(i+1)*width+j]   = pb1;
-                tabp[(i+1)*width+j+1] = pb2;
-                tabp[(i+1)*width+j+2] = pb3;
-                tabp[(i+1)*width+j+3] = pb4;
+                tabp[(i+0)*width+j+0] = p_0_0;
+                tabp[(i+0)*width+j+1] = p_0_1;
+                tabp[(i+0)*width+j+2] = p_0_2;
+                tabp[(i+0)*width+j+3] = p_0_3;
             }
 
             for(int j = width-(width%4); j < width; ++j) {
-                PERFC_ADDMUL+=4; PERFC_MEM+=2;
-                tabp[i*width+j] -= fac1*tabp[m*width+j];
-                tabp[(i+1)*width+j] -= fac2*tabp[m*width+j];
-            }
+                PERFC_MEM += 1;
+                T r1 = tabp[m*width+j];
 
+                PERFC_ADDMUL += 2*1;
+                tabp[(i+0)*width+j] -= fac0*r1;
+            }
         }
+
+        for(int i = m-(m%1); i < m; ++i) {
+            T fac = tabp[i*width+col] * ipiv;
+            for(int j = 0; j < width; ++j) {
+                PERFC_ADDMUL += 2; ++PERFC_MEM;
+                tabp[i*width+j] -= fac*tabp[m*width+j];
+            }
+        }
+
         // swap back
         PERFC_MEM += 2 * width;
         for(int i = 0; i < width; ++i) {

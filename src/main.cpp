@@ -24,14 +24,57 @@ const bool INFO = false;
 
 #include "simplex/baseline.hpp"
 #include "simplex/array.hpp"
-#include "simplex/block2.hpp"
-#include "simplex/block2_swap.hpp"
+#include "simplex/block2x4.hpp"
+//** start blockswap
+#include "simplex/block1x1_swap.hpp"
+#include "simplex/block1x2_swap.hpp"
+#include "simplex/block1x4_swap.hpp"
+#include "simplex/block1x8_swap.hpp"
+#include "simplex/block1x16_swap.hpp"
+#include "simplex/block2x1_swap.hpp"
+#include "simplex/block2x2_swap.hpp"
+#include "simplex/block2x4_swap.hpp"
+#include "simplex/block2x8_swap.hpp"
+#include "simplex/block2x16_swap.hpp"
+#include "simplex/block4x1_swap.hpp"
+#include "simplex/block4x2_swap.hpp"
+#include "simplex/block4x4_swap.hpp"
+#include "simplex/block4x8_swap.hpp"
+#include "simplex/block4x16_swap.hpp"
+#include "simplex/block8x1_swap.hpp"
+#include "simplex/block8x2_swap.hpp"
+#include "simplex/block8x4_swap.hpp"
+#include "simplex/block8x8_swap.hpp"
+#include "simplex/block8x16_swap.hpp"
+#include "simplex/block16x1_swap.hpp"
+#include "simplex/block16x2_swap.hpp"
+#include "simplex/block16x4_swap.hpp"
+#include "simplex/block16x8_swap.hpp"
+#include "simplex/block16x16_swap.hpp"
+//** end blockswap
+//** start blockswap_avx
+#include "simplex/block1x4_swap_avx.hpp"
+#include "simplex/block1x8_swap_avx.hpp"
+#include "simplex/block1x16_swap_avx.hpp"
+#include "simplex/block2x4_swap_avx.hpp"
+#include "simplex/block2x8_swap_avx.hpp"
+#include "simplex/block2x16_swap_avx.hpp"
+#include "simplex/block4x4_swap_avx.hpp"
+#include "simplex/block4x8_swap_avx.hpp"
+#include "simplex/block4x16_swap_avx.hpp"
+#include "simplex/block8x4_swap_avx.hpp"
+#include "simplex/block8x8_swap_avx.hpp"
+#include "simplex/block8x16_swap_avx.hpp"
+#include "simplex/block16x4_swap_avx.hpp"
+#include "simplex/block16x8_swap_avx.hpp"
+#include "simplex/block16x16_swap_avx.hpp"
+//** end blockswap_avx
 #include "simplex/ssa.hpp"
 #include "simplex/sse.hpp"
 #include "simplex/avx.hpp"
-#include "simplex/block2_sse.hpp"
-#include "simplex/block2_swap_avx.hpp"
-#include "simplex/block4_swap_avx.hpp"
+#include "simplex/block2x4_sse.hpp"
+#include "simplex/block2x4_swap_avx.hpp"
+#include "simplex/block4x4_swap_avx.hpp"
 #include "simplex/block8_swap_avx.hpp"
 #include "simplex/nta.hpp"
 
@@ -70,38 +113,162 @@ int main(int argc, char ** argv) {
     Simplex_baseline<s_type> s1;  // this one shouldn't go out of scope
     run(&s1, fname);
     {
-    Simplex_array<s_type> s2;
-    run(&s2, fname);
+    //~ Simplex_array<s_type> s;
+    //~ run(&s, fname);
     }{
-    Simplex_block2<s_type> s3;
-    run(&s3, fname);
+    Simplex_block2x4<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_block2_swap<s_type> s10;
-    run(&s10, fname);
+    //** start blockswap
+    Simplex_block1x1_swap<s_type> s; 
+    run(&s, fname);
     }{
-    Simplex_block2_sse<s_type> s9;
-    run(&s9, fname);
+    Simplex_block1x2_swap<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_block2_swap_avx<s_type> s11;
-    run(&s11, fname);
+    Simplex_block1x4_swap<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_block4_swap_avx<s_type> s12;
-    run(&s12, fname);
+    Simplex_block1x8_swap<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_block8_swap_avx<s_type> s13;
-    run(&s13, fname);
+    Simplex_block1x16_swap<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_ssa<s_type> s4;
-    run(&s4, fname);
+    Simplex_block2x1_swap<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_sse<s_type> s5;
-    run(&s5, fname);
+    Simplex_block2x2_swap<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_avx<s_type> s6;
-    run(&s6, fname);
+    Simplex_block2x4_swap<s_type> s;
+    run(&s, fname);
     }{
-    Simplex_nta<s_type> s7;
-    run(&s7, fname);
+    Simplex_block2x8_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block2x16_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x1_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x2_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x4_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x8_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x16_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x1_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x2_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x4_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x8_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x16_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x1_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x2_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x4_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x8_swap<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x16_swap<s_type> s;
+    run(&s, fname);
+    }{ 
+    //** end blockswap
+    //** start blockswap_avx_avx
+    Simplex_block1x4_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block1x8_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block1x16_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block2x4_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block2x8_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block2x16_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x4_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x8_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block4x16_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x4_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x8_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block8x16_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x4_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x8_swap_avx<s_type> s;
+    run(&s, fname);
+    }{
+    Simplex_block16x16_swap_avx<s_type> s;
+    run(&s, fname);
+    }{ 
+    //** end blockswap_avx_avx
+    //~ Simplex_block2x4_sse<s_type> s;
+    //~ run(&s, fname);
+    }{
+    //~ Simplex_block2x4_sse<s_type> s;
+    //~ run(&s, fname);
+    }{
+    //~ Simplex_block2x4_swap_avx<s_type> s;
+    //~ run(&s, fname);
+    }{
+    //~ Simplex_block4x4_swap_avx<s_type> s;
+    //~ run(&s, fname);
+    }{
+    //~ Simplex_block8_swap_avx<s_type> s;
+    //~ run(&s, fname);
+    }{
+    //~ Simplex_ssa<s_type> s
+    //~ run(&s fname);
+    }{
+    //~ Simplex_sse<s_type> s
+    //~ run(&s fname);
+    }{
+    //~ Simplex_avx<s_type> s
+    //~ run(&s fname);
+    }{
+    //~ Simplex_nta<s_type> s
+    //~ run(&s fname);
     }
 
     //replace file extension

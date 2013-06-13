@@ -11,7 +11,7 @@ Assumptions:
 #include "Simplex.hpp"
 
 template <typename T>
-class Simplex_block2 : public SimplexBase<T> {
+class Simplex_block2x4_swap_avx : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +28,7 @@ class Simplex_block2 : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block2"; }
+    std::string get_identifier() { return "block2x4_swap_avx"; }
 
     void solve() {
 
@@ -102,80 +102,74 @@ class Simplex_block2 : public SimplexBase<T> {
     inline void basis_exchange(int row, int col) {
         ++PERFC_MEM;
         T pivot = tabp[row*width+col];
+        // swap pivot row and last
+        PERFC_MEM += 2 * width;
+        for(int i = 0; i < width; ++i) {
+            T tmp = tabp[row*width+i];
+            tabp[row*width+i] = tabp[m*width+i];
+            tabp[m*width+i] = tmp;
+        }
         ++PERFC_DIV;
         T ipiv = 1. / pivot;
-        for(int i = 0; i < m; i += 2) {     // peel off m+1, as we expect an even amount of dofs
-            PERFC_MEM+=2; PERFC_ADDMUL+=2;
-            T fac1 = tabp[i*width+col] * ipiv;
-            T fac2 = tabp[(i+1)*width+col] * ipiv;
 
+        for(int i = 0; i < m-(m%2); i += 2) {
+            PERFC_MEM+=2*2; PERFC_ADDMUL+=2;
+            T fac0 = tabp[(i+0)*width+col] * ipiv;
+            __m256d f0 = _mm256_set1_pd(fac0);
+            T fac1 = tabp[(i+1)*width+col] * ipiv;
+            __m256d f1 = _mm256_set1_pd(fac1);
+            
             for(int j = 0; j < width-(width%4); j += 4) {
+                __m256d r0 = _mm256_load_pd(tabp+m*width+j+0);
 
-                //~ PERFC_MEM += 4;  // not from memory, as width*sizeof(T) ~ 1-24 kB should easily fit into L2/L3
-                T r1 = tabp[row*width+j];
-                T r2 = tabp[row*width+j+1];
-                T r3 = tabp[row*width+j+2];
-                T r4 = tabp[row*width+j+3];
+                //---------- i + 0 ----------
+                PERFC_MEM += 4;
+                __m256d l_0_0 = _mm256_load_pd(tabp+(i+0)*width+j+0);
 
-                if(i != row) {
-                    PERFC_MEM += 4;
-                    T l1 = tabp[i*width+j];
-                    T l2 = tabp[i*width+j+1];
-                    T l3 = tabp[i*width+j+2];
-                    T l4 = tabp[i*width+j+3];
+                PERFC_ADDMUL += 2*4;
+                __m256d p_0_0 = _mm256_mul_pd(f0, r0);
+                __m256d q_0_0 = _mm256_sub_pd(l_0_0, p_0_0);
 
-                    PERFC_ADDMUL += 8;
-                    T p1 = l1 - fac1*r1;
-                    T p2 = l2 - fac1*r2;
-                    T p3 = l3 - fac1*r3;
-                    T p4 = l4 - fac1*r4;
+                _mm256_store_pd(tabp+(i+0)*width+j+0, q_0_0);
 
-                    tabp[i*width+j] = p1;
-                    tabp[i*width+j+1] = p2;
-                    tabp[i*width+j+2] = p3;
-                    tabp[i*width+j+3] = p4;
-                }
-                if(i+1 != row) {
-                    PERFC_MEM += 4;
-                    T l1 = tabp[(i+1)*width+j];
-                    T l2 = tabp[(i+1)*width+j+1];
-                    T l3 = tabp[(i+1)*width+j+2];
-                    T l4 = tabp[(i+1)*width+j+3];
+                //---------- i + 1 ----------
+                PERFC_MEM += 4;
+                __m256d l_1_0 = _mm256_load_pd(tabp+(i+1)*width+j+0);
 
-                    PERFC_ADDMUL += 8;
-                    T p1 = l1 - fac2*r1;
-                    T p2 = l2 - fac2*r2;
-                    T p3 = l3 - fac2*r3;
-                    T p4 = l4 - fac2*r4;
+                PERFC_ADDMUL += 2*4;
+                __m256d p_1_0 = _mm256_mul_pd(f1, r0);
+                __m256d q_1_0 = _mm256_sub_pd(l_1_0, p_1_0);
 
-                    tabp[(i+1)*width+j] = p1;
-                    tabp[(i+1)*width+j+1] = p2;
-                    tabp[(i+1)*width+j+2] = p3;
-                    tabp[(i+1)*width+j+3] = p4;
-                }
+                _mm256_store_pd(tabp+(i+1)*width+j+0, q_1_0);
             }
 
             for(int j = width-(width%4); j < width; ++j) {
-                if(i != row) {
-                    PERFC_ADDMUL+=2; PERFC_MEM+=1;
-                    tabp[i*width+j] -= fac1*tabp[row*width+j];
-                }
-                if(i+1 != row) {
-                    PERFC_ADDMUL+=2; PERFC_MEM+=1;
-                    tabp[(i+1)*width+j] -= fac2*tabp[row*width+j];
-                }
+                PERFC_MEM += 1;
+                T r1 = tabp[m*width+j];
+
+                PERFC_ADDMUL += 2*2;
+                tabp[(i+0)*width+j] -= fac0*r1;
+                tabp[(i+1)*width+j] -= fac1*r1;
             }
-
         }
+
+        for(int i = m-(m%2); i < m; ++i) {
+            T fac = tabp[i*width+col] * ipiv;
+            for(int j = 0; j < width; ++j) {
+                PERFC_ADDMUL += 2; ++PERFC_MEM;
+                tabp[i*width+j] -= fac*tabp[m*width+j];
+            }
+        }
+
+        // swap back
+        PERFC_MEM += 2 * width;
+        for(int i = 0; i < width; ++i) {
+            T tmp = tabp[row*width+i];
+            tabp[row*width+i] = tabp[m*width+i];
+            tabp[m*width+i] = tmp;
+        }
+
         active[row] = col;
-        ++PERFC_ADDMUL; ++PERFC_MEM;
-        T fac = tabp[m*width+col]*ipiv;
-        for(int j = 0; j < width; ++j) {
-            PERFC_ADDMUL += 2; ++PERFC_MEM;
-            tabp[m*width+j] -= fac*tabp[row*width+j];
-        }
-
-
     }
 
     void load(std::string fname) {
