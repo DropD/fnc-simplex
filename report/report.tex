@@ -177,8 +177,15 @@ as well as the compiler, version, and flags used. I strongly recommend that you 
 Profiling of the {\verb swapNxM_block } implementations showed that between 70\% and 90\% of the time is spent on\\
 {\verb _mm256_load_pd } calls.
 
-Nontemporal assignment showed a negligible effect on the swapping implementations, while prefetching lead to a considerable slowdown.
-%\includegraphics[scale=0.33]{dft-performance.eps}
+As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a negligible effect on the swapping implementations,
+while prefetching lead to a considerable slowdown.
+
+
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/results_cachecontrol.eps}
+  \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline,
+  all with the same operation count.\label{res_cachecontrol}}
+\end{figure}
 
 \ptodo{Next divide the experiments into classes, one paragraph for each. In the simplest case you have one plot that has the size on the x-axis and the performance on the y-axis. The plot will contain several lines, one for each relevant code version. Discuss the plot and extract the overall performance gain from baseline to best code. Also state the percentage of peak performance for the best code. Note that the peak may change depending on the situation. For example, if you only do additions it would be 12 Gflop/s
 on one core with 3 Ghz and SSE and single precision floating point.
