@@ -126,21 +126,24 @@ the third facilitates the gaussian elimination step.
 
 Profiling was done with gprof, perf and valgrind. All tools consistently showed that the vast majority of the
 runtime is spent in the {\tt base\_exchange} function, where we focused all subsequent optimization.
-Further annotated analysis revealed stalls at the memory access functions, can be alleviated via ILP where unit stride access was applicable.
+Further annotated analysis revealed stalls at the memory access functions, which can be alleviated via ILP via static scalar assignment
+where unit stride access was applicable.
 
 
 \rtodo{
 \mypar{Array}
 }
 The Array optimization replaces the vector of vectors implementation of the tableau by
-a C99 one dimensional contiguous array allocated and aligned using { \verb _mm_malloc } from
+a C99 one dimensional contiguous array allocated and aligned using {\tt \_mm\_alloc } from
 the intel intrinsics headers.
 
 All subsequent optimizations were based on this implementation.
 
 \dtodo{
-\mypar{Nontemporal Assignments}
+\mypar{Cache control}
 }
+Cache control was attempted through intrinsics for nontemporal assignment in order to avoid polluting the cache with updates on the active basis elements and
+effective cost calculations. We further added prefetching in order to load soon-to-be-used blocks into the L2 cache.
 
 \rtodo{
 \mypar{Blocking}
@@ -189,8 +192,18 @@ The same technique was used to measure runtime, however instrumentalization was 
 
 \mypar{Results}
 
-Profiling of the {\tt swapNxM\_block } implementations showed that between $70\,\%$ and $90\,\%$ of the time is spent on\\
-{\verb _mm256_load_pd } calls.
+Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on\\
+{\tt \_mm256\_load\_pd } calls.
+
+As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a negligible effect on the swapping implementations,
+while prefetching lead to a considerable slowdown.
+
+
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/results_cachecontrol.eps}
+  \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline,
+  all with the same operation count.\label{res_cachecontrol}}
+\end{figure}
 
 \ptodo{Next divide the experiments into classes, one paragraph for each. In the simplest case you have one plot that has the size on the x-axis and the performance on the y-axis. The plot will contain several lines, one for each relevant code version. Discuss the plot and extract the overall performance gain from baseline to best code. Also state the percentage of peak performance for the best code. Note that the peak may change depending on the situation. For example, if you only do additions it would be 12 Gflop/s
 on one core with 3 Ghz and SSE and single precision floating point.
