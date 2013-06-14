@@ -124,6 +124,7 @@ The steps performed in each iteration are separated into three functions:
 The first two contain the code for finding the pivot element to use in the iteration whereas
 the third facilitates the gaussian elimination step.
 
+\mypar{Profiling}
 Profiling was done with gprof, perf and valgrind. All tools consistently showed that the vast majority of the
 runtime is spent in the {\tt base\_exchange} function, where we focused all subsequent optimization.
 Further annotated analysis revealed stalls at the memory access functions, which can be alleviated via ILP via static scalar assignment
@@ -139,11 +140,9 @@ the intel intrinsics headers.
 
 All subsequent optimizations were based on this implementation.
 
-\dtodo{
 \mypar{Cache control}
-}
-Cache control was attempted through intrinsics for nontemporal assignment in order to avoid polluting the cache with updates on the active basis elements and
-effective cost calculations. We further added prefetching in order to load soon-to-be-used blocks into the L2 cache.
+Improvement of cache access attempted through intrinsics for nontemporal assignment in order to avoid polluting the cache with updates on the active basis elements and
+effective cost calculations. We further added prefetching in order to load soon-to-be-used blocks into the L2 cache, as well as prefetching parts of the current block into L1.
 
 \rtodo{
 \mypar{Blocking}
@@ -178,7 +177,7 @@ Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% 
 {\tt \_mm256\_load\_pd } calls.
 
 As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a negligible effect on the swapping implementations,
-while prefetching lead to a considerable slowdown.
+while any kind of manual prefetching lead to a considerable slowdown.
 
 
 \begin{figure}\centering
