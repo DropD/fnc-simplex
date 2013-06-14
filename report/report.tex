@@ -134,7 +134,7 @@ where unit stride access was applicable.
 \mypar{Array}
 }
 The Array optimization replaces the vector of vectors implementation of the tableau by
-a C99 one dimensional contiguous array allocated and aligned using {\verb _mm_alloc } from
+a C99 one dimensional contiguous array allocated and aligned using {\tt \_mm\_alloc } from
 the intel intrinsics headers.
 
 All subsequent optimizations were based on this implementation.
@@ -174,8 +174,8 @@ as well as the compiler, version, and flags used. I strongly recommend that you 
 
 \mypar{Results}
 
-Profiling of the {\verb swapNxM_block } implementations showed that between 70\% and 90\% of the time is spent on\\
-{\verb _mm256_load_pd } calls.
+Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on\\
+{\tt \_mm256\_load\_pd } calls.
 
 As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a negligible effect on the swapping implementations,
 while prefetching lead to a considerable slowdown.
