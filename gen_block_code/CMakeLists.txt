@@ -20,7 +20,7 @@ add_custom_command(
 
 #---------- gen target ----------
 
-add_custom_target(gen DEPENDS gen_block.py block.py block_avx.py)
+add_custom_target(gen DEPENDS gen_block.py block.py block_swap.py block_avx.py block_swap_avx.py)
 
 #---------- generator script ----------
 
@@ -44,11 +44,27 @@ add_custom_command(
     )
 
 add_custom_command(
+    OUTPUT block_swap.py
+    COMMAND cheetah compile ${ch_flags} block_swap.tmpl
+    COMMENT "cheetah compile block_swap.tmpl --> block_swap.py"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/block_swap.tmpl
+    )
+
+add_custom_command(
     OUTPUT block_avx.py
     COMMAND cheetah compile ${ch_flags} block_avx.tmpl
     COMMENT "cheetah compile block_avx.tmpl --> block_avx.py"
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/block_avx.tmpl
+    )
+
+add_custom_command(
+    OUTPUT block_swap_avx.py
+    COMMAND cheetah compile ${ch_flags} block_swap_avx.tmpl
+    COMMENT "cheetah compile block_swap_avx.tmpl --> block_swap_avx.py"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/block_swap_avx.tmpl
     )
 
 #---------- templates ----------
@@ -61,12 +77,28 @@ add_custom_command(
     )
 
 add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/block_swap.tmpl
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/block_swap.tmpl block_swap.tmpl
+    COMMENT "copy block_swap.tmpl"
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/block_swap.tmpl
+    )
+
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/block_avx.tmpl
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/block_avx.tmpl block_avx.tmpl
     COMMENT "copy block_avx.tmpl"
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/block_avx.tmpl
     )
 
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/block_swap_avx.tmpl
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/block_swap_avx.tmpl block_swap_avx.tmpl
+    COMMENT "copy block_swap_avx.tmpl"
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/block_swap_avx.tmpl
+    )
+
 set(cleanfiles "${cleanfiles};block.pyc")
+set(cleanfiles "${cleanfiles};block_swap.pyc")
 set(cleanfiles "${cleanfiles};block_avx.pyc")
+set(cleanfiles "${cleanfiles};block_swap_avx.pyc")
 set_directory_properties(PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${cleanfiles}")

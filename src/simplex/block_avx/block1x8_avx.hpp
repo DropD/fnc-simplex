@@ -1,5 +1,3 @@
-%assert($M%4 == 0)
-%set m = $M/4
 /*
 Assumptions:
     See base class.
@@ -13,7 +11,7 @@ Assumptions:
 #include "../Simplex.hpp"
 
 template <typename T>
-class Simplex_block${N}x${M}_avx : public SimplexBase<T> {
+class Simplex_block1x8_avx : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -30,7 +28,7 @@ class Simplex_block${N}x${M}_avx : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block${N}x${M}_avx"; }
+    std::string get_identifier() { return "block1x8_avx"; }
 
     void solve() {
 
@@ -108,53 +106,40 @@ class Simplex_block${N}x${M}_avx : public SimplexBase<T> {
         ++PERFC_DIV;
         T ipiv = 1. / pivot;
 
-        for(int i = 0; i < m-(m%$N); i += $N) {
-            PERFC_MEM+=2*$N; PERFC_ADDMUL+=$N;
-            %for S in range($N):
-            T fac$S = tabp[(i+$S)*width+col] * ipiv;
-            __m256d f$S = _mm256_set1_pd(fac$S);
-            %end for
+        for(int i = 0; i < m-(m%1); i += 1) {
+            PERFC_MEM+=2*1; PERFC_ADDMUL+=1;
+            T fac0 = tabp[(i+0)*width+col] * ipiv;
+            __m256d f0 = _mm256_set1_pd(fac0);
             
-            for(int j = 0; j < width-(width%$M); j += $M) {
-                %for t in range($m):
-                %set T = $t * 4
-                __m256d r$t = _mm256_load_pd(tabp+row*width+j+$T);
-                %end for
-                %for S in range($N):
+            for(int j = 0; j < width-(width%8); j += 8) {
+                __m256d r0 = _mm256_load_pd(tabp+row*width+j+0);
+                __m256d r1 = _mm256_load_pd(tabp+row*width+j+4);
 
-                //---------- i + $S ----------
-                PERFC_MEM += $M;
-                %for t in range($m):
-                %set T = $t * 4
-                __m256d l_${S}_${t} = _mm256_load_pd(tabp+(i+$S)*width+j+$T);
-                %end for
+                //---------- i + 0 ----------
+                PERFC_MEM += 8;
+                __m256d l_0_0 = _mm256_load_pd(tabp+(i+0)*width+j+0);
+                __m256d l_0_1 = _mm256_load_pd(tabp+(i+0)*width+j+4);
 
-                PERFC_ADDMUL += 2*${M};
-                %for t in range($m):
-                %set T = $t * 4
-                __m256d p_${S}_${t} = _mm256_mul_pd(f$S, r$t);
-                __m256d q_${S}_${t} = _mm256_sub_pd(l_${S}_${t}, p_${S}_${t});
-                %end for
+                PERFC_ADDMUL += 2*8;
+                __m256d p_0_0 = _mm256_mul_pd(f0, r0);
+                __m256d q_0_0 = _mm256_sub_pd(l_0_0, p_0_0);
+                __m256d p_0_1 = _mm256_mul_pd(f0, r1);
+                __m256d q_0_1 = _mm256_sub_pd(l_0_1, p_0_1);
 
-                %for t in range($m):
-                %set T = $t * 4
-                _mm256_store_pd(tabp+(i+$S)*width+j+$T, q_${S}_${t});
-                %end for
-                %end for
+                _mm256_store_pd(tabp+(i+0)*width+j+0, q_0_0);
+                _mm256_store_pd(tabp+(i+0)*width+j+4, q_0_1);
             }
 
-            for(int j = width-(width%$M); j < width; ++j) {
+            for(int j = width-(width%8); j < width; ++j) {
                 PERFC_MEM += 1;
                 T r1 = tabp[row*width+j];
 
-                PERFC_ADDMUL += 2*${N};
-                %for S in range($N):
-                tabp[(i+$S)*width+j] -= fac$S*r1;
-                %end for
+                PERFC_ADDMUL += 2*1;
+                tabp[(i+0)*width+j] -= fac0*r1;
             }
         }
 
-        for(int i = m-(m%$N); i < m; ++i) {
+        for(int i = m-(m%1); i < m; ++i) {
             T fac = tabp[i*width+col] * ipiv;
             for(int j = 0; j < width; ++j) {
                 PERFC_ADDMUL += 2; ++PERFC_MEM;

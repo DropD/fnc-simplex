@@ -8,10 +8,10 @@ Assumptions:
 
 #pragma once
 
-#include "Simplex.hpp"
+#include "../Simplex.hpp"
 
 template <typename T>
-class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
+class Simplex_block${N}x${M} : public SimplexBase<T> {
 
     using SimplexBase<T>::m;
     using SimplexBase<T>::n;
@@ -28,7 +28,7 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
     using SimplexBase<T>::PERFC_ADDMUL;
     using SimplexBase<T>::PERFC_DIV;
 
-    std::string get_identifier() { return "block${N}x${M}_swap"; }
+    std::string get_identifier() { return "block${N}x${M}"; }
 
     void solve() {
 
@@ -102,13 +102,7 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
     inline void basis_exchange(int row, int col) {
         ++PERFC_MEM;
         T pivot = tabp[row*width+col];
-        // swap pivot row and last
-        PERFC_MEM += 2 * width;
-        for(int i = 0; i < width; ++i) {
-            T tmp = tabp[row*width+i];
-            tabp[row*width+i] = tabp[m*width+i];
-            tabp[m*width+i] = tmp;
-        }
+        
         ++PERFC_DIV;
         T ipiv = 1. / pivot;
 
@@ -120,7 +114,7 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
             
             for(int j = 0; j < width-(width%$M); j += $M) {
                 %for T in range($M):
-                T r$T = tabp[m*width+j+$T];
+                T r$T = tabp[row*width+j+$T];
                 %end for
                 %for S in range($N):
 
@@ -143,7 +137,7 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
 
             for(int j = width-(width%$M); j < width; ++j) {
                 PERFC_MEM += 1;
-                T r1 = tabp[m*width+j];
+                T r1 = tabp[row*width+j];
 
                 PERFC_ADDMUL += 2*${N};
                 %for S in range($N):
@@ -156,16 +150,8 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
             T fac = tabp[i*width+col] * ipiv;
             for(int j = 0; j < width; ++j) {
                 PERFC_ADDMUL += 2; ++PERFC_MEM;
-                tabp[i*width+j] -= fac*tabp[m*width+j];
+                tabp[i*width+j] -= fac*tabp[row*width+j];
             }
-        }
-
-        // swap back
-        PERFC_MEM += 2 * width;
-        for(int i = 0; i < width; ++i) {
-            T tmp = tabp[row*width+i];
-            tabp[row*width+i] = tabp[m*width+i];
-            tabp[m*width+i] = tmp;
         }
 
         active[row] = col;
