@@ -11,7 +11,8 @@ import cPickle
 #~ keep = [ 'baseline', 'avx', 'block2_swap', 'block2_swap_avx', 'block4_swap_avx', 'block8_swap_avx', 'nta' ]
 #~ keep = [ 'baseline', 'avx', 'block2_swap', 'block2_swap_avx', 'block4_swap_avx', 'block8_swap_avx', 'nta', 'soplex', 'gurobi' ]
 #~ keep = [ 'baseline', 'soplex', 'gurobi', 'glpk' ]
-#~ keep = [ 'baseline', 'block16x16_swap', 'block16x1_swap', 'block16x8_swap', 'block2x8_swap', 'block1x4_swap', 'block2x4_swap' ]
+#~ keep = [ 'baseline', 'block2x8_swap', 'block2x4_swap', 
+#~ 'block16x16_swap_avx','block16x16_swap', 'block2x8_swap_avx', 'block2x4_swap_avx' ]
 ignore = [ ]
 #~ ignore = [ 'block2_swap', 'avx' ]
 #~ ignore = [ 'block2_swap', 'avx' ]
