@@ -75,19 +75,28 @@ a brief overview of related work.
 \mypar{Motivation} The Simplex algorithm for linear optimization is widely
 used \mytodo{add examples}
 
-Performance can be very critical in some applications when 
-optimizing a linear problem is a crucial part of decision making.
-\mytodo{add reasons and examples}
+The simplex solution to linear problems may be used as a crucial part in
+basic decision making in business applications, for example in logistics.
+In this environments performance is important. Therefore it is interesting to see how far
+a solver for a specific class of linear problems can be optimized.
 
 \mypar{Implementation} We present an implementation which is optimized 
 for a limited class of linear optimization problems and solves this kind of problem
 faster than any commerciably available general purpose solver.
 
-\mypar{Related work} \mytodo{cite original danzig paper, handouts from opti, papers of the other implementations.}
+\mypar{Related work} Many production grade linear optimization packages exist.
+We used three of them to compare the performance of our implementation to what is being
+used in big business.
+\begin{itemize}
+    \item{GLPK \cite{glpk}, a free open source linear programming package}
+    \item{Gurobi \cite{gurobi}, a commercial grade package which claims to be the fastest available solution when taking into account multi-threading.}
+    \item{SoPlex}
+\end{itemize}
+\mytodo{cite original danzig paper, handouts from opti, papers of the other implementations.}
 
 \section{Background: The Simplex Algorithm}\label{sec:background}
 
-\mypar{Linear Optimization Problems} \rtodo{put the Max c'x Subject to \dots formula and explain}
+\mypar{Linear Optimization Problems} \mytodo{put the Max c'x Subject to \dots formula and explain}
 
 \mypar{Standard form Problems} \mytodo{explain standard form, mention restriction to standard form}
 % standard form restrictions result from trying to keep the focus more on optimization and less on implementing a domain specific language parser.
@@ -130,9 +139,7 @@ Further annotated analysis revealed stalls at the memory access functions, which
 where unit stride access was applicable.
 
 
-\rtodo{
 \mypar{Array}
-}
 The Array optimization replaces the vector of vectors implementation of the tableau by
 a C99 one dimensional contiguous array allocated and aligned using {\tt \_mm\_alloc } from
 the intel intrinsics headers.
@@ -145,9 +152,7 @@ All subsequent optimizations were based on this implementation.
 Cache control was attempted through intrinsics for nontemporal assignment in order to avoid polluting the cache with updates on the active basis elements and
 effective cost calculations. We further added prefetching in order to load soon-to-be-used blocks into the L2 cache.
 
-\rtodo{
 \mypar{Blocking}
-}
 As a next step we added blocking in the loop that runs over the whole tableau 
 inside the basis exchange. block sizes from $1 \times 1$ to $16 \times 16$ were tried.
 
