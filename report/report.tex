@@ -132,7 +132,7 @@ on the {\tt base\_exchange} step.
 \mypar{Array}
 }
 The Array optimization replaces the vector of vectors implementation of the tableau by
-a C99 one dimensional contiguous array allocated and aligned using {\verb _mm_alloc} from
+a C99 one dimensional contiguous array allocated and aligned using { \verb _mm_malloc } from
 the intel intrinsics headers.
 
 All subsequent optimizations were based on this implementation.
@@ -148,7 +148,7 @@ As a next step we added blocking in the loop that runs over the whole tableau
 inside the basis exchange. block sizes from $1 \times 1$ to $16 \times 16$ were tried.
 
 The code for different block sizes was generated using 
-{\tt cheetah, a templating engine for python}. The following optimizations were introduced
+{\tt cheetah} \cite{cheetah}, a templating engine for python. The following optimizations were introduced
 by changing the code templates to be able to make use of the best block size.
 
 \mytodo{
@@ -231,7 +231,7 @@ convinced you are the reader knows it.
 high quality. Many people may read it and the quality makes a big difference.
 In this class, the quality is part of the grade.
 
-\item Books helping you to write better: \cite{Higham:98} and \cite{Strunk:00}.
+\item Books helping you to write better: %\cite{Higham:98} and \cite{Strunk:00}.
 
 \item Conversion to pdf (latex users only): 
 
