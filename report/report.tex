@@ -144,8 +144,12 @@ All subsequent optimizations were based on this implementation.
 \rtodo{
 \mypar{Blocking}
 }
-As a next step we did blocking in the loop that runs over the whole tableau 
-inside the basis exchange
+As a next step we added blocking in the loop that runs over the whole tableau 
+inside the basis exchange. block sizes from $1 \times 1$ to $16 \times 16$ were tried.
+
+The code for different block sizes was generated using 
+{\tt cheetah, a templating engine for python}. The following optimizations were introduced
+by changing the code templates to be able to make use of the best block size.
 
 \mytodo{
 \mypar{Vectorization}
