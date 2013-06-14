@@ -182,7 +182,7 @@ A random linear problem generator was written to test the implementations.
 The problem generator is restricted for simplicity's sake to generate problems with guaranteed feasibility by allowing only positive coefficients. 
 The same parameter was used for the number of Variables as well as the number of constraints.
 
-The problem size was varied from 10 to 1000 for most experiments. For profiling also larger problems were used. \dtodo{what problem sizes did you actually use?}
+The problem size was varied from 10 to 1000, or up to 4000 where relevant for out-of-cache comparison.
 
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
@@ -196,20 +196,31 @@ best block sizes for blocking of the elimination step?
 best block sizes for unrolled/ssa calculation steps?
 vectorisation useful (cf autovectorisation)?
 cache control useful?
+comparison to 3rd party
+are we at the memory bandwidth maximum? -> roofline, yes
 }
 
 Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on\\
 {\tt \_mm256\_load\_pd } calls.
 
-As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a mostly positive but miniscule effect on the swapping implementations,
+As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
-
 \begin{figure}\centering
-  \includegraphics[scale=0.4]{img/results_cachecontrol.eps}
+  \includegraphics[scale=0.4]{img/results_cachecontrol_novec.eps}
   \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline,
   all with the same operation count.\label{res_cachecontrol}}
 \end{figure}
+
+From the roofline plot shown in Fig.~\ref{res_roof_high} we learn that our best-performing implementation is very close to the theoretical memory limit.
+The corresponding test set starts with problems of size 500 in order to measure only RAM to CPU traffic.
+
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/roof_high_autovec.eps}
+  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better readability.\label{res_roof_high}}
+\end{figure}
+
+
 
 \ptodo{Next divide the experiments into classes, one paragraph for each. In the simplest case you have one plot that has the size on the x-axis and the performance on the y-axis. The plot will contain several lines, one for each relevant code version. Discuss the plot and extract the overall performance gain from baseline to best code. Also state the percentage of peak performance for the best code. Note that the peak may change depending on the situation. For example, if you only do additions it would be 12 Gflop/s
 on one core with 3 Ghz and SSE and single precision floating point.
