@@ -87,7 +87,7 @@ faster than any commerciably available general purpose solver.
 
 \section{Background: The Simplex Algorithm}\label{sec:background}
 
-\mypar{Linear Optimization Problems} \mytodo{put the Max c'x Subject to \dots formula and explain}
+\mypar{Linear Optimization Problems} \rtodo{put the Max c'x Subject to \dots formula and explain}
 
 \mypar{Standard form Problems} \mytodo{explain standard form, mention restriction to standard form}
 % standard form restrictions result from trying to keep the focus more on optimization and less on implementing a domain specific language parser.
@@ -147,8 +147,12 @@ effective cost calculations. We further added prefetching in order to load soon-
 \rtodo{
 \mypar{Blocking}
 }
-As a next step we did blocking in the loop that runs over the whole tableau 
-inside the basis exchange
+As a next step we added blocking in the loop that runs over the whole tableau 
+inside the basis exchange. block sizes from $1 \times 1$ to $16 \times 16$ were tried.
+
+The code for different block sizes was generated using 
+{\tt cheetah} \cite{cheetah}, a templating engine for python. The following optimizations were introduced
+by changing the code templates to be able to make use of the best block size.
 
 \mytodo{
 \mypar{Vectorization}
@@ -167,9 +171,23 @@ very short summary of the section. The typical structure follows.}
 
 \mypar{Experimental setup} \ptodo{Specify the platform (processor, frequency, cache sizes)
 as well as the compiler, version, and flags used. I strongly recommend that you play with optimization flags and consider also icc for additional potential speedup.}
+All experiments were conducted on a Core i5-3360M (Ivy Bridge), running GNU/Linux. 
+\dtodo{cpu specs table}
 
-\ptodo{Then explain what input you used and what range of sizes. The idea is to give enough information so the experiments are reproducible by somebody else on his or her code.}
-\mytodo{mention problem generator, instrumentalization, use of third party code.}
+GCC 4.7.3 was used for compilation. The following flags were used:
+{\tt -O3 -march\--native  } for automatic vectorization with {\tt -fno\--tree\--vectorize -fno\--tree\--slp\--vectorize -mno\--abm } additionally for non vectorized code.
+For profiling {\tt -g3 -ggdb -pg } was added.
+
+A random linear problem generator was written to test the implementations. 
+The problem generator is restricted for simplicity's sake to generate problems with guaranteed feasibility by allowing only positive coefficients. 
+The same parameter was used for the number of Variables as well as the number of constraints.
+
+The problem size was varied from 10 to 1000 for most experiments. For profiling also larger problems were used. \dtodo{what problem sizes did you actually use?}
+
+The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
+
+In order to compare to third party packages, their respective API was used according to the available documentation. 
+The same technique was used to measure runtime, however instrumentalization was not used.
 
 \mypar{Results}
 
@@ -244,7 +262,7 @@ convinced you are the reader knows it.
 high quality. Many people may read it and the quality makes a big difference.
 In this class, the quality is part of the grade.
 
-\item Books helping you to write better: \cite{Higham:98} and \cite{Strunk:00}.
+\item Books helping you to write better: %\cite{Higham:98} and \cite{Strunk:00}.
 
 \item Conversion to pdf (latex users only): 
 

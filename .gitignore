@@ -20,3 +20,5 @@ presentation/backup/
 *.pdf
 *.tdo
 *.synctex.gz
+*.bbl
+*.blg

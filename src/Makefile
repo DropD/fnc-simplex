@@ -50,9 +50,9 @@ endif
 CFLAGS += -I"../../gurobi/include"
 CFLAGS += -I"../../soplex/src"
 
-DBGFLAGS = $(CFLAGS) -Wall -Wextra -g3 -ggdb -pg -rdynamic
-ifeq ($(shell uname), Darwin)
-	DBGFLAGS = $(CFLAGS) -g -pg
+DBGFLAGS = $(CFLAGS) -Wall -Wextra -g3 -ggdb -pg
+ifeq (!$(shell uname), Darwin)
+	DBGFLAGS +=  -rdynamic
 endif
 LIBS = -lglpk -lm
 LIBS += -L"../../gurobi/lib/" -lgurobi_c++ -lgurobi55 -lpthread
