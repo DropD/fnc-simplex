@@ -176,9 +176,16 @@ GCC 4.7.3 was used for compilation. The following flags were used:
 {\tt -O3 -march\--native  } for automatic vectorization with {\tt -fno\--tree\--vectorize -fno\--tree\--slp\--vectorize -mno\--abm } additionally for non vectorized code.
 For profiling {\tt -g3 -ggdb -pg } was added.
 
-\ptodo{Then explain what input you used and what range of sizes. The idea is to give enough information so the experiments are reproducible by somebody else on his or her code.}
+A random linear problem generator was written to test the implementations. 
+The problem generator is restricted for simplicity's sake to generate problems with guaranteed feasibility by allowing only positive coefficients. 
+The same parameter was used for the number of Variables as well as the number of constraints.
 
-\mytodo{mention problem generator, instrumentalization, use of third party code.}
+The problem size was varied from 10 to 1000 for most experiments. For profiling also larger problems were used. \dtodo{what problem sizes did you actually use?}
+
+The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
+
+In order to compare to third party packages, their respective API was used according to the available documentation. 
+The same technique was used to measure runtime, however instrumentalization was not used.
 
 \mypar{Results}
 
