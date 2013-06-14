@@ -13,6 +13,7 @@ keep = [ 'avx', 'baseline', 'block_swap', 'block_avx', 'soplex', 'gurobi', 'glpk
 ignore = [  'block_swap', 'block_avx' ]
 
 outdir = "tmp"
+#~ outdir = "tmp_donj_upper_0_O3novec"
 prog = "../bin/main"
 
 if len(sys.argv) > 1:
