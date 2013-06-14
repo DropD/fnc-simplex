@@ -124,20 +124,21 @@ The steps performed in each iteration are separated into three functions:
 The first two contain the code for finding the pivot element to use in the iteration whereas
 the third facilitates the gaussian elimination step.
 
-Profiling with \dtodo{insert tool here} shows that \dtodo{$??\, \%$} of the
-runtime is spent in the {\tt base\_exchange} function. For this reason, subsequent optimizations focused
-on the {\tt base\_exchange} step.
+Profiling was done with gprof, perf and valgrind. All tools consistently showed that the vast majority of the
+runtime is spent in the {\tt base\_exchange} function, where we focused all subsequent optimization.
+Further annotated analysis revealed stalls at the memory access functions, can be alleviated via ILP where unit stride access was applicable.
+
 
 \rtodo{
 \mypar{Array}
 }
 The Array optimization replaces the vector of vectors implementation of the tableau by
-a C99 one dimensional contiguous array allocated and aligned using {\verb _mm_alloc} from
+a C99 one dimensional contiguous array allocated and aligned using {\verb _mm_alloc } from
 the intel intrinsics headers.
 
 All subsequent optimizations were based on this implementation.
 
-\mytodo{
+\dtodo{
 \mypar{Nontemporal Assignments}
 }
 
@@ -169,6 +170,10 @@ as well as the compiler, version, and flags used. I strongly recommend that you 
 \mytodo{mention problem generator, instrumentalization, use of third party code.}
 
 \mypar{Results}
+
+Profiling of the {\verb swapNxM_block } implementations showed that between 70\% and 90\% of the time is spent on\\
+{\verb _mm256_load_pd } calls.
+
 \ptodo{Next divide the experiments into classes, one paragraph for each. In the simplest case you have one plot that has the size on the x-axis and the performance on the y-axis. The plot will contain several lines, one for each relevant code version. Discuss the plot and extract the overall performance gain from baseline to best code. Also state the percentage of peak performance for the best code. Note that the peak may change depending on the situation. For example, if you only do additions it would be 12 Gflop/s
 on one core with 3 Ghz and SSE and single precision floating point.
 
