@@ -7,9 +7,11 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{spconf,amsmath,amssymb,graphicx}
-\usepackage{todonotes}
+\usepackage[colorinlistoftodos]{todonotes}
 
 \newcommand{\mytodo}[1]{\todo[inline]{#1}}
+\newcommand{\dtodo}[1]{\todo[inline, color=cyan]{#1}}
+\newcommand{\rtodo}[1]{\todo[inline, color=yellow]{#1}}
 \newcommand{\ptodo}[1]{\todo[inline, nolist, color=green]{#1}}
 
 % Example definitions.
@@ -70,10 +72,12 @@ should write the abstract last.}
 In this section we will motivate our choice of algorithm to optimize and give
 a brief overview of related work.
 
-\mypar{Motivation} The simplex algorithm for linear optimization is widely
-used in many applications\dots \mytodo{add examples}
+\mypar{Motivation} The Simplex algorithm for linear optimization is widely
+used \mytodo{add examples}
 
-Performance can be very critical in some applications because \dots \mytodo{add reasons and examples}
+Performance can be very critical in some applications when 
+optimizing a linear problem is a crucial part of decision making.
+\mytodo{add reasons and examples}
 
 \mypar{Implementation} We present an implementation which is optimized 
 for a limited class of linear optimization problems and solves this kind of problem
@@ -108,17 +112,45 @@ explain the baseline implementation, then go through locality and other optimiza
 \mytodo{
 \mypar{Baseline Implementation}
 }
+Our baseline implementation parses an input file containing the coefficients for the objective function and the constraints.
+The coefficients are stored in a two dimensional STL vector of vector representation of the simplex tableau.
 
-\mytodo{
+The steps performed in each iteration are separated into three functions: 
+\begin{itemize}
+    \item{\tt pivot\_col}
+    \item{\tt pivot\_row}
+    \item{\tt base\_exchange}
+\end{itemize}
+The first two contain the code for finding the pivot element to use in the iteration whereas
+the third facilitates the gaussian elimination step.
+
+Profiling with \dtodo{insert tool here} shows that \dtodo{$??\, \%$} of the
+runtime is spent in the {\tt base\_exchange} function. For this reason, subsequent optimizations focused
+on the {\tt base\_exchange} step.
+
+\rtodo{
 \mypar{Array}
 }
+The Array optimization replaces the vector of vectors implementation of the tableau by
+a C99 one dimensional contiguous array allocated and aligned using {\verb _mm_alloc} from
+the intel intrinsics headers.
 
-\mytodo{
-\mypar{Profiling}
-}
+All subsequent optimizations were based on this implementation.
 
 \mytodo{
 \mypar{Nontemporal Assignments}
+}
+
+\mytodo{
+\mypar{Static Single Assignment}
+}
+
+\mytodo{
+\mypar{Blocking}
+}
+
+\mytodo{
+\mypar{Vectorization}
 }
 
 \ptodo{As important as the final results is to show that you took a structured, organized approach to the optimization and that you explain why you did what you did.}

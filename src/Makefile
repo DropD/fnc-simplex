@@ -32,7 +32,7 @@ HEADEREXT = h hpp hxx
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic-errors -ansi
 CFLAGS += -O3 -march=native -m64
-CFLAGS += -fno-tree-vectorize -fno-tree-slp-vectorize -mno-avx
+CFLAGS += -fno-tree-vectorize -fno-tree-slp-vectorize -mno-abm
 
 ifeq ($(shell uname), Darwin)
 	CC = g++-4.7
@@ -51,6 +51,9 @@ CFLAGS += -I"../../gurobi/include"
 CFLAGS += -I"../../soplex/src"
 
 DBGFLAGS = $(CFLAGS) -Wall -Wextra -g3 -ggdb -pg -rdynamic
+ifeq ($(shell uname), Darwin)
+	DBGFLAGS = $(CFLAGS) -g -pg
+endif
 LIBS = -lglpk -lm
 LIBS += -L"../../gurobi/lib/" -lgurobi_c++ -lgurobi55 -lpthread
 LIBS += -L"../../soplex/lib/" -lsoplex -lz
