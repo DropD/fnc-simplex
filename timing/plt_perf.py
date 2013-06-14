@@ -8,11 +8,13 @@ from fncplot import fncplot
 import cPickle
 
 # algorithms filtered by intersection of keep and ignore, keep can be left undefined
-keep = [ 'baseline', 'avx', 'block2_swap', 'block2_swap_avx', 'block4_swap_avx', 'block8_swap_avx', 'nta' ]
+#~ keep = [ 'baseline', 'avx', 'block2_swap', 'block2_swap_avx', 'block4_swap_avx', 'block8_swap_avx', 'nta' ]
 #~ keep = [ 'baseline', 'avx', 'block2_swap', 'block2_swap_avx', 'block4_swap_avx', 'block8_swap_avx', 'nta', 'soplex', 'gurobi' ]
 #~ keep = [ 'baseline', 'soplex', 'gurobi', 'glpk' ]
-#~ ignore = [ ]
-ignore = [ 'block2_swap', 'avx' ]
+#~ keep = [ 'baseline', 'block16x16_swap', 'block16x1_swap', 'block16x8_swap', 'block2x8_swap', 'block1x4_swap', 'block2x4_swap' ]
+ignore = [ ]
+#~ ignore = [ 'block2_swap', 'avx' ]
+#~ ignore = [ 'block2_swap', 'avx' ]
 
 outdir = "tmp"
 #~ outdir = "tmp_donj_upper_0_O3novec"
