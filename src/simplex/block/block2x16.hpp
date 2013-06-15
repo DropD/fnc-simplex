@@ -110,7 +110,10 @@ class Simplex_block2x16 : public SimplexBase<T> {
             PERFC_MEM+=2; PERFC_ADDMUL+=2;
             T fac0 = tabp[(i+0)*width+col] * ipiv;
             T fac1 = tabp[(i+1)*width+col] * ipiv;
-            
+
+            PERFC_ADDMUL += 2*2 * width;
+            PERFC_MEM += 2*width;
+
             for(int j = 0; j < width-(width%16); j += 16) {
                 T r0 = tabp[row*width+j+0];
                 T r1 = tabp[row*width+j+1];
@@ -130,125 +133,127 @@ class Simplex_block2x16 : public SimplexBase<T> {
                 T r15 = tabp[row*width+j+15];
 
                 //---------- i + 0 ----------
-                PERFC_MEM += 16;
-                T l_0_0 = tabp[(i+0)*width+j+0];
-                T l_0_1 = tabp[(i+0)*width+j+1];
-                T l_0_2 = tabp[(i+0)*width+j+2];
-                T l_0_3 = tabp[(i+0)*width+j+3];
-                T l_0_4 = tabp[(i+0)*width+j+4];
-                T l_0_5 = tabp[(i+0)*width+j+5];
-                T l_0_6 = tabp[(i+0)*width+j+6];
-                T l_0_7 = tabp[(i+0)*width+j+7];
-                T l_0_8 = tabp[(i+0)*width+j+8];
-                T l_0_9 = tabp[(i+0)*width+j+9];
-                T l_0_10 = tabp[(i+0)*width+j+10];
-                T l_0_11 = tabp[(i+0)*width+j+11];
-                T l_0_12 = tabp[(i+0)*width+j+12];
-                T l_0_13 = tabp[(i+0)*width+j+13];
-                T l_0_14 = tabp[(i+0)*width+j+14];
-                T l_0_15 = tabp[(i+0)*width+j+15];
+                if(i+0 != row) {
+                    T l_0_0 = tabp[(i+0)*width+j+0];
+                    T l_0_1 = tabp[(i+0)*width+j+1];
+                    T l_0_2 = tabp[(i+0)*width+j+2];
+                    T l_0_3 = tabp[(i+0)*width+j+3];
+                    T l_0_4 = tabp[(i+0)*width+j+4];
+                    T l_0_5 = tabp[(i+0)*width+j+5];
+                    T l_0_6 = tabp[(i+0)*width+j+6];
+                    T l_0_7 = tabp[(i+0)*width+j+7];
+                    T l_0_8 = tabp[(i+0)*width+j+8];
+                    T l_0_9 = tabp[(i+0)*width+j+9];
+                    T l_0_10 = tabp[(i+0)*width+j+10];
+                    T l_0_11 = tabp[(i+0)*width+j+11];
+                    T l_0_12 = tabp[(i+0)*width+j+12];
+                    T l_0_13 = tabp[(i+0)*width+j+13];
+                    T l_0_14 = tabp[(i+0)*width+j+14];
+                    T l_0_15 = tabp[(i+0)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
-                T p_0_0 = l_0_0 - fac0*r0;
-                T p_0_1 = l_0_1 - fac0*r1;
-                T p_0_2 = l_0_2 - fac0*r2;
-                T p_0_3 = l_0_3 - fac0*r3;
-                T p_0_4 = l_0_4 - fac0*r4;
-                T p_0_5 = l_0_5 - fac0*r5;
-                T p_0_6 = l_0_6 - fac0*r6;
-                T p_0_7 = l_0_7 - fac0*r7;
-                T p_0_8 = l_0_8 - fac0*r8;
-                T p_0_9 = l_0_9 - fac0*r9;
-                T p_0_10 = l_0_10 - fac0*r10;
-                T p_0_11 = l_0_11 - fac0*r11;
-                T p_0_12 = l_0_12 - fac0*r12;
-                T p_0_13 = l_0_13 - fac0*r13;
-                T p_0_14 = l_0_14 - fac0*r14;
-                T p_0_15 = l_0_15 - fac0*r15;
+                    T p_0_0 = l_0_0 - fac0*r0;
+                    T p_0_1 = l_0_1 - fac0*r1;
+                    T p_0_2 = l_0_2 - fac0*r2;
+                    T p_0_3 = l_0_3 - fac0*r3;
+                    T p_0_4 = l_0_4 - fac0*r4;
+                    T p_0_5 = l_0_5 - fac0*r5;
+                    T p_0_6 = l_0_6 - fac0*r6;
+                    T p_0_7 = l_0_7 - fac0*r7;
+                    T p_0_8 = l_0_8 - fac0*r8;
+                    T p_0_9 = l_0_9 - fac0*r9;
+                    T p_0_10 = l_0_10 - fac0*r10;
+                    T p_0_11 = l_0_11 - fac0*r11;
+                    T p_0_12 = l_0_12 - fac0*r12;
+                    T p_0_13 = l_0_13 - fac0*r13;
+                    T p_0_14 = l_0_14 - fac0*r14;
+                    T p_0_15 = l_0_15 - fac0*r15;
 
-                tabp[(i+0)*width+j+0] = p_0_0;
-                tabp[(i+0)*width+j+1] = p_0_1;
-                tabp[(i+0)*width+j+2] = p_0_2;
-                tabp[(i+0)*width+j+3] = p_0_3;
-                tabp[(i+0)*width+j+4] = p_0_4;
-                tabp[(i+0)*width+j+5] = p_0_5;
-                tabp[(i+0)*width+j+6] = p_0_6;
-                tabp[(i+0)*width+j+7] = p_0_7;
-                tabp[(i+0)*width+j+8] = p_0_8;
-                tabp[(i+0)*width+j+9] = p_0_9;
-                tabp[(i+0)*width+j+10] = p_0_10;
-                tabp[(i+0)*width+j+11] = p_0_11;
-                tabp[(i+0)*width+j+12] = p_0_12;
-                tabp[(i+0)*width+j+13] = p_0_13;
-                tabp[(i+0)*width+j+14] = p_0_14;
-                tabp[(i+0)*width+j+15] = p_0_15;
+                    tabp[(i+0)*width+j+0] = p_0_0;
+                    tabp[(i+0)*width+j+1] = p_0_1;
+                    tabp[(i+0)*width+j+2] = p_0_2;
+                    tabp[(i+0)*width+j+3] = p_0_3;
+                    tabp[(i+0)*width+j+4] = p_0_4;
+                    tabp[(i+0)*width+j+5] = p_0_5;
+                    tabp[(i+0)*width+j+6] = p_0_6;
+                    tabp[(i+0)*width+j+7] = p_0_7;
+                    tabp[(i+0)*width+j+8] = p_0_8;
+                    tabp[(i+0)*width+j+9] = p_0_9;
+                    tabp[(i+0)*width+j+10] = p_0_10;
+                    tabp[(i+0)*width+j+11] = p_0_11;
+                    tabp[(i+0)*width+j+12] = p_0_12;
+                    tabp[(i+0)*width+j+13] = p_0_13;
+                    tabp[(i+0)*width+j+14] = p_0_14;
+                    tabp[(i+0)*width+j+15] = p_0_15;
+                }
 
                 //---------- i + 1 ----------
-                PERFC_MEM += 16;
-                T l_1_0 = tabp[(i+1)*width+j+0];
-                T l_1_1 = tabp[(i+1)*width+j+1];
-                T l_1_2 = tabp[(i+1)*width+j+2];
-                T l_1_3 = tabp[(i+1)*width+j+3];
-                T l_1_4 = tabp[(i+1)*width+j+4];
-                T l_1_5 = tabp[(i+1)*width+j+5];
-                T l_1_6 = tabp[(i+1)*width+j+6];
-                T l_1_7 = tabp[(i+1)*width+j+7];
-                T l_1_8 = tabp[(i+1)*width+j+8];
-                T l_1_9 = tabp[(i+1)*width+j+9];
-                T l_1_10 = tabp[(i+1)*width+j+10];
-                T l_1_11 = tabp[(i+1)*width+j+11];
-                T l_1_12 = tabp[(i+1)*width+j+12];
-                T l_1_13 = tabp[(i+1)*width+j+13];
-                T l_1_14 = tabp[(i+1)*width+j+14];
-                T l_1_15 = tabp[(i+1)*width+j+15];
+                if(i+1 != row) {
+                    T l_1_0 = tabp[(i+1)*width+j+0];
+                    T l_1_1 = tabp[(i+1)*width+j+1];
+                    T l_1_2 = tabp[(i+1)*width+j+2];
+                    T l_1_3 = tabp[(i+1)*width+j+3];
+                    T l_1_4 = tabp[(i+1)*width+j+4];
+                    T l_1_5 = tabp[(i+1)*width+j+5];
+                    T l_1_6 = tabp[(i+1)*width+j+6];
+                    T l_1_7 = tabp[(i+1)*width+j+7];
+                    T l_1_8 = tabp[(i+1)*width+j+8];
+                    T l_1_9 = tabp[(i+1)*width+j+9];
+                    T l_1_10 = tabp[(i+1)*width+j+10];
+                    T l_1_11 = tabp[(i+1)*width+j+11];
+                    T l_1_12 = tabp[(i+1)*width+j+12];
+                    T l_1_13 = tabp[(i+1)*width+j+13];
+                    T l_1_14 = tabp[(i+1)*width+j+14];
+                    T l_1_15 = tabp[(i+1)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
-                T p_1_0 = l_1_0 - fac1*r0;
-                T p_1_1 = l_1_1 - fac1*r1;
-                T p_1_2 = l_1_2 - fac1*r2;
-                T p_1_3 = l_1_3 - fac1*r3;
-                T p_1_4 = l_1_4 - fac1*r4;
-                T p_1_5 = l_1_5 - fac1*r5;
-                T p_1_6 = l_1_6 - fac1*r6;
-                T p_1_7 = l_1_7 - fac1*r7;
-                T p_1_8 = l_1_8 - fac1*r8;
-                T p_1_9 = l_1_9 - fac1*r9;
-                T p_1_10 = l_1_10 - fac1*r10;
-                T p_1_11 = l_1_11 - fac1*r11;
-                T p_1_12 = l_1_12 - fac1*r12;
-                T p_1_13 = l_1_13 - fac1*r13;
-                T p_1_14 = l_1_14 - fac1*r14;
-                T p_1_15 = l_1_15 - fac1*r15;
+                    T p_1_0 = l_1_0 - fac1*r0;
+                    T p_1_1 = l_1_1 - fac1*r1;
+                    T p_1_2 = l_1_2 - fac1*r2;
+                    T p_1_3 = l_1_3 - fac1*r3;
+                    T p_1_4 = l_1_4 - fac1*r4;
+                    T p_1_5 = l_1_5 - fac1*r5;
+                    T p_1_6 = l_1_6 - fac1*r6;
+                    T p_1_7 = l_1_7 - fac1*r7;
+                    T p_1_8 = l_1_8 - fac1*r8;
+                    T p_1_9 = l_1_9 - fac1*r9;
+                    T p_1_10 = l_1_10 - fac1*r10;
+                    T p_1_11 = l_1_11 - fac1*r11;
+                    T p_1_12 = l_1_12 - fac1*r12;
+                    T p_1_13 = l_1_13 - fac1*r13;
+                    T p_1_14 = l_1_14 - fac1*r14;
+                    T p_1_15 = l_1_15 - fac1*r15;
 
-                tabp[(i+1)*width+j+0] = p_1_0;
-                tabp[(i+1)*width+j+1] = p_1_1;
-                tabp[(i+1)*width+j+2] = p_1_2;
-                tabp[(i+1)*width+j+3] = p_1_3;
-                tabp[(i+1)*width+j+4] = p_1_4;
-                tabp[(i+1)*width+j+5] = p_1_5;
-                tabp[(i+1)*width+j+6] = p_1_6;
-                tabp[(i+1)*width+j+7] = p_1_7;
-                tabp[(i+1)*width+j+8] = p_1_8;
-                tabp[(i+1)*width+j+9] = p_1_9;
-                tabp[(i+1)*width+j+10] = p_1_10;
-                tabp[(i+1)*width+j+11] = p_1_11;
-                tabp[(i+1)*width+j+12] = p_1_12;
-                tabp[(i+1)*width+j+13] = p_1_13;
-                tabp[(i+1)*width+j+14] = p_1_14;
-                tabp[(i+1)*width+j+15] = p_1_15;
+                    tabp[(i+1)*width+j+0] = p_1_0;
+                    tabp[(i+1)*width+j+1] = p_1_1;
+                    tabp[(i+1)*width+j+2] = p_1_2;
+                    tabp[(i+1)*width+j+3] = p_1_3;
+                    tabp[(i+1)*width+j+4] = p_1_4;
+                    tabp[(i+1)*width+j+5] = p_1_5;
+                    tabp[(i+1)*width+j+6] = p_1_6;
+                    tabp[(i+1)*width+j+7] = p_1_7;
+                    tabp[(i+1)*width+j+8] = p_1_8;
+                    tabp[(i+1)*width+j+9] = p_1_9;
+                    tabp[(i+1)*width+j+10] = p_1_10;
+                    tabp[(i+1)*width+j+11] = p_1_11;
+                    tabp[(i+1)*width+j+12] = p_1_12;
+                    tabp[(i+1)*width+j+13] = p_1_13;
+                    tabp[(i+1)*width+j+14] = p_1_14;
+                    tabp[(i+1)*width+j+15] = p_1_15;
+                }
             }
 
             for(int j = width-(width%16); j < width; ++j) {
-                PERFC_MEM += 1;
                 T r1 = tabp[row*width+j];
 
-                PERFC_ADDMUL += 2*2;
-                tabp[(i+0)*width+j] -= fac0*r1;
-                tabp[(i+1)*width+j] -= fac1*r1;
+                if(i+0 != row) {
+                    tabp[(i+0)*width+j] -= fac0*r1;
+                }
+                if(i+1 != row) {
+                    tabp[(i+1)*width+j] -= fac1*r1;
+                }
             }
         }
 
-        for(int i = m-(m%2); i < m; ++i) {
+        for(int i = m-(m%2); i < m+1; ++i) {
             T fac = tabp[i*width+col] * ipiv;
             for(int j = 0; j < width; ++j) {
                 PERFC_ADDMUL += 2; ++PERFC_MEM;

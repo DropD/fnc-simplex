@@ -259,11 +259,13 @@ The same parameter was used for the number of Variables as well as the number of
 
 The problem size was varied from 10 to 1000, or up to 4000 where relevant for out-of-cache comparison.
 Due to the unpredictable count of steps the Simplex algorithm needs to reach a solution, each problem size was averaged over up to 100 samples.
+Additionally, in order to achieve a defined minimum of RDTSC cycles, small problems were repeatedly calculated as shown in the exercise framework.
 
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
 The same technique was used to measure runtime, however instrumentalization was not used.
+We used Gurobi\mytodo{references}, SoPlex, GLPK and CPPLEX, with the last one being dropped from testing because of numerical instability for large problems.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -279,21 +281,28 @@ are we at the memory bandwidth maximum? -> roofline, yes
 }
 
 
-Direct comparison with alternative Simplex solvers shows that even our baseline implementation performs significantly faster.
+Direct comparison with alternative Simplex solvers (see Fig.~\ref{res_external}) shows that even our baseline implementation performs significantly faster than any of the alternatives.
 This results from the simplicity assumptions we have made (regularity, conformity, definiteness) under which a lot of tedious checks can be eliminated.
 Unfortunately none of the APIs offered to impart this information to the respective solver.
 We plot the elapsed RDTSC cycles instead of per cycle performance as to not having to guess the operation count of each solver.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_compare_external.eps}
-  \caption{Comparison with Gurobi, SoPlex and GLPK.\label{fig:comp_ext}}
+  \caption{Comparison with Gurobi, SoPlex and GLPK.\label{res_external}}
 \end{figure}
+
+
+Of our own optimisation techniques, blocking with an additional copy (swap) step showed to be the most efficient, both non-auto-vectorised (Fig) and auto-vectorised (Fig).
+
+Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count, which incidentally turned out to be our originally picked sizes.
+
 
 
 Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls.
 
 
-As shown in Fig.~\ref{fig:res_cachecontrol}, non temporal assignment showed a mostly positive but small effect on the swapping implementations,
+Can we improve on this further?
+As shown in Fig.~\ref{fig:res_cachecontrol}, nontemporal assignment showed a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
 \begin{figure}\centering
@@ -302,6 +311,7 @@ while any kind of manual prefetching lead to a considerable slowdown.
   all with the same operation count.\label{fig:res_cachecontrol}}
 \end{figure}
 
+AVX
 
 From the roofline plot shown in Fig.~\ref{fig:res_roof_high} we learn that our best-performing implementation is very close to the theoretical memory limit.
 The corresponding test set starts with problems of size 500 in order to measure only RAM to CPU traffic.

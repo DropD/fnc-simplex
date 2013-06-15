@@ -122,7 +122,10 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
             T fac5 = tabp[(i+5)*width+col] * ipiv;
             T fac6 = tabp[(i+6)*width+col] * ipiv;
             T fac7 = tabp[(i+7)*width+col] * ipiv;
-            
+
+            PERFC_ADDMUL += 2*8 * width;
+            PERFC_MEM += 8*width;
+
             for(int j = 0; j < width-(width%16); j += 16) {
                 T r0 = tabp[m*width+j+0];
                 T r1 = tabp[m*width+j+1];
@@ -142,7 +145,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T r15 = tabp[m*width+j+15];
 
                 //---------- i + 0 ----------
-                PERFC_MEM += 16;
                 T l_0_0 = tabp[(i+0)*width+j+0];
                 T l_0_1 = tabp[(i+0)*width+j+1];
                 T l_0_2 = tabp[(i+0)*width+j+2];
@@ -160,7 +162,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_0_14 = tabp[(i+0)*width+j+14];
                 T l_0_15 = tabp[(i+0)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_0_0 = l_0_0 - fac0*r0;
                 T p_0_1 = l_0_1 - fac0*r1;
                 T p_0_2 = l_0_2 - fac0*r2;
@@ -196,7 +197,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 tabp[(i+0)*width+j+15] = p_0_15;
 
                 //---------- i + 1 ----------
-                PERFC_MEM += 16;
                 T l_1_0 = tabp[(i+1)*width+j+0];
                 T l_1_1 = tabp[(i+1)*width+j+1];
                 T l_1_2 = tabp[(i+1)*width+j+2];
@@ -214,7 +214,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_1_14 = tabp[(i+1)*width+j+14];
                 T l_1_15 = tabp[(i+1)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_1_0 = l_1_0 - fac1*r0;
                 T p_1_1 = l_1_1 - fac1*r1;
                 T p_1_2 = l_1_2 - fac1*r2;
@@ -250,7 +249,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 tabp[(i+1)*width+j+15] = p_1_15;
 
                 //---------- i + 2 ----------
-                PERFC_MEM += 16;
                 T l_2_0 = tabp[(i+2)*width+j+0];
                 T l_2_1 = tabp[(i+2)*width+j+1];
                 T l_2_2 = tabp[(i+2)*width+j+2];
@@ -268,7 +266,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_2_14 = tabp[(i+2)*width+j+14];
                 T l_2_15 = tabp[(i+2)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_2_0 = l_2_0 - fac2*r0;
                 T p_2_1 = l_2_1 - fac2*r1;
                 T p_2_2 = l_2_2 - fac2*r2;
@@ -304,7 +301,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 tabp[(i+2)*width+j+15] = p_2_15;
 
                 //---------- i + 3 ----------
-                PERFC_MEM += 16;
                 T l_3_0 = tabp[(i+3)*width+j+0];
                 T l_3_1 = tabp[(i+3)*width+j+1];
                 T l_3_2 = tabp[(i+3)*width+j+2];
@@ -322,7 +318,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_3_14 = tabp[(i+3)*width+j+14];
                 T l_3_15 = tabp[(i+3)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_3_0 = l_3_0 - fac3*r0;
                 T p_3_1 = l_3_1 - fac3*r1;
                 T p_3_2 = l_3_2 - fac3*r2;
@@ -358,7 +353,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 tabp[(i+3)*width+j+15] = p_3_15;
 
                 //---------- i + 4 ----------
-                PERFC_MEM += 16;
                 T l_4_0 = tabp[(i+4)*width+j+0];
                 T l_4_1 = tabp[(i+4)*width+j+1];
                 T l_4_2 = tabp[(i+4)*width+j+2];
@@ -376,7 +370,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_4_14 = tabp[(i+4)*width+j+14];
                 T l_4_15 = tabp[(i+4)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_4_0 = l_4_0 - fac4*r0;
                 T p_4_1 = l_4_1 - fac4*r1;
                 T p_4_2 = l_4_2 - fac4*r2;
@@ -412,7 +405,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 tabp[(i+4)*width+j+15] = p_4_15;
 
                 //---------- i + 5 ----------
-                PERFC_MEM += 16;
                 T l_5_0 = tabp[(i+5)*width+j+0];
                 T l_5_1 = tabp[(i+5)*width+j+1];
                 T l_5_2 = tabp[(i+5)*width+j+2];
@@ -430,7 +422,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_5_14 = tabp[(i+5)*width+j+14];
                 T l_5_15 = tabp[(i+5)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_5_0 = l_5_0 - fac5*r0;
                 T p_5_1 = l_5_1 - fac5*r1;
                 T p_5_2 = l_5_2 - fac5*r2;
@@ -466,7 +457,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 tabp[(i+5)*width+j+15] = p_5_15;
 
                 //---------- i + 6 ----------
-                PERFC_MEM += 16;
                 T l_6_0 = tabp[(i+6)*width+j+0];
                 T l_6_1 = tabp[(i+6)*width+j+1];
                 T l_6_2 = tabp[(i+6)*width+j+2];
@@ -484,7 +474,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_6_14 = tabp[(i+6)*width+j+14];
                 T l_6_15 = tabp[(i+6)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_6_0 = l_6_0 - fac6*r0;
                 T p_6_1 = l_6_1 - fac6*r1;
                 T p_6_2 = l_6_2 - fac6*r2;
@@ -520,7 +509,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 tabp[(i+6)*width+j+15] = p_6_15;
 
                 //---------- i + 7 ----------
-                PERFC_MEM += 16;
                 T l_7_0 = tabp[(i+7)*width+j+0];
                 T l_7_1 = tabp[(i+7)*width+j+1];
                 T l_7_2 = tabp[(i+7)*width+j+2];
@@ -538,7 +526,6 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
                 T l_7_14 = tabp[(i+7)*width+j+14];
                 T l_7_15 = tabp[(i+7)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_7_0 = l_7_0 - fac7*r0;
                 T p_7_1 = l_7_1 - fac7*r1;
                 T p_7_2 = l_7_2 - fac7*r2;
@@ -575,10 +562,8 @@ class Simplex_block8x16_swap : public SimplexBase<T> {
             }
 
             for(int j = width-(width%16); j < width; ++j) {
-                PERFC_MEM += 1;
                 T r1 = tabp[m*width+j];
 
-                PERFC_ADDMUL += 2*8;
                 tabp[(i+0)*width+j] -= fac0*r1;
                 tabp[(i+1)*width+j] -= fac1*r1;
                 tabp[(i+2)*width+j] -= fac2*r1;

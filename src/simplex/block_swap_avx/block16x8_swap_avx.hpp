@@ -146,17 +146,43 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
             __m256d f14 = _mm256_set1_pd(fac14);
             T fac15 = tabp[(i+15)*width+col] * ipiv;
             __m256d f15 = _mm256_set1_pd(fac15);
-            
-            for(int j = 0; j < width-(width%8); j += 8) {
+
+            PERFC_ADDMUL += 2*16 * width;
+            PERFC_MEM += 16*width;
+
+            int peel = (long long)tabp & 0x1f; /* tabp % 32 */
+            if(peel != 0) {
+                peel = (32 - peel)/sizeof(T);
+                for (int j = 0; j < peel; j++) {
+                    tabp[(i+0)*width+j] -= fac0*tabp[m*width+j];
+                    tabp[(i+1)*width+j] -= fac1*tabp[m*width+j];
+                    tabp[(i+2)*width+j] -= fac2*tabp[m*width+j];
+                    tabp[(i+3)*width+j] -= fac3*tabp[m*width+j];
+                    tabp[(i+4)*width+j] -= fac4*tabp[m*width+j];
+                    tabp[(i+5)*width+j] -= fac5*tabp[m*width+j];
+                    tabp[(i+6)*width+j] -= fac6*tabp[m*width+j];
+                    tabp[(i+7)*width+j] -= fac7*tabp[m*width+j];
+                    tabp[(i+8)*width+j] -= fac8*tabp[m*width+j];
+                    tabp[(i+9)*width+j] -= fac9*tabp[m*width+j];
+                    tabp[(i+10)*width+j] -= fac10*tabp[m*width+j];
+                    tabp[(i+11)*width+j] -= fac11*tabp[m*width+j];
+                    tabp[(i+12)*width+j] -= fac12*tabp[m*width+j];
+                    tabp[(i+13)*width+j] -= fac13*tabp[m*width+j];
+                    tabp[(i+14)*width+j] -= fac14*tabp[m*width+j];
+                    tabp[(i+15)*width+j] -= fac15*tabp[m*width+j];
+                }
+            }
+
+            int aligned_end = width - (width%8) - peel;
+
+            for(int j = 0; j < aligned_end; j += 8) {
                 __m256d r0 = _mm256_load_pd(tabp+m*width+j+0);
                 __m256d r1 = _mm256_load_pd(tabp+m*width+j+4);
 
                 //---------- i + 0 ----------
-                PERFC_MEM += 8;
                 __m256d l_0_0 = _mm256_load_pd(tabp+(i+0)*width+j+0);
                 __m256d l_0_1 = _mm256_load_pd(tabp+(i+0)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_0_0 = _mm256_mul_pd(f0, r0);
                 __m256d q_0_0 = _mm256_sub_pd(l_0_0, p_0_0);
                 __m256d p_0_1 = _mm256_mul_pd(f0, r1);
@@ -166,11 +192,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+0)*width+j+4, q_0_1);
 
                 //---------- i + 1 ----------
-                PERFC_MEM += 8;
                 __m256d l_1_0 = _mm256_load_pd(tabp+(i+1)*width+j+0);
                 __m256d l_1_1 = _mm256_load_pd(tabp+(i+1)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_1_0 = _mm256_mul_pd(f1, r0);
                 __m256d q_1_0 = _mm256_sub_pd(l_1_0, p_1_0);
                 __m256d p_1_1 = _mm256_mul_pd(f1, r1);
@@ -180,11 +204,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+1)*width+j+4, q_1_1);
 
                 //---------- i + 2 ----------
-                PERFC_MEM += 8;
                 __m256d l_2_0 = _mm256_load_pd(tabp+(i+2)*width+j+0);
                 __m256d l_2_1 = _mm256_load_pd(tabp+(i+2)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_2_0 = _mm256_mul_pd(f2, r0);
                 __m256d q_2_0 = _mm256_sub_pd(l_2_0, p_2_0);
                 __m256d p_2_1 = _mm256_mul_pd(f2, r1);
@@ -194,11 +216,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+2)*width+j+4, q_2_1);
 
                 //---------- i + 3 ----------
-                PERFC_MEM += 8;
                 __m256d l_3_0 = _mm256_load_pd(tabp+(i+3)*width+j+0);
                 __m256d l_3_1 = _mm256_load_pd(tabp+(i+3)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_3_0 = _mm256_mul_pd(f3, r0);
                 __m256d q_3_0 = _mm256_sub_pd(l_3_0, p_3_0);
                 __m256d p_3_1 = _mm256_mul_pd(f3, r1);
@@ -208,11 +228,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+3)*width+j+4, q_3_1);
 
                 //---------- i + 4 ----------
-                PERFC_MEM += 8;
                 __m256d l_4_0 = _mm256_load_pd(tabp+(i+4)*width+j+0);
                 __m256d l_4_1 = _mm256_load_pd(tabp+(i+4)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_4_0 = _mm256_mul_pd(f4, r0);
                 __m256d q_4_0 = _mm256_sub_pd(l_4_0, p_4_0);
                 __m256d p_4_1 = _mm256_mul_pd(f4, r1);
@@ -222,11 +240,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+4)*width+j+4, q_4_1);
 
                 //---------- i + 5 ----------
-                PERFC_MEM += 8;
                 __m256d l_5_0 = _mm256_load_pd(tabp+(i+5)*width+j+0);
                 __m256d l_5_1 = _mm256_load_pd(tabp+(i+5)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_5_0 = _mm256_mul_pd(f5, r0);
                 __m256d q_5_0 = _mm256_sub_pd(l_5_0, p_5_0);
                 __m256d p_5_1 = _mm256_mul_pd(f5, r1);
@@ -236,11 +252,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+5)*width+j+4, q_5_1);
 
                 //---------- i + 6 ----------
-                PERFC_MEM += 8;
                 __m256d l_6_0 = _mm256_load_pd(tabp+(i+6)*width+j+0);
                 __m256d l_6_1 = _mm256_load_pd(tabp+(i+6)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_6_0 = _mm256_mul_pd(f6, r0);
                 __m256d q_6_0 = _mm256_sub_pd(l_6_0, p_6_0);
                 __m256d p_6_1 = _mm256_mul_pd(f6, r1);
@@ -250,11 +264,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+6)*width+j+4, q_6_1);
 
                 //---------- i + 7 ----------
-                PERFC_MEM += 8;
                 __m256d l_7_0 = _mm256_load_pd(tabp+(i+7)*width+j+0);
                 __m256d l_7_1 = _mm256_load_pd(tabp+(i+7)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_7_0 = _mm256_mul_pd(f7, r0);
                 __m256d q_7_0 = _mm256_sub_pd(l_7_0, p_7_0);
                 __m256d p_7_1 = _mm256_mul_pd(f7, r1);
@@ -264,11 +276,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+7)*width+j+4, q_7_1);
 
                 //---------- i + 8 ----------
-                PERFC_MEM += 8;
                 __m256d l_8_0 = _mm256_load_pd(tabp+(i+8)*width+j+0);
                 __m256d l_8_1 = _mm256_load_pd(tabp+(i+8)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_8_0 = _mm256_mul_pd(f8, r0);
                 __m256d q_8_0 = _mm256_sub_pd(l_8_0, p_8_0);
                 __m256d p_8_1 = _mm256_mul_pd(f8, r1);
@@ -278,11 +288,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+8)*width+j+4, q_8_1);
 
                 //---------- i + 9 ----------
-                PERFC_MEM += 8;
                 __m256d l_9_0 = _mm256_load_pd(tabp+(i+9)*width+j+0);
                 __m256d l_9_1 = _mm256_load_pd(tabp+(i+9)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_9_0 = _mm256_mul_pd(f9, r0);
                 __m256d q_9_0 = _mm256_sub_pd(l_9_0, p_9_0);
                 __m256d p_9_1 = _mm256_mul_pd(f9, r1);
@@ -292,11 +300,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+9)*width+j+4, q_9_1);
 
                 //---------- i + 10 ----------
-                PERFC_MEM += 8;
                 __m256d l_10_0 = _mm256_load_pd(tabp+(i+10)*width+j+0);
                 __m256d l_10_1 = _mm256_load_pd(tabp+(i+10)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_10_0 = _mm256_mul_pd(f10, r0);
                 __m256d q_10_0 = _mm256_sub_pd(l_10_0, p_10_0);
                 __m256d p_10_1 = _mm256_mul_pd(f10, r1);
@@ -306,11 +312,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+10)*width+j+4, q_10_1);
 
                 //---------- i + 11 ----------
-                PERFC_MEM += 8;
                 __m256d l_11_0 = _mm256_load_pd(tabp+(i+11)*width+j+0);
                 __m256d l_11_1 = _mm256_load_pd(tabp+(i+11)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_11_0 = _mm256_mul_pd(f11, r0);
                 __m256d q_11_0 = _mm256_sub_pd(l_11_0, p_11_0);
                 __m256d p_11_1 = _mm256_mul_pd(f11, r1);
@@ -320,11 +324,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+11)*width+j+4, q_11_1);
 
                 //---------- i + 12 ----------
-                PERFC_MEM += 8;
                 __m256d l_12_0 = _mm256_load_pd(tabp+(i+12)*width+j+0);
                 __m256d l_12_1 = _mm256_load_pd(tabp+(i+12)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_12_0 = _mm256_mul_pd(f12, r0);
                 __m256d q_12_0 = _mm256_sub_pd(l_12_0, p_12_0);
                 __m256d p_12_1 = _mm256_mul_pd(f12, r1);
@@ -334,11 +336,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+12)*width+j+4, q_12_1);
 
                 //---------- i + 13 ----------
-                PERFC_MEM += 8;
                 __m256d l_13_0 = _mm256_load_pd(tabp+(i+13)*width+j+0);
                 __m256d l_13_1 = _mm256_load_pd(tabp+(i+13)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_13_0 = _mm256_mul_pd(f13, r0);
                 __m256d q_13_0 = _mm256_sub_pd(l_13_0, p_13_0);
                 __m256d p_13_1 = _mm256_mul_pd(f13, r1);
@@ -348,11 +348,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+13)*width+j+4, q_13_1);
 
                 //---------- i + 14 ----------
-                PERFC_MEM += 8;
                 __m256d l_14_0 = _mm256_load_pd(tabp+(i+14)*width+j+0);
                 __m256d l_14_1 = _mm256_load_pd(tabp+(i+14)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_14_0 = _mm256_mul_pd(f14, r0);
                 __m256d q_14_0 = _mm256_sub_pd(l_14_0, p_14_0);
                 __m256d p_14_1 = _mm256_mul_pd(f14, r1);
@@ -362,11 +360,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+14)*width+j+4, q_14_1);
 
                 //---------- i + 15 ----------
-                PERFC_MEM += 8;
                 __m256d l_15_0 = _mm256_load_pd(tabp+(i+15)*width+j+0);
                 __m256d l_15_1 = _mm256_load_pd(tabp+(i+15)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_15_0 = _mm256_mul_pd(f15, r0);
                 __m256d q_15_0 = _mm256_sub_pd(l_15_0, p_15_0);
                 __m256d p_15_1 = _mm256_mul_pd(f15, r1);
@@ -376,11 +372,9 @@ class Simplex_block16x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+15)*width+j+4, q_15_1);
             }
 
-            for(int j = width-(width%8); j < width; ++j) {
-                PERFC_MEM += 1;
+            for(int j = aligned_end; j < width; ++j) {
                 T r1 = tabp[m*width+j];
 
-                PERFC_ADDMUL += 2*16;
                 tabp[(i+0)*width+j] -= fac0*r1;
                 tabp[(i+1)*width+j] -= fac1*r1;
                 tabp[(i+2)*width+j] -= fac2*r1;

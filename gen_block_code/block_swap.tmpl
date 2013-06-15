@@ -117,7 +117,10 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
             %for S in range($N):
             T fac$S = tabp[(i+$S)*width+col] * ipiv;
             %end for
-            
+
+            PERFC_ADDMUL += 2*${N} * width;
+            PERFC_MEM += ${N}*width;
+
             for(int j = 0; j < width-(width%$M); j += $M) {
                 %for T in range($M):
                 T r$T = tabp[m*width+j+$T];
@@ -125,12 +128,10 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
                 %for S in range($N):
 
                 //---------- i + $S ----------
-                PERFC_MEM += $M;
                 %for T in range($M):
                 T l_${S}_${T} = tabp[(i+$S)*width+j+$T];
                 %end for
 
-                PERFC_ADDMUL += 2*${M};
                 %for T in range($M):
                 T p_${S}_${T} = l_${S}_${T} - fac$S*r$T;
                 %end for
@@ -142,10 +143,8 @@ class Simplex_block${N}x${M}_swap : public SimplexBase<T> {
             }
 
             for(int j = width-(width%$M); j < width; ++j) {
-                PERFC_MEM += 1;
                 T r1 = tabp[m*width+j];
 
-                PERFC_ADDMUL += 2*${N};
                 %for S in range($N):
                 tabp[(i+$S)*width+j] -= fac$S*r1;
                 %end for

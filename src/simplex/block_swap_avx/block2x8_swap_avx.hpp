@@ -118,17 +118,29 @@ class Simplex_block2x8_swap_avx : public SimplexBase<T> {
             __m256d f0 = _mm256_set1_pd(fac0);
             T fac1 = tabp[(i+1)*width+col] * ipiv;
             __m256d f1 = _mm256_set1_pd(fac1);
-            
-            for(int j = 0; j < width-(width%8); j += 8) {
+
+            PERFC_ADDMUL += 2*2 * width;
+            PERFC_MEM += 2*width;
+
+            int peel = (long long)tabp & 0x1f; /* tabp % 32 */
+            if(peel != 0) {
+                peel = (32 - peel)/sizeof(T);
+                for (int j = 0; j < peel; j++) {
+                    tabp[(i+0)*width+j] -= fac0*tabp[m*width+j];
+                    tabp[(i+1)*width+j] -= fac1*tabp[m*width+j];
+                }
+            }
+
+            int aligned_end = width - (width%8) - peel;
+
+            for(int j = 0; j < aligned_end; j += 8) {
                 __m256d r0 = _mm256_load_pd(tabp+m*width+j+0);
                 __m256d r1 = _mm256_load_pd(tabp+m*width+j+4);
 
                 //---------- i + 0 ----------
-                PERFC_MEM += 8;
                 __m256d l_0_0 = _mm256_load_pd(tabp+(i+0)*width+j+0);
                 __m256d l_0_1 = _mm256_load_pd(tabp+(i+0)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_0_0 = _mm256_mul_pd(f0, r0);
                 __m256d q_0_0 = _mm256_sub_pd(l_0_0, p_0_0);
                 __m256d p_0_1 = _mm256_mul_pd(f0, r1);
@@ -138,11 +150,9 @@ class Simplex_block2x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+0)*width+j+4, q_0_1);
 
                 //---------- i + 1 ----------
-                PERFC_MEM += 8;
                 __m256d l_1_0 = _mm256_load_pd(tabp+(i+1)*width+j+0);
                 __m256d l_1_1 = _mm256_load_pd(tabp+(i+1)*width+j+4);
 
-                PERFC_ADDMUL += 2*8;
                 __m256d p_1_0 = _mm256_mul_pd(f1, r0);
                 __m256d q_1_0 = _mm256_sub_pd(l_1_0, p_1_0);
                 __m256d p_1_1 = _mm256_mul_pd(f1, r1);
@@ -152,11 +162,9 @@ class Simplex_block2x8_swap_avx : public SimplexBase<T> {
                 _mm256_store_pd(tabp+(i+1)*width+j+4, q_1_1);
             }
 
-            for(int j = width-(width%8); j < width; ++j) {
-                PERFC_MEM += 1;
+            for(int j = aligned_end; j < width; ++j) {
                 T r1 = tabp[m*width+j];
 
-                PERFC_ADDMUL += 2*2;
                 tabp[(i+0)*width+j] -= fac0*r1;
                 tabp[(i+1)*width+j] -= fac1*r1;
             }

@@ -102,7 +102,7 @@ class Simplex_block2x4_avx : public SimplexBase<T> {
     inline void basis_exchange(int row, int col) {
         ++PERFC_MEM;
         T pivot = tabp[row*width+col];
-        
+
         ++PERFC_DIV;
         T ipiv = 1. / pivot;
 
@@ -112,42 +112,58 @@ class Simplex_block2x4_avx : public SimplexBase<T> {
             __m256d f0 = _mm256_set1_pd(fac0);
             T fac1 = tabp[(i+1)*width+col] * ipiv;
             __m256d f1 = _mm256_set1_pd(fac1);
-            
-            for(int j = 0; j < width-(width%4); j += 4) {
+
+            PERFC_ADDMUL += 2*2 * width;
+            PERFC_MEM += 2*width;
+
+            int peel = (long long)tabp & 0x1f; /* tabp % 32 */
+            if(peel != 0) {
+                peel = (32 - peel)/sizeof(T);
+                for (int j = 0; j < peel; j++) {
+                    tabp[(i+0)*width+j] -= fac0*tabp[m*width+j];
+                    tabp[(i+1)*width+j] -= fac1*tabp[m*width+j];
+                }
+            }
+
+            int aligned_end = width - (width%4) - peel;
+
+            for(int j = peel; j < aligned_end; j += 4) {
                 __m256d r0 = _mm256_load_pd(tabp+row*width+j+0);
 
                 //---------- i + 0 ----------
-                PERFC_MEM += 4;
-                __m256d l_0_0 = _mm256_load_pd(tabp+(i+0)*width+j+0);
+                if(i+0 != row) {
+		            __m256d l_0_0 = _mm256_load_pd(tabp+(i+0)*width+j+0);
 
-                PERFC_ADDMUL += 2*4;
-                __m256d p_0_0 = _mm256_mul_pd(f0, r0);
-                __m256d q_0_0 = _mm256_sub_pd(l_0_0, p_0_0);
+		            __m256d p_0_0 = _mm256_mul_pd(f0, r0);
+		            __m256d q_0_0 = _mm256_sub_pd(l_0_0, p_0_0);
 
-                _mm256_store_pd(tabp+(i+0)*width+j+0, q_0_0);
+		            _mm256_store_pd(tabp+(i+0)*width+j+0, q_0_0);
+				}
 
                 //---------- i + 1 ----------
-                PERFC_MEM += 4;
-                __m256d l_1_0 = _mm256_load_pd(tabp+(i+1)*width+j+0);
+                if(i+1 != row) {
+		            __m256d l_1_0 = _mm256_load_pd(tabp+(i+1)*width+j+0);
 
-                PERFC_ADDMUL += 2*4;
-                __m256d p_1_0 = _mm256_mul_pd(f1, r0);
-                __m256d q_1_0 = _mm256_sub_pd(l_1_0, p_1_0);
+		            __m256d p_1_0 = _mm256_mul_pd(f1, r0);
+		            __m256d q_1_0 = _mm256_sub_pd(l_1_0, p_1_0);
 
-                _mm256_store_pd(tabp+(i+1)*width+j+0, q_1_0);
+		            _mm256_store_pd(tabp+(i+1)*width+j+0, q_1_0);
+				}
             }
 
-            for(int j = width-(width%4); j < width; ++j) {
-                PERFC_MEM += 1;
+            for(int j = aligned_end; j < width; ++j) {
                 T r1 = tabp[row*width+j];
 
-                PERFC_ADDMUL += 2*2;
-                tabp[(i+0)*width+j] -= fac0*r1;
-                tabp[(i+1)*width+j] -= fac1*r1;
+                if(i+0 != row) {
+                    tabp[(i+0)*width+j] -= fac0*r1;
+                }
+                if(i+1 != row) {
+                    tabp[(i+1)*width+j] -= fac1*r1;
+                }
             }
         }
 
-        for(int i = m-(m%2); i < m; ++i) {
+        for(int i = m-(m%2); i < m+1; ++i) {
             T fac = tabp[i*width+col] * ipiv;
             for(int j = 0; j < width; ++j) {
                 PERFC_ADDMUL += 2; ++PERFC_MEM;
