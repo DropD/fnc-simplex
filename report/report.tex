@@ -7,7 +7,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{spconf,amsmath,amssymb,graphicx}
-\usepackage[disable,colorinlistoftodos]{todonotes}
+\usepackage[colorinlistoftodos]{todonotes}
 
 \newcommand{\mytodo}[1]{\todo[inline]{#1}}
 \newcommand{\dtodo}[1]{\todo[inline, color=cyan]{#1}}
@@ -226,13 +226,6 @@ This optimization does not change the number of floating point operations perfor
 \mypar{Vectorization}
 In the last phase, manual vectorization using AVX instructions was performed.
 
-
-\ptodo{As important as the final results is to show that you took a structured, organized approach to the optimization and that you explain why you did what you did.}
-
-\ptodo{Mention and cite any external resources including library or other code.}
-
-\ptodo{Good visuals or even brief code snippets to illustrate what you did are good. Pasting large amounts of code to fill the space is not good.}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -242,7 +235,7 @@ In the last phase, manual vectorization using AVX instructions was performed.
 very short summary of the section. The typical structure follows.}
 
 \mypar{Experimental setup}
-All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32kB L1 cache, 256kB L2 cache and 3MB L3 cache, all at 64 bytes line size.
+All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32 kB L1 cache, 256 kB L2 cache and 3 MB L3 cache, all at 64 bytes line size.
 
 GCC 4.7.3 was used for compilation. The following flags were used:
 {\tt -O3 -march\--native  } for automatic vectorization with {\tt -fno\--tree\--vectorize \\ -fno\--tree\--slp\--vectorize -mno\--abm } additionally for non vectorized code.
@@ -259,9 +252,8 @@ Additionally, in order to achieve a defined minimum of RDTSC cycles, small probl
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
-The same technique was used to measure runtime, however instrumentalization was not used.
-We dropped CPPLEX from testing because of numerical instability for large problems.
-
+The same technique was used to measure runtime, however instrumentali\mytodo{references}zation was not used.
+We used Gurobi \cite{gurobi}, SoPlex \cite{soplex}, GLPK \cite{glpk} and CPPLEX \cite{cpplex}, with the last one being dropped from testing because of numerical instability for large problems.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -280,7 +272,7 @@ are we at the memory bandwidth maximum? -> roofline, yes
 Direct comparison with alternative Simplex solvers (see Fig.~\ref{res_external}) shows that even our baseline implementation performs significantly faster than any of the alternatives.
 This results from the simplicity assumptions we have made (regularity, conformity, definiteness) under which a lot of tedious checks can be eliminated.
 Unfortunately none of the APIs offered to impart this information to the respective solver.
-We plot the elapsed RDTSC cycles instead of per cycle performance as to not having to guess the operation count of each solver.
+We plot the elapsed RDTSC cycles instead of per cycle performance so as not to guess the operation count of each solver.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_compare_external.eps}
@@ -313,9 +305,7 @@ The search space consisted of the dyadic product of these two parameters for the
 \end{figure}
 
 
-
-
-Can we improve on this further?
+Could we improve on this further?
 As shown in Fig.~\ref{fig:res_cachecontrol}, nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
@@ -324,7 +314,7 @@ while any kind of manual prefetching lead to a considerable slowdown.
   \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline.\label{fig:res_cachecontrol}}
 \end{figure}
 
-AVX
+One interesting result is that while AVX intrinsics do not noticeably improve performance, they even degrade the efficiency if we turn on autovectorisation (Fig).
 
 Profiling of the {\tt swapNxM\_block\_avx } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls,
 which once more underlines the memory tightness of the problem.
