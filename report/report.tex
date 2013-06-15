@@ -229,7 +229,7 @@ allowing to get rid of the if statements used to test for the pivot row in the m
 This optimization does not change the number of floating point operations performed, however it affects the number of bytes loaded per iteration slightly.
 
 \mypar{Vectorization}
-In the last phase, manual vectorization using AVX instructions was performed.
+In the last phase, manual vectorization using advanced vector extensions (AVX) instructions was performed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -255,7 +255,7 @@ Additionally, in order to achieve a defined minimum of RDTSC cycles, small probl
 
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
-In order to compare to third party packages, their respective API was used according to the available documentation. 
+In order to compare to third party packages, their respective application programming interface (API) was used according to the available documentation. 
 The same technique was used to measure runtime, however instrumentalization was not used.
 We used Gurobi \cite{gurobi}, SoPlex \cite{soplex}, GLPK \cite{glpk} and CPPLEX \cite{cpplex}, with the last one being dropped from testing because of numerical instability for large problems.
 
