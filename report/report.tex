@@ -73,7 +73,7 @@ In this section we will motivate our choice of algorithm to optimize and give
 a brief overview of related work.
 
 \mypar{Motivation} The Simplex algorithm for linear optimization is widely
-used \mytodo{add examples}
+used in logistics, optimizing business performance and many other fields.
 
 The simplex solution to linear problems may be used as a crucial part in
 basic decision making in business applications, for example in logistics.
@@ -88,20 +88,62 @@ faster than any commerciably available general purpose solver.
 We used three of them to compare the performance of our implementation to what is being
 used in big business.
 \begin{itemize}
-    \item{GLPK \cite{glpk}, a free open source linear programming package}
-    \item{Gurobi \cite{gurobi}, a commercial grade package which claims to be the fastest available solution when taking into account multi-threading.}
-    \item{SoPlex}
+    \item{GLPK \cite{glpk}, a free open source linear programming package.}
+    \item{Gurobi \cite{gurobi}, a commercial grade package which claims to be the fastest available solution when taking into account multi-threading. Gurobi is free for educational use.}
+    \item{SoPlex \cite{soplex}, free for educational use, developped at Zuse Institute Berlin.}
 \end{itemize}
-\mytodo{cite original danzig paper, handouts from opti, papers of the other implementations.}
+\rtodo{cite original danzig paper?}
 
 \section{Background: The Simplex Algorithm}\label{sec:background}
+\rtodo{cite handouts from opti.}
 
 \mypar{Linear Optimization Problems} \mytodo{put the Max c'x Subject to \dots formula and explain}
+The general formulation of a linear problem is
+\begin{eqnarray}
+    \max c^T x, & \text{Subject To}\\
+    b_l \leq A x \leq b_u,
+\end{eqnarray}
+Where $c \in \mathbb{Q}^n$, $x \in \mathbb{R}^n$, $A \in \mathbb{Q}^{m \times n}$ and $b \in \mathbb{R}^m$.
 
-\mypar{Standard form Problems} \mytodo{explain standard form, mention restriction to standard form}
-% standard form restrictions result from trying to keep the focus more on optimization and less on implementing a domain specific language parser.
+\mypar{Standard form Linear Problems} \mytodo{explain standard form, mention restriction to standard form}
+A linear problem is considered to be in standard form when it is formulated as
+\begin{eqnarray}
+    \max c^T x, & \text{Subject To}\\
+    A x \leq b \\
+    x \geq 0.
+\end{eqnarray}
+Any linear problem can be transformed into standard form \rtodo{citation needed}. Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
 
-\mypar{The Simplex Method} \mytodo{explain Simplex in tableau form}
+\mypar{The Simplex Method}
+The tableau form of the simplex method for standard form problems works as follows:
+Let m be the number of constraints and n the number of variables.
+\begin{enumerate}
+    \item initialize the tableau 
+        \[ T = 
+            \left[
+            \begin{matrix}
+                A & I_m & b \\
+                c & 0 & 0
+            \end{matrix}
+            \right]
+        \]
+        And create a set of column indices to keep track of the currently ``active'' columns (also caled the basis). 
+        Initialize the basis with the indices 
+        \[ B = \{ m, \dots, 2m-1 \} \]
+    \item iterate:
+        \begin{enumerate}
+            \item If $\nexists\, i\, |\, T_{m,i} < 0$ problem is solved. Else:
+                \[\text{pcol} := \text{argmin}\left(T_{m,i}\right)\]
+            \item If $\nexists\, i\, |\, T_{i, \text{pcol}} > 0$ problem is infeasible. Else:
+                \[\text{prow} := \text{argmin}\left(\frac{T_{i, 2m}}{T_{i,\text{pcol}}} \right)\]
+            \item perform Gaussian elimination:
+                \[p :=  T_{\text{prow}, \text{pcol}}\]
+                for $i \in \{0, \dots, m-1\}$:
+                \[ T_{i,:} := T_{i,:} - T_{\text{prow},:} \frac{T_{i,\text{pcol}}}{p},\, if\, i \neq \text{prow}, \]
+                and update the basis
+                \[ B := B \\ \{\text{prow}\} \cup \{\text{pcol}\}. \]
+        \end{enumerate}
+\end{enumerate}
 
 \mypar{Cost Analysis}
 \mytodo{mention number of iterations varies with problem matrix}
