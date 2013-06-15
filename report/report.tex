@@ -67,6 +67,9 @@ self-contained and readable for a person in the general area. You
 should write the abstract last.}
 \end{abstract}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction}\label{sec:intro}
 
 In this section we will motivate our choice of algorithm to optimize and give
@@ -85,6 +88,9 @@ faster than any commerciably available general purpose solver.
 
 \mypar{Related work} \mytodo{cite original danzig paper, handouts from opti, papers of the other implementations.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Background: The Simplex Algorithm}\label{sec:background}
 
 \mypar{Linear Optimization Problems} \rtodo{put the Max c'x Subject to \dots formula and explain}
@@ -98,6 +104,9 @@ faster than any commerciably available general purpose solver.
 \mytodo{mention number of iterations varies with problem matrix}
 
 \mytodo{cost analysis for one iteration}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Your Proposed Method}\label{sec:yourmethod}
 
@@ -150,6 +159,7 @@ effective cost calculations. We further added prefetching in order to load soon-
 As a next step we added blocking in the loop that runs over the whole tableau 
 inside the basis exchange. block sizes from $1 \times 1$ to $16 \times 16$ were tried.
 
+
 The code for different block sizes was generated using 
 {\tt cheetah} \cite{cheetah}, a templating engine for python. The following optimizations were introduced
 by changing the code templates to be able to make use of the best block size.
@@ -163,6 +173,9 @@ by changing the code templates to be able to make use of the best block size.
 \ptodo{Mention and cite any external resources including library or other code.}
 
 \ptodo{Good visuals or even brief code snippets to illustrate what you did are good. Pasting large amounts of code to fill the space is not good.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Experimental Results}\label{sec:exp}
 
@@ -182,11 +195,14 @@ The problem generator is restricted for simplicity's sake to generate problems w
 The same parameter was used for the number of Variables as well as the number of constraints.
 
 The problem size was varied from 10 to 1000, or up to 4000 where relevant for out-of-cache comparison.
+Due to the unpredictable count of steps the Simplex algorithm needs to reach a solution, each problem size was averaged over up to 100 samples.
 
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
 The same technique was used to measure runtime, however instrumentalization was not used.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \mypar{Results}
 \mytodo{
@@ -250,6 +266,9 @@ answer from the plot in its discussion
 Every plot should be discussed (what does it show, which statements do
 you extract).}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Conclusions}
 
 \ptodo{Here you need to briefly summarize what you did and why this is
@@ -261,6 +280,9 @@ important results and say the things you really want to get across
 Even though we only considered the DFT, our optimization
 techniques should be also applicable ....) You can also formulate next
 steps if you want. Be brief.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Further comments}
 
