@@ -76,24 +76,25 @@ In this section we will motivate our choice of algorithm to optimize and give
 a brief overview of related work.
 
 \mypar{Motivation} The Simplex algorithm for linear optimization is widely
-used in logistics, optimizing business performance and many other fields.
+used in logistics, optimization of business performance and many other fields.
 
 The simplex solution to linear problems may be used as a crucial part in
-basic decision making in business applications, for example in logistics.
-In this environments performance is important. Therefore it is interesting to see how far
+basic decision making wherever management requirements for interdependent resources produce linear constraints.
+In production environments performance is often crucial, therefore it is interesting to see how far
 a solver for a specific class of linear problems can be optimized.
 
-\mypar{Implementation} We present an implementation which is optimized 
-for a limited class of linear optimization problems and solves this kind of problem
+\mypar{Implementation} We present an implementation which is geared towards 
+a limited class of linear optimization problems and solves this kind of problem
 faster than any commercially available general purpose solver.
 
 \mypar{Related work} Many production grade linear optimization packages exist.
-We used three of them to compare the performance of our implementation to what is being
+We used a number of them to compare the performance of our implementation to what is being
 used in big business.
 \begin{itemize}
     \item{GLPK \cite{glpk}, a free open source linear programming package.}
     \item{Gurobi \cite{gurobi}, a commercial grade package which claims to be the fastest available solution when taking into account multi-threading. Gurobi is free for educational use.}
     \item{SoPlex \cite{soplex}, free for educational use, developed at Zuse Institute Berlin (ZIB).}
+    \item{CPPLEX \cite{cpplex}, a free open source mathematical implementation emphasizing clean object oriented code style.}
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -118,11 +119,11 @@ A linear problem is considered to be in standard form when it is formulated as
     A x \leq b \\
     x \geq 0.
 \end{eqnarray*}
-Any linear problem can be transformed into standard form \rtodo{citation needed?}. Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
+Any linear problem can be transformed into standard form \rtodo{citation needed? -> Yes, cite the Weismantel script or if possible the book}. Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
 
 \mypar{The Simplex Method}
 The tableau form of the simplex method for standard form problems works as follows:
-Let m be the number of constraints and n the number of variables.
+Let $m$ be the number of constraints and $n$ the number of variables.
 \begin{enumerate}
     \item initialize the tableau $T \in \mathbb{R}^{(m+1) \times (n+m+1)}$
         \[ T = 
@@ -167,7 +168,7 @@ tableau fits into cache, and bounded from above by
 Assuming every load is a miss.
 
 For the operational intensity this means:
-\[ \frac{B\times N}{4} \leq I \leq \frac{1}{4} \]
+\[ \frac{1}{4} \leq I \leq \frac{B\times N}{4} \]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,10 +200,13 @@ where unit stride access was applicable.
 
 \mypar{Array}
 The Array optimization replaces the vector of vectors implementation of the tableau by
-a C99 one dimensional contiguous array allocated and aligned using {\tt \_mm\_malloc } from
+a C99 one dimensional contiguous array allocated and aligned using {\tt \_mm\_malloc} from
 the Intel intrinsics headers.
 
 All subsequent optimizations were based on this implementation.
+
+\mypar{SSA}
+The first optimization consisted of unrolling the tightest loop and applying static assignment in order to increase ILP.
 
 \mypar{Blocking}
 As a next step we added blocking in the loop that runs over the whole tableau 
@@ -213,7 +217,7 @@ The code for different block sizes was generated using
 by changing the code templates to be able to make use of the best block size.
 
 \mypar{Cache control}
-Improvement of cache access attempted through intrinsics for non temporal assignment in order to avoid polluting the cache with updates on the active basis elements and
+Improvement of cache access attempted through intrinsics for non temporal assignment, in order to avoid polluting the cache with updates on the active basis elements and
 effective cost calculations. We further added prefetching in order to load soon-to-be-used blocks into the L2 cache, as well as prefetching parts of the current block into L1.
 
 \mypar{Swapping}
@@ -231,14 +235,14 @@ In the last phase, manual vectorization using AVX instructions was performed.
 
 \section{Experimental Results}\label{sec:exp}
 
-\dtodo{short summary of the section}
+We give a short overview of our hardware and software framework, followed by measurements and visualisation of the code performance.
 
 \mypar{Experimental setup}
 All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32 kB L1 cache, 256 kB L2 cache and 3 MB L3 cache, all at 64 bytes line size.
 
 GCC 4.7.3 was used for compilation. The following flags were used:
 {\tt -O3 -march\--native  } for automatic vectorization with {\tt -fno\--tree\--vectorize \\ -fno\--tree\--slp\--vectorize -mno\--abm } additionally for non vectorized code.
-For profiling {\tt -g3 -ggdb -pg } was added.
+For profiling {\tt -g3 -ggdb -pg } was added. Turboboost has been taken care of.
 
 A random linear problem generator was written to test the implementations. 
 The problem generator is restricted for simplicity's sake to generate problems with guaranteed feasibility by allowing only positive coefficients. 
@@ -262,8 +266,6 @@ We used Gurobi \cite{gurobi}, SoPlex \cite{soplex}, GLPK \cite{glpk} and CPPLEX 
 best block sizes for blocking of the elimination step?
 best block sizes for unrolled/ssa calculation steps?
 vectorisation useful (cf autovectorisation)?
-cache control useful?
-comparison to 3rd party
 are we at the memory bandwidth maximum? -> roofline, yes
 }
 
@@ -279,7 +281,7 @@ We plot the elapsed RDTSC cycles instead of per cycle performance so as not to g
 \end{figure}
 
 
-Of our own optimisation techniques, blocking with an additional copy (swap) step showed to be the most efficient for large sizes,
+Of our own optimization techniques, blocking with an additional copy (swap) step showed to be the most efficient for large sizes,
 both non-auto-vectorised (Fig.~\ref{res_basic_novec}) and auto-vectorised (Fig.~\ref{res_basic_autovec}).
 Note that while in theory an AVX enabled program could reach 8 flop/cycle for compute-bound problems on our testing machine, the plots have been capped at 2 flop/cycle for better viewability.
 All further plots contain programs with approximately the same operation count.
@@ -296,24 +298,31 @@ All further plots contain programs with approximately the same operation count.
 
 
 Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count. The search was done over incidentally turned out to be our originally picked sizes.
-The search space consisted of the dyadic product of these two parameters for the dyadic product of avx and scalar code as well as blocking and non-blocking versions.
+The search space consisted of the dyadic product of these two parameters for the dyadic product of AVX and scalar code as well as blocking and non-blocking versions.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_find_blocks.eps}
-  \caption{A small selection of the parametrised blocking implementations.\label{res_findblock}}
+  \caption{A small selection of the parametrised blocking implementations. Note the kink around $n=500$, which may indicate a numerically particularly challenging problem.\label{res_findblock}}
 \end{figure}
 
+\dtodo{Give hard speedup ratio}
 
 Could we improve on this further?
-As shown in Fig.~\ref{fig:res_cachecontrol}, combining our previous favourite with nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations,
-while any kind of manual prefetching lead to a considerable slowdown.
+As shown in Fig.~\ref{fig:res_cachecontrol}, combining our previous favourite with nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations.
+Any kind of manual prefetching as described in section 3, or partial implementations thereof, lead to a considerable slowdown.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_cachecontrol_novec.eps}
   \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline.\label{fig:res_cachecontrol}}
 \end{figure}
 
-One particularly interesting result is that while AVX intrinsics do not noticeably improve performance, they even degrade the efficiency if we turn on autovectorisation (Fig).
+One particularly interesting result is that the effect of AVX intrinsics on performance is not easy to predict if we turn on auto-vectorisation,
+yet they do not match the fastest auto-vectorised version (Fig).
+
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/results_avx.eps}
+  \caption{Example comparison of auto-vectorised code and its AVX counterpart.\label{fig:res_avx}}
+\end{figure}
 
 Profiling of the {\tt swapNxM\_block\_avx } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls,
 which once more underlines the memory tightness of the problem.
@@ -327,70 +336,30 @@ The corresponding test set starts with problems of size 500 in order to measure 
 \end{figure}
 
 
-
-\ptodo{Next divide the experiments into classes, one paragraph for each. In the simplest case you have one plot that has the size on the x-axis and the performance on the y-axis. The plot will contain several lines, one for each relevant code version. Discuss the plot and extract the overall performance gain from baseline to best code. Also state the percentage of peak performance for the best code. Note that the peak may change depending on the situation. For example, if you only do additions it would be 12 Gflop/s
-on one core with 3 GHz and SSE and single precision floating point.
-
-Do not put two performance lines into the same plot if the operations count changed significantly (that's apples and oranges). In that case first perform the optimizations that reduce op count and report the runtime gain in a plot. Then continue to optimize the best version and show performance plots.}
-
-\ptodo{{\bf You should}
-\begin{itemize}
-\item Follow the guide to benchmarking presented in class, in particular
-\item very readable, attractive plots (do 1 column, not 2 column plots
-for this class), proper readable font size. An example is below (of course you can have a different style),
-\item every plot answers a question, which you pose and extract the
-answer from the plot in its discussion
-\end{itemize}
-Every plot should be discussed (what does it show, which statements do
-you extract).}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusions}
-\dtodo{conclusions about optimization speedups}
+
+Our measurement results and profiling is highly memory bound and at the same time keeps
+a very simple structure, which does not lend itself to optimization easily.
+We were able to realize a speedup of up to 25\% for small problems and up to 15\% for large ones,
+albeit limited to feasible standard maximization LPs.
+
+\mytodo{say something more? feels so little here}
+
 Finally, we can conclude that in cases where many linear problems of only one certain 
 class has to be solved and performance matters it might pay to invest into a specifically
 tailored solution. Depending on the restrictions of the problem class loss of generality
 may be rewarded with great speed gains.
-
-\ptodo{Here you need to briefly summarize what you did and why this is
-important. {\em Do not take the abstract} and put it in the past
-tense. Remember, now the reader has (hopefully) read the paper, so it
-is a very different situation from the abstract. Try to highlight
-important results and say the things you really want to get across
-(e.g., the results show that we are within 2x of the optimal performance ... 
-Even though we only considered the DFT, our optimization
-techniques should be also applicable ....) You can also formulate next
-steps if you want. Be brief.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Further comments}
 
-\ptodo{Here we provide some further tips.
-
-\mypar{Further general guidelines}
-
-\begin{itemize}
-
-\item Each section should be started with a very
-short summary of what the reader can expect in this section. Nothing
-more awkward as when the story starts and one does not know what the
-direction is or the goal.
-
-\item Make sure you define every acronym you use, no matter how
-convinced you are the reader knows it.
-
-\item Always spell-check before you submit (to me in this case).
-
-\item Be picky. When writing a paper you should always strive for very
-high quality. Many people may read it and the quality makes a big difference.
-In this class, the quality is part of the grade.
-
-\end{itemize}
-}
+\mytodo{Make sure you define every acronym you use, no matter how
+convinced you are the reader knows it.}
 
 % References should be produced using the bibtex program from suitable
 % BiBTeX files (here: bibl_conf). The IEEEbib.bst bibliography
