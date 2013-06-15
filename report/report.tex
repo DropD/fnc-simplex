@@ -290,8 +290,9 @@ All further plots contain programs with approximately the same operation count.
 \end{figure}
 
 
-Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count. The search was done over incidentally turned out to be our originally picked sizes.
-The search space consisted of the dyadic product of these two parameters for the dyadic product of AVX and scalar code as well as blocking and non-blocking versions.
+Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count.
+The search space consisted of the dyadic product of these two parameters for the dyadic product of AVX and scalar code
+as well as blocking and non-blocking versions and incidentally turned out to favor our originally picked sizes.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_find_blocks.eps}
