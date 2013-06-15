@@ -252,7 +252,7 @@ Additionally, in order to achieve a defined minimum of RDTSC cycles, small probl
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
-The same technique was used to measure runtime, however instrumentali\mytodo{references}zation was not used.
+The same technique was used to measure runtime, however instrumentalization was not used.
 We used Gurobi \cite{gurobi}, SoPlex \cite{soplex}, GLPK \cite{glpk} and CPPLEX \cite{cpplex}, with the last one being dropped from testing because of numerical instability for large problems.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -331,6 +331,11 @@ you extract).}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusions}
+\dtodo{conclusions about optimization speedups}
+Finally, we can conclude that in cases where many linear problems of only one certain 
+class has to be solved and performance matters it might pay to invest into a specifically
+tailored solution. Depending on the restrictions of the problem class loss of generality
+may be rewarded with great speed gains.
 
 \ptodo{Here you need to briefly summarize what you did and why this is
 important. {\em Do not take the abstract} and put it in the past
