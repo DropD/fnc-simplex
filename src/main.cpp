@@ -7,14 +7,14 @@
 #include <iostream>
 #include <string>
 
-#define NO_GLPK
-#define NO_GUROBI
-#define NO_SOPLEX
+//~ #define NO_GLPK
+//~ #define NO_GUROBI
+//~ #define NO_SOPLEX
 
 //~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
 //~ #define RDTSC_CYCLES_REQUIRED 1E3
-#define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
-//~ #define RDTSC_CYCLES_REQUIRED 1E8
+//~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
+#define RDTSC_CYCLES_REQUIRED 1E8
 //~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
 
@@ -91,7 +91,7 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block1x16_swap)
     //~ SIMPLEX_IMPL(block2x1_swap)
     //~ SIMPLEX_IMPL(block2x2_swap)
-    SIMPLEX_IMPL(block2x4_swap)
+    //~ SIMPLEX_IMPL(block2x4_swap)
     //~ SIMPLEX_IMPL(block2x8_swap)
     //~ SIMPLEX_IMPL(block2x16_swap)
     //~ SIMPLEX_IMPL(block4x1_swap)
@@ -108,12 +108,12 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block16x2_swap)
     //~ SIMPLEX_IMPL(block16x4_swap)
     //~ SIMPLEX_IMPL(block16x8_swap)
-    SIMPLEX_IMPL(block16x16_swap)
+    //~ SIMPLEX_IMPL(block16x16_swap)
 
     //~ SIMPLEX_IMPL(block1x4_swap_avx)
     //~ SIMPLEX_IMPL(block1x8_swap_avx)
     //~ SIMPLEX_IMPL(block1x16_swap_avx)
-    SIMPLEX_IMPL(block2x4_swap_avx)
+    //~ SIMPLEX_IMPL(block2x4_swap_avx)
     //~ SIMPLEX_IMPL(block2x8_swap_avx)
     //~ SIMPLEX_IMPL(block2x16_swap_avx)
     //~ SIMPLEX_IMPL(block4x4_swap_avx)
@@ -124,10 +124,10 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block8x16_swap_avx)
     //~ SIMPLEX_IMPL(block16x4_swap_avx)
     //~ SIMPLEX_IMPL(block16x8_swap_avx)
-    SIMPLEX_IMPL(block16x16_swap_avx)
+    //~ SIMPLEX_IMPL(block16x16_swap_avx)
 
     //~ SIMPLEX_IMPL(block2x4_sse)
-    SIMPLEX_IMPL(block2x4_swap_nta)
+    //~ SIMPLEX_IMPL(block2x4_swap_nta)
     //~ SIMPLEX_IMPL(block2x4_swap_nta_pf)
     //~ SIMPLEX_IMPL(ssa)
     //~ SIMPLEX_IMPL(sse)
@@ -138,15 +138,15 @@ int main(int argc, char ** argv) {
     string lname = fname.substr(0, fname.length()-3);
     lname.append("lp");
 
-//~ #ifndef NO_GLPK
-    //~ run_glpk(lname, &s1);
-//~ #endif // NO_GLPK
-//~ #ifndef NO_GUROBI
-    //~ run_gurobi(lname, &s1);
-//~ #endif // NO_GUROBI
-//~ #ifndef NO_SOPLEX
-    //~ run_soplex(lname, &s1);
-//~ #endif // NO_SOPLEX
+#ifndef NO_GLPK
+    run_glpk(lname, &s1);
+#endif // NO_GLPK
+#ifndef NO_GUROBI
+    run_gurobi(lname, &s1);
+#endif // NO_GUROBI
+#ifndef NO_SOPLEX
+    run_soplex(lname, &s1);
+#endif // NO_SOPLEX
 
     return 0;
 

@@ -67,6 +67,9 @@ self-contained and readable for a person in the general area. You
 should write the abstract last.}
 \end{abstract}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction}\label{sec:intro}
 
 In this section we will motivate our choice of algorithm to optimize and give
@@ -93,6 +96,9 @@ used in big business.
     \item{SoPlex \cite{soplex}, free for educational use, developped at Zuse Institute Berlin.}
 \end{itemize}
 \rtodo{cite original danzig paper?}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Background: The Simplex Algorithm}\label{sec:background}
 \rtodo{cite handouts from opti.}
@@ -150,6 +156,9 @@ Let m be the number of constraints and n the number of variables.
 
 \mytodo{cost analysis for one iteration}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Your Proposed Method}\label{sec:yourmethod}
 
 In this section we explain the our baseline implementation as well as all optimizations we made.
@@ -197,6 +206,7 @@ effective cost calculations. We further added prefetching in order to load soon-
 As a next step we added blocking in the loop that runs over the whole tableau 
 inside the basis exchange. block sizes from $1 \times 1$ to $16 \times 16$ were tried.
 
+
 The code for different block sizes was generated using 
 {\tt cheetah} \cite{cheetah}, a templating engine for python. The following optimizations were introduced
 by changing the code templates to be able to make use of the best block size.
@@ -211,6 +221,9 @@ by changing the code templates to be able to make use of the best block size.
 
 \ptodo{Good visuals or even brief code snippets to illustrate what you did are good. Pasting large amounts of code to fill the space is not good.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Experimental Results}\label{sec:exp}
 
 \ptodo{Here you evaluate your work using experiments. You start again with a
@@ -218,23 +231,25 @@ very short summary of the section. The typical structure follows.}
 
 \mypar{Experimental setup} \ptodo{Specify the platform (processor, frequency, cache sizes)
 as well as the compiler, version, and flags used. I strongly recommend that you play with optimization flags and consider also icc for additional potential speedup.}
-All experiments were conducted on a Core i5-3360M (Ivy Bridge), running GNU/Linux. 
-\dtodo{cpu specs table}
+All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32kB L1 cache, 256kB L2 cache and 3MB L3 cache, all at 64 bytes line size.
 
 GCC 4.7.3 was used for compilation. The following flags were used:
-{\tt -O3 -march\--native  } for automatic vectorization with {\tt -fno\--tree\--vectorize -fno\--tree\--slp\--vectorize -mno\--abm } additionally for non vectorized code.
+{\tt -O3 -march\--native  } for automatic vectorization with {\tt -fno\--tree\--vectorize \\ -fno\--tree\--slp\--vectorize -mno\--abm } additionally for non vectorized code.
 For profiling {\tt -g3 -ggdb -pg } was added.
 
 A random linear problem generator was written to test the implementations. 
 The problem generator is restricted for simplicity's sake to generate problems with guaranteed feasibility by allowing only positive coefficients. 
 The same parameter was used for the number of Variables as well as the number of constraints.
 
-The problem size was varied from 10 to 1000 for most experiments. For profiling also larger problems were used. \dtodo{what problem sizes did you actually use?}
+The problem size was varied from 10 to 1000, or up to 4000 where relevant for out-of-cache comparison.
+Due to the unpredictable count of steps the Simplex algorithm needs to reach a solution, each problem size was averaged over up to 100 samples.
 
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
 The same technique was used to measure runtime, however instrumentalization was not used.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \mypar{Results}
 \mytodo{
@@ -243,20 +258,44 @@ best block sizes for blocking of the elimination step?
 best block sizes for unrolled/ssa calculation steps?
 vectorisation useful (cf autovectorisation)?
 cache control useful?
+comparison to 3rd party
+are we at the memory bandwidth maximum? -> roofline, yes
 }
 
-Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on\\
-{\tt \_mm256\_load\_pd } calls.
 
-As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a mostly positive but miniscule effect on the swapping implementations,
-while any kind of manual prefetching lead to a considerable slowdown.
-
+Direct comparison with alternative Simplex solvers shows that even our baseline implementation performs significantly faster.
+This results from the simplicity assumptions we have made (regularity, conformity, definiteness) under which a lot of tedious checks can be eliminated.
+Unfortunately none of the APIs offered to impart this information to the respective solver.
+We plot the elapsed RDTSC cycles instead of per cycle performance as to not having to guess the operation count of each solver.
 
 \begin{figure}\centering
-  \includegraphics[scale=0.4]{img/results_cachecontrol.eps}
+  \includegraphics[scale=0.4]{img/results_compare_external.eps}
+  \caption{Comparison with Gurobi, SoPlex and GLPK.\label{res_cachecontrol}}
+\end{figure}
+
+
+Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls.
+
+
+As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a mostly positive but small effect on the swapping implementations,
+while any kind of manual prefetching lead to a considerable slowdown.
+
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/results_cachecontrol_novec.eps}
   \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline,
   all with the same operation count.\label{res_cachecontrol}}
 \end{figure}
+
+
+From the roofline plot shown in Fig.~\ref{res_roof_high} we learn that our best-performing implementation is very close to the theoretical memory limit.
+The corresponding test set starts with problems of size 500 in order to measure only RAM to CPU traffic.
+
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/roof_high_autovec.eps}
+  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better readability.\label{res_roof_high}}
+\end{figure}
+
+
 
 \ptodo{Next divide the experiments into classes, one paragraph for each. In the simplest case you have one plot that has the size on the x-axis and the performance on the y-axis. The plot will contain several lines, one for each relevant code version. Discuss the plot and extract the overall performance gain from baseline to best code. Also state the percentage of peak performance for the best code. Note that the peak may change depending on the situation. For example, if you only do additions it would be 12 Gflop/s
 on one core with 3 Ghz and SSE and single precision floating point.
@@ -274,6 +313,9 @@ answer from the plot in its discussion
 Every plot should be discussed (what does it show, which statements do
 you extract).}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Conclusions}
 
 \ptodo{Here you need to briefly summarize what you did and why this is
@@ -285,6 +327,9 @@ important results and say the things you really want to get across
 Even though we only considered the DFT, our optimization
 techniques should be also applicable ....) You can also formulate next
 steps if you want. Be brief.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Further comments}
 
