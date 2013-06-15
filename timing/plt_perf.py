@@ -15,7 +15,7 @@ import cPickle
 #~ 'block16x16_swap_avx','block16x16_swap', 'block2x8_swap_avx', 'block2x4_swap_avx' ]
 ignore = [ ]
 #~ ignore = [ 'block2_swap', 'avx' ]
-#~ ignore = [ 'block2_swap', 'avx' ]
+#~ ignore = [ 'block1x1_swap', 'avx' ]
 
 outdir = "tmp"
 #~ outdir = "tmp_donj_upper_0_O3novec"

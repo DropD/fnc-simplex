@@ -282,17 +282,17 @@ We plot the elapsed RDTSC cycles instead of per cycle performance so as not to g
 
 Of our own optimisation techniques, blocking with an additional copy (swap) step showed to be the most efficient for large sizes,
 both non-auto-vectorised (Fig.~\ref{res_basic_novec}) and auto-vectorised (Fig.~\ref{res_basic_autovec}).
-Note that in theory, an AVX enabled program could reach 8 flop/cycle on our testing machine.
+Note that while in theory an AVX enabled program could reach 8 flop/cycle for compute-bound problems on our testing machine, the plots have been capped at 2 flop/cycle for better viewability.
 All further plots contain programs with approximately the same operation count.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_basic_novec.eps}
-  \caption{Non-auto-vectorised basic implementations, capped at 2 flop/cycle for better viewability.\label{res_basic_novec}}
+  \caption{Non-auto-vectorised basic implementations.\label{res_basic_novec}}
 \end{figure}
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_basic_autovec.eps}
-  \caption{Auto-vectorised basic implementations, capped at 2 flop/cycle for better viewability.\label{res_basic_autovec}}
+  \caption{Auto-vectorised basic implementations.\label{res_basic_autovec}}
 \end{figure}
 
 
@@ -300,13 +300,13 @@ Our further goal was to find the optimal block sizes by varying unrolling width 
 The search space consisted of the dyadic product of these two parameters for the dyadic product of avx and scalar code as well as blocking and non-blocking versions.
 
 \begin{figure}\centering
-  %\includegraphics[scale=0.4]{img/results_find_blocks.eps}
+  \includegraphics[scale=0.4]{img/results_find_blocks.eps}
   \caption{A small selection of the parametrised blocking implementations.\label{res_findblock}}
 \end{figure}
 
 
 Could we improve on this further?
-As shown in Fig.~\ref{fig:res_cachecontrol}, nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations,
+As shown in Fig.~\ref{fig:res_cachecontrol}, combining our previous favourite with nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
 \begin{figure}\centering
@@ -314,7 +314,7 @@ while any kind of manual prefetching lead to a considerable slowdown.
   \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline.\label{fig:res_cachecontrol}}
 \end{figure}
 
-One interesting result is that while AVX intrinsics do not noticeably improve performance, they even degrade the efficiency if we turn on autovectorisation (Fig).
+One particularly interesting result is that while AVX intrinsics do not noticeably improve performance, they even degrade the efficiency if we turn on autovectorisation (Fig).
 
 Profiling of the {\tt swapNxM\_block\_avx } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls,
 which once more underlines the memory tightness of the problem.

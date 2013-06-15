@@ -14,7 +14,8 @@
 //~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
 //~ #define RDTSC_CYCLES_REQUIRED 1E3
 //~ #define RDTSC_CYCLES_REQUIRED 1E7               // warm enough
-#define RDTSC_CYCLES_REQUIRED 1E8
+//~ #define RDTSC_CYCLES_REQUIRED 1E8
+#define RDTSC_CYCLES_REQUIRED 2*1E8
 //~ #define RDTSC_CYCLES_REQUIRED 1E9               // warm
 #include "misc/rdtsc_testing.hpp"
 
@@ -80,12 +81,12 @@ int main(int argc, char ** argv) {
     Simplex_baseline<s_type> s1;  // this one shouldn't go out of scope
     run(&s1, fname);
 
-    SIMPLEX_IMPL(array)
-    SIMPLEX_IMPL(block2x4)
-    SIMPLEX_IMPL(ssa)
-    SIMPLEX_IMPL(sse)
-    SIMPLEX_IMPL(avx)
-    SIMPLEX_IMPL(nta)
+    //~ SIMPLEX_IMPL(array)
+    //~ SIMPLEX_IMPL(block2x4)
+    //~ SIMPLEX_IMPL(ssa)
+    //~ SIMPLEX_IMPL(sse)
+    //~ SIMPLEX_IMPL(avx)
+    //~ SIMPLEX_IMPL(nta)
 
     //~ SIMPLEX_IMPL(block2x4_swap_nta)
     //~ SIMPLEX_IMPL(block2x4_swap_nta_pf)
@@ -104,17 +105,17 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block2x16_swap)
     //~ SIMPLEX_IMPL(block4x1_swap)
     //~ SIMPLEX_IMPL(block4x2_swap)
-    //~ SIMPLEX_IMPL(block4x4_swap)
-    //~ SIMPLEX_IMPL(block4x8_swap)
+    SIMPLEX_IMPL(block4x4_swap)
+    SIMPLEX_IMPL(block4x8_swap)
     //~ SIMPLEX_IMPL(block4x16_swap)
     //~ SIMPLEX_IMPL(block8x1_swap)
-    //~ SIMPLEX_IMPL(block8x2_swap)
+    SIMPLEX_IMPL(block8x2_swap)
     //~ SIMPLEX_IMPL(block8x4_swap)
     //~ SIMPLEX_IMPL(block8x8_swap)
     //~ SIMPLEX_IMPL(block8x16_swap)
     //~ SIMPLEX_IMPL(block16x1_swap)
     //~ SIMPLEX_IMPL(block16x2_swap)
-    //~ SIMPLEX_IMPL(block16x4_swap)
+    SIMPLEX_IMPL(block16x4_swap)
     //~ SIMPLEX_IMPL(block16x8_swap)
     //~ SIMPLEX_IMPL(block16x16_swap)
 
