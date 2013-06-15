@@ -105,26 +105,26 @@ used in big business.
 
 \mypar{Linear Optimization Problems} \mytodo{put the Max c'x Subject to \dots formula and explain}
 The general formulation of a linear problem is
-\begin{eqnarray}
+\begin{eqnarray*}
     \max c^T x, & \text{Subject To}\\
     b_l \leq A x \leq b_u,
-\end{eqnarray}
+\end{eqnarray*}
 Where $c \in \mathbb{Q}^n$, $x \in \mathbb{R}^n$, $A \in \mathbb{Q}^{m \times n}$ and $b \in \mathbb{R}^m$.
 
 \mypar{Standard form Linear Problems} \mytodo{explain standard form, mention restriction to standard form}
 A linear problem is considered to be in standard form when it is formulated as
-\begin{eqnarray}
+\begin{eqnarray*}
     \max c^T x, & \text{Subject To}\\
     A x \leq b \\
     x \geq 0.
-\end{eqnarray}
+\end{eqnarray*}
 Any linear problem can be transformed into standard form \rtodo{citation needed}. Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
 
 \mypar{The Simplex Method}
 The tableau form of the simplex method for standard form problems works as follows:
 Let m be the number of constraints and n the number of variables.
 \begin{enumerate}
-    \item initialize the tableau 
+    \item initialize the tableau $T \in \mathbb{R}^{(m+1) \times (n+m+1)}$
         \[ T = 
             \left[
             \begin{matrix}
@@ -135,26 +135,39 @@ Let m be the number of constraints and n the number of variables.
         \]
         And create a set of column indices to keep track of the currently ``active'' columns (also caled the basis). 
         Initialize the basis with the indices 
-        \[ B = \{ m, \dots, 2m-1 \} \]
+        \[ B = \{ m, \dots, n+m-1 \} \]
     \item iterate:
         \begin{enumerate}
-            \item If $\nexists\, i\, |\, T_{m,i} < 0$ problem is solved. Else:
+            \item (Pivoting) If $\nexists\, i\, |\, T_{m,i} < 0$ problem is solved. Else:
                 \[\text{pcol} := \text{argmin}\left(T_{m,i}\right)\]
-            \item If $\nexists\, i\, |\, T_{i, \text{pcol}} > 0$ problem is infeasible. Else:
-                \[\text{prow} := \text{argmin}\left(\frac{T_{i, 2m}}{T_{i,\text{pcol}}} \right)\]
+            \item (Pivoting) If $\nexists\, i\, |\, T_{i, \text{pcol}} > 0$ problem is infeasible. Else:
+                (Basis Exchange)\[\text{prow} := \text{argmin}\left(\frac{T_{i, 2m}}{T_{i,\text{pcol}}} \right)\]
             \item perform Gaussian elimination:
                 \[p :=  T_{\text{prow}, \text{pcol}}\]
                 for $i \in \{0, \dots, m-1\}$:
                 \[ T_{i,:} := T_{i,:} - T_{\text{prow},:} \frac{T_{i,\text{pcol}}}{p},\, if\, i \neq \text{prow}, \]
                 and update the basis
-                \[ B := B \\ \{\text{prow}\} \cup \{\text{pcol}\}. \]
+                \[ B := B \setminus \{\text{prow}\} \cup \{\text{pcol}\}. \]
         \end{enumerate}
 \end{enumerate}
 
 \mypar{Cost Analysis}
-\mytodo{mention number of iterations varies with problem matrix}
+The cost of the overall algorithn depends highly on the coefficients of the problem,
+since the coefficients determine the number of iterations necessary. 
+A small problem may very well take more iterations to solve than a huge one.
 
-\mytodo{cost analysis for one iteration}
+However, the number of operations contained in one iteration only depends on the problem size.
+Let the number of iterations be $N$, then
+\[ \text{\#flops} = N \times 2 m \times (m + n + 1) \]
+As well as the number of doubles read from memory, which bounded from below by
+\[ \frac{(m + 1) \times (m + n + 1)}{B} \leq \text{\#loads}, \]
+Where $B$ is the block size of the L1 cache for very small problems where the entire
+tableau fits into cache, and bounded from above by
+\[ \text{\#loads} \leq N \times (3m + n) + (m + 1) \times (m + n + 1), \]
+Assuming every load is a miss.
+
+For the operational intensity this means:
+\[ \frac{B\times N}{4} \leq I \leq \frac{1}{4} \]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -229,9 +242,8 @@ by changing the code templates to be able to make use of the best block size.
 \ptodo{Here you evaluate your work using experiments. You start again with a
 very short summary of the section. The typical structure follows.}
 
-\mypar{Experimental setup} \ptodo{Specify the platform (processor, frequency, cache sizes)
-as well as the compiler, version, and flags used. I strongly recommend that you play with optimization flags and consider also icc for additional potential speedup.}
-All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32kB L1 cache, 256kB L2 cache and 3MB L3 cache, all at 64 bytes line size.
+\mypar{Experimental setup}
+All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux with 32kB L1 cache, 256kB L2 cache and 3MB L3 cache, all at 64 bytes line size.
 
 GCC 4.7.3 was used for compilation. The following flags were used:
 {\tt -O3 -march\--native  } for automatic vectorization with {\tt -fno\--tree\--vectorize \\ -fno\--tree\--slp\--vectorize -mno\--abm } additionally for non vectorized code.
@@ -270,29 +282,29 @@ We plot the elapsed RDTSC cycles instead of per cycle performance as to not havi
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_compare_external.eps}
-  \caption{Comparison with Gurobi, SoPlex and GLPK.\label{res_cachecontrol}}
+  \caption{Comparison with Gurobi, SoPlex and GLPK.\label{fig:comp_ext}}
 \end{figure}
 
 
 Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls.
 
 
-As shown in Fig.~\ref{res_cachecontrol}, nontemporal assignment showed a mostly positive but small effect on the swapping implementations,
+As shown in Fig.~\ref{fig:res_cachecontrol}, nontemporal assignment showed a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_cachecontrol_novec.eps}
   \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline,
-  all with the same operation count.\label{res_cachecontrol}}
+  all with the same operation count.\label{fig:res_cachecontrol}}
 \end{figure}
 
 
-From the roofline plot shown in Fig.~\ref{res_roof_high} we learn that our best-performing implementation is very close to the theoretical memory limit.
+From the roofline plot shown in Fig.~\ref{fig:res_roof_high} we learn that our best-performing implementation is very close to the theoretical memory limit.
 The corresponding test set starts with problems of size 500 in order to measure only RAM to CPU traffic.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/roof_high_autovec.eps}
-  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better readability.\label{res_roof_high}}
+  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better readability.\label{fig:res_roof_high}}
 \end{figure}
 
 
