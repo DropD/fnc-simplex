@@ -80,7 +80,17 @@ int main(int argc, char ** argv) {
     Simplex_baseline<s_type> s1;  // this one shouldn't go out of scope
     run(&s1, fname);
 
-    //~ SIMPLEX_IMPL(array)
+    SIMPLEX_IMPL(array)
+    SIMPLEX_IMPL(block2x4)
+    SIMPLEX_IMPL(ssa)
+    SIMPLEX_IMPL(sse)
+    SIMPLEX_IMPL(avx)
+    SIMPLEX_IMPL(nta)
+
+    //~ SIMPLEX_IMPL(block2x4_swap_nta)
+    //~ SIMPLEX_IMPL(block2x4_swap_nta_pf)
+    //~ SIMPLEX_IMPL(block2x4_sse)
+    //~ SIMPLEX_IMPL(block2x4_avx)
 
     //~ SIMPLEX_IMPL(block1x1_swap)
     //~ SIMPLEX_IMPL(block1x2_swap)
@@ -89,7 +99,7 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block1x16_swap)
     //~ SIMPLEX_IMPL(block2x1_swap)
     //~ SIMPLEX_IMPL(block2x2_swap)
-    //~ SIMPLEX_IMPL(block2x4_swap) // best
+    SIMPLEX_IMPL(block2x4_swap) // best
     //~ SIMPLEX_IMPL(block2x8_swap)
     //~ SIMPLEX_IMPL(block2x16_swap)
     //~ SIMPLEX_IMPL(block4x1_swap)
@@ -111,7 +121,7 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block1x4_swap_avx)
     //~ SIMPLEX_IMPL(block1x8_swap_avx)
     //~ SIMPLEX_IMPL(block1x16_swap_avx)
-    SIMPLEX_IMPL(block2x4_swap_avx)
+    //~ SIMPLEX_IMPL(block2x4_swap_avx)
     //~ SIMPLEX_IMPL(block2x8_swap_avx)
     //~ SIMPLEX_IMPL(block2x16_swap_avx)
     //~ SIMPLEX_IMPL(block4x4_swap_avx)
@@ -123,17 +133,6 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block16x4_swap_avx)
     //~ SIMPLEX_IMPL(block16x8_swap_avx)
     //~ SIMPLEX_IMPL(block16x16_swap_avx)
-
-    //~ SIMPLEX_IMPL(block2x4_sse)
-    SIMPLEX_IMPL(block2x4_avx)
-
-    SIMPLEX_IMPL(block2x4)
-    //~ SIMPLEX_IMPL(ssa)
-    //~ SIMPLEX_IMPL(sse)
-    //~ SIMPLEX_IMPL(avx)
-    //~ SIMPLEX_IMPL(nta)
-    //~ SIMPLEX_IMPL(block2x4_swap_nta)
-    //~ SIMPLEX_IMPL(block2x4_swap_nta_pf)
 
     //~ //replace file extension
     string lname = fname.substr(0, fname.length()-3);

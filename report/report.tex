@@ -263,7 +263,8 @@ The code was instrumentalized to count floating point and memory operations. The
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
 The same technique was used to measure runtime, however instrumentalization was not used.
-We used Gurobi\mytodo{references}, SoPlex, GLPK and CPPLEX, with the last one being dropped from testing because of numerical instability for large problems.
+We dropped CPPLEX from testing because of numerical instability for large problems.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -290,33 +291,53 @@ We plot the elapsed RDTSC cycles instead of per cycle performance as to not havi
 \end{figure}
 
 
-Of our own optimisation techniques, blocking with an additional copy (swap) step showed to be the most efficient, both non-auto-vectorised (Fig) and auto-vectorised (Fig).
+Of our own optimisation techniques, blocking with an additional copy (swap) step showed to be the most efficient for large sizes,
+both non-auto-vectorised (Fig.~\ref{res_basic_novec}) and auto-vectorised (Fig.~\ref{res_basic_autovec}).
+Note that in theory, an AVX enabled program could reach 8 flop/cycle on our testing machine.
+All further plots contain programs with approximately the same operation count.
 
-Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count, which incidentally turned out to be our originally picked sizes.
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/results_basic_novec.eps}
+  \caption{Non-auto-vectorised basic implementations, capped at 2 flop/cycle for better viewability.\label{res_basic_novec}}
+\end{figure}
+
+\begin{figure}\centering
+  \includegraphics[scale=0.4]{img/results_basic_autovec.eps}
+  \caption{Auto-vectorised basic implementations, capped at 2 flop/cycle for better viewability.\label{res_basic_autovec}}
+\end{figure}
 
 
+Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count. The search was done over incidentally turned out to be our originally picked sizes.
+The search space consisted of the dyadic product of these two parameters for the dyadic product of avx and scalar code as well as blocking and non-blocking versions.
 
-Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls.
+\begin{figure}\centering
+  %\includegraphics[scale=0.4]{img/results_find_blocks.eps}
+  \caption{A small selection of the parametrised blocking implementations.\label{res_findblock}}
+\end{figure}
+
+
 
 
 Can we improve on this further?
-As shown in Fig.~\ref{fig:res_cachecontrol}, nontemporal assignment showed a mostly positive but small effect on the swapping implementations,
+As shown in Fig.~\ref{fig:res_cachecontrol}, nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_cachecontrol_novec.eps}
-  \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline,
-  all with the same operation count.\label{fig:res_cachecontrol}}
+  \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline.\label{fig:res_cachecontrol}}
 \end{figure}
 
 AVX
+
+Profiling of the {\tt swapNxM\_block\_avx } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls,
+which once more underlines the memory tightness of the problem.
 
 From the roofline plot shown in Fig.~\ref{fig:res_roof_high} we learn that our best-performing implementation is very close to the theoretical memory limit.
 The corresponding test set starts with problems of size 500 in order to measure only RAM to CPU traffic.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/roof_high_autovec.eps}
-  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better readability.\label{fig:res_roof_high}}
+  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better viewability.\label{fig:res_roof_high}}
 \end{figure}
 
 
