@@ -231,8 +231,7 @@ In the last phase, manual vectorization using AVX instructions was performed.
 
 \section{Experimental Results}\label{sec:exp}
 
-\ptodo{Here you evaluate your work using experiments. You start again with a
-very short summary of the section. The typical structure follows.}
+\dtodo{short summary of the section}
 
 \mypar{Experimental setup}
 All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32 kB L1 cache, 256 kB L2 cache and 3 MB L3 cache, all at 64 bytes line size.
@@ -252,7 +251,7 @@ Additionally, in order to achieve a defined minimum of RDTSC cycles, small probl
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
-The same technique was used to measure runtime, however instrumentali\mytodo{references}zation was not used.
+The same technique was used to measure runtime, however instrumentalization was not used.
 We used Gurobi \cite{gurobi}, SoPlex \cite{soplex}, GLPK \cite{glpk} and CPPLEX \cite{cpplex}, with the last one being dropped from testing because of numerical instability for large problems.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -349,6 +348,11 @@ you extract).}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusions}
+\dtodo{conclusions about optimization speedups}
+Finally, we can conclude that in cases where many linear problems of only one certain 
+class has to be solved and performance matters it might pay to invest into a specifically
+tailored solution. Depending on the restrictions of the problem class loss of generality
+may be rewarded with great speed gains.
 
 \ptodo{Here you need to briefly summarize what you did and why this is
 important. {\em Do not take the abstract} and put it in the past
@@ -370,14 +374,6 @@ steps if you want. Be brief.}
 \mypar{Further general guidelines}
 
 \begin{itemize}
-\item For short papers, to save space, I use paragraph titles instead of
-subsections, as shown in the introduction.
-
-\item It is generally a good idea to break sections into such smaller
-units for readability and since it helps you to (visually) structure the story.
-
-\item The above section titles should be adapted to more precisely
-reflect what you do.
 
 \item Each section should be started with a very
 short summary of what the reader can expect in this section. Nothing
