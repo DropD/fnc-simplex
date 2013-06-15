@@ -32,7 +32,7 @@ HEADEREXT = h hpp hxx
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic-errors -ansi
 CFLAGS += -O3 -march=native -m64
-#~ CFLAGS += -fno-tree-vectorize -fno-tree-slp-vectorize -mno-abm
+CFLAGS += -fno-tree-vectorize -fno-tree-slp-vectorize -mno-abm
 
 ifeq ($(shell uname), Darwin)
 	CC = g++-4.7

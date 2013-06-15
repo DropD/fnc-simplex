@@ -7,9 +7,9 @@
 #include <iostream>
 #include <string>
 
-//~ #define NO_GLPK
-//~ #define NO_GUROBI
-//~ #define NO_SOPLEX
+#define NO_GLPK
+#define NO_GUROBI
+#define NO_SOPLEX
 
 //~ #define RDTSC_CYCLES_REQUIRED 0                 // cold
 //~ #define RDTSC_CYCLES_REQUIRED 1E3
@@ -24,20 +24,18 @@ const bool INFO = false;
 
 #include "simplex/baseline.hpp"
 #include "simplex/array.hpp"
-#include "simplex/block.hpp"
-#include "simplex/block_swap.hpp"
-#include "simplex/block_avx.hpp"
-#include "simplex/block_swap_avx.hpp"
-
 #include "simplex/ssa.hpp"
 #include "simplex/sse.hpp"
 #include "simplex/avx.hpp"
 #include "simplex/block2x4_sse.hpp"
 #include "simplex/block2x4_swap_nta.hpp"
 #include "simplex/block2x4_swap_nta_pf.hpp"
-#include "simplex/block8_swap_avx.hpp"
 #include "simplex/nta.hpp"
 
+#include "simplex/block.hpp"
+#include "simplex/block_swap.hpp"
+#include "simplex/block_avx.hpp"
+#include "simplex/block_swap_avx.hpp"
 
 
 using namespace std;
@@ -91,7 +89,7 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block1x16_swap)
     //~ SIMPLEX_IMPL(block2x1_swap)
     //~ SIMPLEX_IMPL(block2x2_swap)
-    //~ SIMPLEX_IMPL(block2x4_swap)
+    //~ SIMPLEX_IMPL(block2x4_swap) // best
     //~ SIMPLEX_IMPL(block2x8_swap)
     //~ SIMPLEX_IMPL(block2x16_swap)
     //~ SIMPLEX_IMPL(block4x1_swap)
@@ -113,7 +111,7 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block1x4_swap_avx)
     //~ SIMPLEX_IMPL(block1x8_swap_avx)
     //~ SIMPLEX_IMPL(block1x16_swap_avx)
-    //~ SIMPLEX_IMPL(block2x4_swap_avx)
+    SIMPLEX_IMPL(block2x4_swap_avx)
     //~ SIMPLEX_IMPL(block2x8_swap_avx)
     //~ SIMPLEX_IMPL(block2x16_swap_avx)
     //~ SIMPLEX_IMPL(block4x4_swap_avx)
@@ -127,14 +125,17 @@ int main(int argc, char ** argv) {
     //~ SIMPLEX_IMPL(block16x16_swap_avx)
 
     //~ SIMPLEX_IMPL(block2x4_sse)
-    //~ SIMPLEX_IMPL(block2x4_swap_nta)
-    //~ SIMPLEX_IMPL(block2x4_swap_nta_pf)
+    SIMPLEX_IMPL(block2x4_avx)
+
+    SIMPLEX_IMPL(block2x4)
     //~ SIMPLEX_IMPL(ssa)
     //~ SIMPLEX_IMPL(sse)
     //~ SIMPLEX_IMPL(avx)
     //~ SIMPLEX_IMPL(nta)
+    //~ SIMPLEX_IMPL(block2x4_swap_nta)
+    //~ SIMPLEX_IMPL(block2x4_swap_nta_pf)
 
-    //replace file extension
+    //~ //replace file extension
     string lname = fname.substr(0, fname.length()-3);
     lname.append("lp");
 

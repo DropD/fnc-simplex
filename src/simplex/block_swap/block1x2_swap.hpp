@@ -115,17 +115,18 @@ class Simplex_block1x2_swap : public SimplexBase<T> {
         for(int i = 0; i < m-(m%1); i += 1) {
             PERFC_MEM+=1; PERFC_ADDMUL+=1;
             T fac0 = tabp[(i+0)*width+col] * ipiv;
-            
+
+            PERFC_ADDMUL += 2*1 * width;
+            PERFC_MEM += 1*width;
+
             for(int j = 0; j < width-(width%2); j += 2) {
                 T r0 = tabp[m*width+j+0];
                 T r1 = tabp[m*width+j+1];
 
                 //---------- i + 0 ----------
-                PERFC_MEM += 2;
                 T l_0_0 = tabp[(i+0)*width+j+0];
                 T l_0_1 = tabp[(i+0)*width+j+1];
 
-                PERFC_ADDMUL += 2*2;
                 T p_0_0 = l_0_0 - fac0*r0;
                 T p_0_1 = l_0_1 - fac0*r1;
 
@@ -134,10 +135,8 @@ class Simplex_block1x2_swap : public SimplexBase<T> {
             }
 
             for(int j = width-(width%2); j < width; ++j) {
-                PERFC_MEM += 1;
                 T r1 = tabp[m*width+j];
 
-                PERFC_ADDMUL += 2*1;
                 tabp[(i+0)*width+j] -= fac0*r1;
             }
         }

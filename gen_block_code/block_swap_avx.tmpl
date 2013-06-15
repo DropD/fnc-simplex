@@ -120,8 +120,23 @@ class Simplex_block${N}x${M}_swap_avx : public SimplexBase<T> {
             T fac$S = tabp[(i+$S)*width+col] * ipiv;
             __m256d f$S = _mm256_set1_pd(fac$S);
             %end for
-            
-            for(int j = 0; j < width-(width%$M); j += $M) {
+
+            PERFC_ADDMUL += 2*${N} * width;
+            PERFC_MEM += ${N}*width;
+
+            int peel = (long long)tabp & 0x1f; /* tabp % 32 */
+            if(peel != 0) {
+                peel = (32 - peel)/sizeof(T);
+                for (int j = 0; j < peel; j++) {
+                    %for S in range($N):
+                    tabp[(i+$S)*width+j] -= fac$S*tabp[m*width+j];
+                    %end for
+                }
+            }
+
+            int aligned_end = width - (width%$M) - peel;
+
+            for(int j = 0; j < aligned_end; j += $M) {
                 %for t in range($m):
                 %set T = $t * 4
                 __m256d r$t = _mm256_load_pd(tabp+m*width+j+$T);
@@ -129,13 +144,11 @@ class Simplex_block${N}x${M}_swap_avx : public SimplexBase<T> {
                 %for S in range($N):
 
                 //---------- i + $S ----------
-                PERFC_MEM += $M;
                 %for t in range($m):
                 %set T = $t * 4
                 __m256d l_${S}_${t} = _mm256_load_pd(tabp+(i+$S)*width+j+$T);
                 %end for
 
-                PERFC_ADDMUL += 2*${M};
                 %for t in range($m):
                 %set T = $t * 4
                 __m256d p_${S}_${t} = _mm256_mul_pd(f$S, r$t);
@@ -149,11 +162,9 @@ class Simplex_block${N}x${M}_swap_avx : public SimplexBase<T> {
                 %end for
             }
 
-            for(int j = width-(width%$M); j < width; ++j) {
-                PERFC_MEM += 1;
+            for(int j = aligned_end; j < width; ++j) {
                 T r1 = tabp[m*width+j];
 
-                PERFC_ADDMUL += 2*${N};
                 %for S in range($N):
                 tabp[(i+$S)*width+j] -= fac$S*r1;
                 %end for

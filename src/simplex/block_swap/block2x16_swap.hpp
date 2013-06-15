@@ -116,7 +116,10 @@ class Simplex_block2x16_swap : public SimplexBase<T> {
             PERFC_MEM+=2; PERFC_ADDMUL+=2;
             T fac0 = tabp[(i+0)*width+col] * ipiv;
             T fac1 = tabp[(i+1)*width+col] * ipiv;
-            
+
+            PERFC_ADDMUL += 2*2 * width;
+            PERFC_MEM += 2*width;
+
             for(int j = 0; j < width-(width%16); j += 16) {
                 T r0 = tabp[m*width+j+0];
                 T r1 = tabp[m*width+j+1];
@@ -136,7 +139,6 @@ class Simplex_block2x16_swap : public SimplexBase<T> {
                 T r15 = tabp[m*width+j+15];
 
                 //---------- i + 0 ----------
-                PERFC_MEM += 16;
                 T l_0_0 = tabp[(i+0)*width+j+0];
                 T l_0_1 = tabp[(i+0)*width+j+1];
                 T l_0_2 = tabp[(i+0)*width+j+2];
@@ -154,7 +156,6 @@ class Simplex_block2x16_swap : public SimplexBase<T> {
                 T l_0_14 = tabp[(i+0)*width+j+14];
                 T l_0_15 = tabp[(i+0)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_0_0 = l_0_0 - fac0*r0;
                 T p_0_1 = l_0_1 - fac0*r1;
                 T p_0_2 = l_0_2 - fac0*r2;
@@ -190,7 +191,6 @@ class Simplex_block2x16_swap : public SimplexBase<T> {
                 tabp[(i+0)*width+j+15] = p_0_15;
 
                 //---------- i + 1 ----------
-                PERFC_MEM += 16;
                 T l_1_0 = tabp[(i+1)*width+j+0];
                 T l_1_1 = tabp[(i+1)*width+j+1];
                 T l_1_2 = tabp[(i+1)*width+j+2];
@@ -208,7 +208,6 @@ class Simplex_block2x16_swap : public SimplexBase<T> {
                 T l_1_14 = tabp[(i+1)*width+j+14];
                 T l_1_15 = tabp[(i+1)*width+j+15];
 
-                PERFC_ADDMUL += 2*16;
                 T p_1_0 = l_1_0 - fac1*r0;
                 T p_1_1 = l_1_1 - fac1*r1;
                 T p_1_2 = l_1_2 - fac1*r2;
@@ -245,10 +244,8 @@ class Simplex_block2x16_swap : public SimplexBase<T> {
             }
 
             for(int j = width-(width%16); j < width; ++j) {
-                PERFC_MEM += 1;
                 T r1 = tabp[m*width+j];
 
-                PERFC_ADDMUL += 2*2;
                 tabp[(i+0)*width+j] -= fac0*r1;
                 tabp[(i+1)*width+j] -= fac1*r1;
             }
