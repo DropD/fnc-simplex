@@ -78,7 +78,7 @@ a brief overview of related work.
 \mypar{Motivation} The Simplex algorithm for linear optimization is widely
 used in logistics, optimization of business performance and many other fields.
 
-The simplex solution to linear problems may be used as a crucial part in
+The simplex solution to linear problems (LPs) may be used as a crucial part in
 basic decision making wherever management requirements for interdependent resources produce linear constraints.
 In production environments performance is often crucial, therefore it is interesting to see how far
 a solver for a specific class of linear problems can be optimized.
@@ -119,7 +119,8 @@ A linear problem is considered to be in standard form when it is formulated as
     A x \leq b \\
     x \geq 0.
 \end{eqnarray*}
-Any linear problem can be transformed into standard form \rtodo{citation needed? -> Yes, cite the Weismantel script or if possible the book}. Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
+Any linear problem can be transformed into standard form \cite{groetschel}. 
+Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
 
 \mypar{The Simplex Method}
 The tableau form of the simplex method for standard form problems works as follows:
@@ -235,7 +236,7 @@ In the last phase, manual vectorization using AVX instructions was performed.
 
 \section{Experimental Results}\label{sec:exp}
 
-We give a short overview of our hardware and software framework, followed by measurements and visualisation of the code performance.
+We give a short overview of our hardware and software framework, followed by measurements and visualization of the code performance.
 
 \mypar{Experimental setup}
 All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32 kB L1 cache, 256 kB L2 cache and 3 MB L3 cache, all at 64 bytes line size.
@@ -274,18 +275,18 @@ We plot the elapsed RDTSC cycles instead of per cycle performance so as not to g
 
 
 Of our own optimization techniques, blocking with an additional copy (swap) step showed to be the most efficient for large sizes,
-both non-auto-vectorised (Fig.~\ref{res_basic_novec}) and auto-vectorised (Fig.~\ref{res_basic_autovec}).
-Note that while in theory an AVX enabled program could reach 8 flop/cycle for compute-bound problems on our testing machine, the plots have been capped at 2 flop/cycle for better viewability.
+both non-auto-vectorized (Fig.~\ref{res_basic_novec}) and auto-vectorized (Fig.~\ref{res_basic_autovec}).
+Note that while in theory an AVX enabled program could reach 8 flop/cycle for compute-bound problems on our testing machine, the plots have been capped at 2 flop/cycle for better readability.
 All further plots contain programs with approximately the same operation count.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_basic_novec.eps}
-  \caption{Non-auto-vectorised basic implementations.\label{res_basic_novec}}
+  \caption{Non-auto-vectorized basic implementations.\label{res_basic_novec}}
 \end{figure}
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_basic_autovec.eps}
-  \caption{Auto-vectorised basic implementations.\label{res_basic_autovec}}
+  \caption{Auto-vectorized basic implementations.\label{res_basic_autovec}}
 \end{figure}
 
 
@@ -294,7 +295,7 @@ The search space consisted of the dyadic product of these two parameters for the
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_find_blocks.eps}
-  \caption{A small selection of the parametrised blocking implementations. Note the kink around $n=500$, which may indicate a numerically particularly challenging problem.\label{res_findblock}}
+  \caption{A small selection of the parametrized blocking implementations. Note the kink around $n=500$, which may indicate a numerically particularly challenging problem.\label{res_findblock}}
 \end{figure}
 
 For large problems, our most efficient blocking algorithm achieves 0.75 flop/cycle, compared to the baseline 0.68 flop/cycle.
@@ -302,20 +303,20 @@ Small problems that fit in cache are at the show the greatest difference around 
 These correspond to speedups of 25\% respectively 10\%, although we drop to hardly any speedup at the cache boundaries.
 
 Could we improve on this further?
-As shown in Fig.~\ref{fig:res_cachecontrol}, combining our previous favourite with nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations.
+As shown in Fig.~\ref{fig:res_cachecontrol}, combining our previous favorite with non temporal assignment resulted in a mostly positive but small effect on the swapping implementations.
 Any kind of manual prefetching as described in section 3, or partial implementations thereof, lead to a considerable slowdown.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_cachecontrol_novec.eps}
-  \caption{Performance of nontemporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline.\label{fig:res_cachecontrol}}
+  \caption{Performance of non temporal assignment ({\tt \_nta}) and prefetching ({\tt \_nta\_pf}) implementations of {\tt block2x4\_swap} and the baseline.\label{fig:res_cachecontrol}}
 \end{figure}
 
-One particularly interesting result is that the effect of AVX intrinsics on performance is not easy to predict if we turn on auto-vectorisation,
-yet they do not match the fastest auto-vectorised version (Fig.~\ref{fig:res_avx}).
+One particularly interesting result is that the effect of AVX intrinsics on performance is not easy to predict if we turn on auto-vectorization,
+yet they do not match the fastest auto-vectorized version (Fig).
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_avx.eps}
-  \caption{Example comparison of auto-vectorised code and its AVX counterpart.\label{fig:res_avx}}
+  \caption{Example comparison of auto-vectorized code and its AVX counterpart.\label{fig:res_avx}}
 \end{figure}
 
 Profiling of the {\tt swapNxM\_block\_avx } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls,
@@ -326,7 +327,7 @@ The corresponding test set starts with problems of size 500 in order to measure 
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/roof_high_autovec.eps}
-  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better viewability.\label{fig:res_roof_high}}
+  \caption{Roofline plot, the 8 flop/cycle performance line is cropped away for better readability.\label{fig:res_roof_high}}
 \end{figure}
 
 
@@ -335,12 +336,10 @@ The corresponding test set starts with problems of size 500 in order to measure 
 
 \section{Conclusions}
 
-Our measurement results and profiling indicate that the problem is highly memory bound and at the same time keeps
+Our measurement results and profiling is highly memory bound and at the same time keeps
 a very simple structure, which does not lend itself to optimization easily.
-We were able to realize a speedup of up to 25\% for small problems and up to 10\% for large ones,
+We were able to realize a speedup of up to 25\% for small problems and up to 15\% for large ones,
 albeit limited to feasible standard maximization LPs.
-
-\mytodo{say something more? feels so little here}
 
 Finally, we can conclude that in cases where many linear problems of only one certain 
 class has to be solved and performance matters it might pay to invest into a specifically
