@@ -7,7 +7,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{spconf,amsmath,amssymb,graphicx}
-\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[disable,colorinlistoftodos]{todonotes}
 
 \newcommand{\mytodo}[1]{\todo[inline]{#1}}
 \newcommand{\dtodo}[1]{\todo[inline, color=cyan]{#1}}
@@ -175,15 +175,10 @@ For the operational intensity this means:
 \section{Our Implementation}\label{sec:yourmethod}
 
 In this section we explain the our baseline implementation as well as all optimizations we made.
-\ptodo{Now comes the ``beef'' of the paper, where you explain what you
-did. Again, organize it in paragraphs with titles. As in every section
-you start with a very brief overview of the section.}
-
-\ptodo{For this class, explain all the optimizations you performed. This mean, you first very briefly
-explain the baseline implementation, then go through locality and other optimizations, and finally SSE (every project will be slightly different of course). Show or mention relevant analysis or assumptions. A few examples: 1) Profiling may lead you to optimize one part first; 2) bandwidth plus data transfer analysis may show that it is memory bound; 3) it may be too hard to implement the algorithm in full generality: make assumptions and state them (e.g., we assume $n$ is divisible by 4; or, we consider only one type of input image); 4) explain how certain data accesses have poor locality. Generally, any type of analysis adds value to your work.}
 
 \mypar{Baseline Implementation}
 Our baseline implementation parses an input file containing the coefficients for the objective function and the constraints.
+It assumes the problem is in standard form and that the number of constraints is even.
 The coefficients are stored in a two dimensional STL vector of vector representation of the simplex tableau.
 
 The steps performed in each iteration are separated into three functions: 
@@ -292,7 +287,7 @@ We plot the elapsed RDTSC cycles instead of per cycle performance as to not havi
 \end{figure}
 
 
-Of our own optimisation techniques, blocking with an additional copy (swap) step showed to be the most efficient, both non-auto-vectorised (Fig) and auto-vectorised (Fig).
+Of our own optimization techniques, blocking with an additional copy (swap) step showed to be the most efficient, both non-auto-vectorized (Fig) and auto-vectorized (Fig).
 
 Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count, which incidentally turned out to be our originally picked sizes.
 
@@ -302,7 +297,7 @@ Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% 
 
 
 Can we improve on this further?
-As shown in Fig.~\ref{fig:res_cachecontrol}, nontemporal assignment showed a mostly positive but small effect on the swapping implementations,
+As shown in Fig.~\ref{fig:res_cachecontrol}, non temporal assignment showed a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
 \begin{figure}\centering
