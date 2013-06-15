@@ -61,10 +61,10 @@
 \listoftodos
 
 \begin{abstract}
-\ptodo{Describe in concise words what you do, why you do it (not necessarily
-in this order), and the main result.  The abstract has to be
-self-contained and readable for a person in the general area. You
-should write the abstract last.}
+We implement Dantzigs Simplex Algorithm for Linear Programming, a widespread and established linear optimization method.
+Various computational optimization techniques are used to improve the efficiency of the algorithm and explore the options of improving upon this highly memory-bound problem;
+and to compare it to well-known industry tools.
+Our specific focus on the sub-class of feasible standard maximization problems allows us to achieve performance close to the hardware maximum.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -261,14 +261,6 @@ We used Gurobi \cite{gurobi}, SoPlex \cite{soplex}, GLPK \cite{glpk} and CPPLEX 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \mypar{Results}
-\mytodo{
-\mypar{Questions}
-best block sizes for blocking of the elimination step?
-best block sizes for unrolled/ssa calculation steps?
-vectorisation useful (cf autovectorisation)?
-are we at the memory bandwidth maximum? -> roofline, yes
-}
-
 
 Direct comparison with alternative Simplex solvers (see Fig.~\ref{res_external}) shows that even our baseline implementation performs significantly faster than any of the alternatives.
 This results from the simplicity assumptions we have made (regularity, conformity, definiteness) under which a lot of tedious checks can be eliminated.
@@ -305,7 +297,9 @@ The search space consisted of the dyadic product of these two parameters for the
   \caption{A small selection of the parametrised blocking implementations. Note the kink around $n=500$, which may indicate a numerically particularly challenging problem.\label{res_findblock}}
 \end{figure}
 
-\dtodo{Give hard speedup ratio}
+For large problems, our most efficient blocking algorithm achieves 0.75 flop/cycle, compared to the baseline 0.68 flop/cycle.
+Small problems that fit in cache are at the show the greatest difference around $n=100$ with 1.83 flop/cycle for the blocking algorithm and 1.46 flop/cycle for the baseline.
+These correspond to speedups of 25\% respectively 10\%, although we drop to hardly any speedup at the cache boundaries.
 
 Could we improve on this further?
 As shown in Fig.~\ref{fig:res_cachecontrol}, combining our previous favourite with nontemporal assignment resulted in a mostly positive but small effect on the swapping implementations.
@@ -317,7 +311,7 @@ Any kind of manual prefetching as described in section 3, or partial implementat
 \end{figure}
 
 One particularly interesting result is that the effect of AVX intrinsics on performance is not easy to predict if we turn on auto-vectorisation,
-yet they do not match the fastest auto-vectorised version (Fig).
+yet they do not match the fastest auto-vectorised version (Fig.~\ref{fig:res_avx}).
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_avx.eps}
@@ -341,9 +335,9 @@ The corresponding test set starts with problems of size 500 in order to measure 
 
 \section{Conclusions}
 
-Our measurement results and profiling is highly memory bound and at the same time keeps
+Our measurement results and profiling indicate that the problem is highly memory bound and at the same time keeps
 a very simple structure, which does not lend itself to optimization easily.
-We were able to realize a speedup of up to 25\% for small problems and up to 15\% for large ones,
+We were able to realize a speedup of up to 25\% for small problems and up to 10\% for large ones,
 albeit limited to feasible standard maximization LPs.
 
 \mytodo{say something more? feels so little here}
