@@ -7,7 +7,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{spconf,amsmath,amssymb,graphicx}
-\usepackage[disable,colorinlistoftodos]{todonotes}
+\usepackage[colorinlistoftodos]{todonotes}
 
 \newcommand{\mytodo}[1]{\todo[inline]{#1}}
 \newcommand{\dtodo}[1]{\todo[inline, color=cyan]{#1}}
@@ -226,13 +226,6 @@ This optimization does not change the number of floating point operations perfor
 \mypar{Vectorization}
 In the last phase, manual vectorization using AVX instructions was performed.
 
-
-\ptodo{As important as the final results is to show that you took a structured, organized approach to the optimization and that you explain why you did what you did.}
-
-\ptodo{Mention and cite any external resources including library or other code.}
-
-\ptodo{Good visuals or even brief code snippets to illustrate what you did are good. Pasting large amounts of code to fill the space is not good.}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -259,8 +252,8 @@ Additionally, in order to achieve a defined minimum of RDTSC cycles, small probl
 The code was instrumentalized to count floating point and memory operations. The measured numbers for both were compared to manually computed values and found to agree.
 
 In order to compare to third party packages, their respective API was used according to the available documentation. 
-The same technique was used to measure runtime, however instrumentalization was not used.
-We used Gurobi\mytodo{references}, SoPlex, GLPK and CPPLEX, with the last one being dropped from testing because of numerical instability for large problems.
+The same technique was used to measure runtime, however instrumentali\mytodo{references}zation was not used.
+We used Gurobi \cite{gurobi}, SoPlex \cite{soplex}, GLPK \cite{glpk} and CPPLEX \cite{cpplex}, with the last one being dropped from testing because of numerical instability for large problems.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -279,7 +272,7 @@ are we at the memory bandwidth maximum? -> roofline, yes
 Direct comparison with alternative Simplex solvers (see Fig.~\ref{res_external}) shows that even our baseline implementation performs significantly faster than any of the alternatives.
 This results from the simplicity assumptions we have made (regularity, conformity, definiteness) under which a lot of tedious checks can be eliminated.
 Unfortunately none of the APIs offered to impart this information to the respective solver.
-We plot the elapsed RDTSC cycles instead of per cycle performance as to not having to guess the operation count of each solver.
+We plot the elapsed RDTSC cycles instead of per cycle performance so as not to guess the operation count of each solver.
 
 \begin{figure}\centering
   \includegraphics[scale=0.4]{img/results_compare_external.eps}
@@ -289,14 +282,14 @@ We plot the elapsed RDTSC cycles instead of per cycle performance as to not havi
 
 Of our own optimization techniques, blocking with an additional copy (swap) step showed to be the most efficient, both non-auto-vectorized (Fig) and auto-vectorized (Fig).
 
-Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count, which incidentally turned out to be our originally picked sizes.
+Our further goal was to find the optimal block sizes by varying unrolling width and concurrent line elimination count, which \mytodo{incidentally} turned out to be \mytodo{our originally picked sizes,} $2\times 4$.
 
 
 
 Profiling of the {\tt swapNxM\_block } implementations showed that between 70\% and 90\% of the time is spent on {\tt \_mm256\_load\_pd } calls.
 
 
-Can we improve on this further?
+Could we improve on this further?
 As shown in Fig.~\ref{fig:res_cachecontrol}, non temporal assignment showed a mostly positive but small effect on the swapping implementations,
 while any kind of manual prefetching lead to a considerable slowdown.
 
@@ -306,7 +299,7 @@ while any kind of manual prefetching lead to a considerable slowdown.
   all with the same operation count.\label{fig:res_cachecontrol}}
 \end{figure}
 
-AVX
+\dtodo{AVX (was macht das hier so ganz allein?)}
 
 From the roofline plot shown in Fig.~\ref{fig:res_roof_high} we learn that our best-performing implementation is very close to the theoretical memory limit.
 The corresponding test set starts with problems of size 500 in order to measure only RAM to CPU traffic.
