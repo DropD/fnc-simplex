@@ -7,7 +7,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{spconf,amsmath,amssymb,graphicx}
-\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[disable,colorinlistoftodos]{todonotes}
 
 \newcommand{\mytodo}[1]{\todo[inline]{#1}}
 \newcommand{\dtodo}[1]{\todo[inline, color=cyan]{#1}}
@@ -85,7 +85,7 @@ a solver for a specific class of linear problems can be optimized.
 
 \mypar{Implementation} We present an implementation which is optimized 
 for a limited class of linear optimization problems and solves this kind of problem
-faster than any commerciably available general purpose solver.
+faster than any commercially available general purpose solver.
 
 \mypar{Related work} Many production grade linear optimization packages exist.
 We used three of them to compare the performance of our implementation to what is being
@@ -93,17 +93,17 @@ used in big business.
 \begin{itemize}
     \item{GLPK \cite{glpk}, a free open source linear programming package.}
     \item{Gurobi \cite{gurobi}, a commercial grade package which claims to be the fastest available solution when taking into account multi-threading. Gurobi is free for educational use.}
-    \item{SoPlex \cite{soplex}, free for educational use, developped at Zuse Institute Berlin.}
+    \item{SoPlex \cite{soplex}, free for educational use, developed at Zuse Institute Berlin (ZIB).}
 \end{itemize}
-\rtodo{cite original danzig paper?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Background: The Simplex Algorithm}\label{sec:background}
-\rtodo{cite handouts from opti.}
+It follows a brief introduction to the class of problem in consideration
+and the algorithm used as well as a cost analysis of the algorithm.
 
-\mypar{Linear Optimization Problems} \mytodo{put the Max c'x Subject to \dots formula and explain}
+\mypar{Linear Optimization Problems \cite{dantzig}}
 The general formulation of a linear problem is
 \begin{eqnarray*}
     \max c^T x, & \text{Subject To}\\
@@ -111,14 +111,14 @@ The general formulation of a linear problem is
 \end{eqnarray*}
 Where $c \in \mathbb{Q}^n$, $x \in \mathbb{R}^n$, $A \in \mathbb{Q}^{m \times n}$ and $b \in \mathbb{R}^m$.
 
-\mypar{Standard form Linear Problems} \mytodo{explain standard form, mention restriction to standard form}
+\mypar{Standard form Linear Problems}
 A linear problem is considered to be in standard form when it is formulated as
 \begin{eqnarray*}
     \max c^T x, & \text{Subject To}\\
     A x \leq b \\
     x \geq 0.
 \end{eqnarray*}
-Any linear problem can be transformed into standard form \rtodo{citation needed}. Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
+Any linear problem can be transformed into standard form \rtodo{citation needed?}. Considering this we chose to restrict our solver to standard form problems, since supporting other formulations would have lead to more effort being put into transforming the problem into standard form (effectively implementing a domain specific language).
 
 \mypar{The Simplex Method}
 The tableau form of the simplex method for standard form problems works as follows:
@@ -133,7 +133,7 @@ Let m be the number of constraints and n the number of variables.
             \end{matrix}
             \right]
         \]
-        And create a set of column indices to keep track of the currently ``active'' columns (also caled the basis). 
+        And create a set of column indices to keep track of the currently ``active'' columns (also called the basis). 
         Initialize the basis with the indices 
         \[ B = \{ m, \dots, n+m-1 \} \]
     \item iterate:
@@ -152,7 +152,7 @@ Let m be the number of constraints and n the number of variables.
 \end{enumerate}
 
 \mypar{Cost Analysis}
-The cost of the overall algorithn depends highly on the coefficients of the problem,
+The cost of the overall algorithm depends highly on the coefficients of the problem,
 since the coefficients determine the number of iterations necessary. 
 A small problem may very well take more iterations to solve than a huge one.
 
@@ -172,20 +172,13 @@ For the operational intensity this means:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Your Proposed Method}\label{sec:yourmethod}
+\section{Our Implementation}\label{sec:yourmethod}
 
 In this section we explain the our baseline implementation as well as all optimizations we made.
-\ptodo{Now comes the ``beef'' of the paper, where you explain what you
-did. Again, organize it in paragraphs with titles. As in every section
-you start with a very brief overview of the section.}
 
-\ptodo{For this class, explain all the optimizations you performed. This mean, you first very briefly
-explain the baseline implementation, then go through locality and other optimizations, and finally SSE (every project will be slightly different of course). Show or mention relevant analysis or assumptions. A few examples: 1) Profiling may lead you to optimize one part first; 2) bandwidth plus data transfer analysis may show that it is memory bound; 3) it may be too hard to implement the algorithm in full generality: make assumptions and state them (e.g., we assume $n$ is divisible by 4; or, we consider only one type of input image); 4) explain how certain data accesses have poor locality. Generally, any type of analysis adds value to your work.}
-
-\mytodo{
 \mypar{Baseline Implementation}
-}
 Our baseline implementation parses an input file containing the coefficients for the objective function and the constraints.
+It assumes the problem is in standard form and that the number of constraints is even.
 The coefficients are stored in a two dimensional STL vector of vector representation of the simplex tableau.
 
 The steps performed in each iteration are separated into three functions: 
@@ -195,38 +188,44 @@ The steps performed in each iteration are separated into three functions:
     \item{\tt base\_exchange}
 \end{itemize}
 The first two contain the code for finding the pivot element to use in the iteration whereas
-the third facilitates the gaussian elimination step.
+the third facilitates the Gaussian elimination step.
 
 \mypar{Profiling}
-Profiling was done with gprof, perf and valgrind. All tools consistently showed that the vast majority of the
+Profiling was done with {\tt gprof}, {\tt perf} and {\tt valgrind}. All tools consistently showed that the vast majority of the
 runtime is spent in the {\tt base\_exchange} function, where we focused all subsequent optimization.
-Further annotated analysis revealed stalls at the memory access functions, which can be alleviated via ILP via static scalar assignment
+Further annotated analysis revealed stalls at the memory access functions, which can be alleviated by exploiting instruction level parallelism (ILP) via static scalar assignment
 where unit stride access was applicable.
 
 
 \mypar{Array}
 The Array optimization replaces the vector of vectors implementation of the tableau by
-a C99 one dimensional contiguous array allocated and aligned using {\tt \_mm\_alloc } from
-the intel intrinsics headers.
+a C99 one dimensional contiguous array allocated and aligned using {\tt \_mm\_malloc } from
+the Intel intrinsics headers.
 
 All subsequent optimizations were based on this implementation.
 
-\mypar{Cache control}
-Improvement of cache access attempted through intrinsics for nontemporal assignment in order to avoid polluting the cache with updates on the active basis elements and
-effective cost calculations. We further added prefetching in order to load soon-to-be-used blocks into the L2 cache, as well as prefetching parts of the current block into L1.
-
 \mypar{Blocking}
 As a next step we added blocking in the loop that runs over the whole tableau 
-inside the basis exchange. block sizes from $1 \times 1$ to $16 \times 16$ were tried.
-
+inside the basis exchange. Block sizes from $1 \times 1$ to $16 \times 16$ were tried.
 
 The code for different block sizes was generated using 
 {\tt cheetah} \cite{cheetah}, a templating engine for python. The following optimizations were introduced
 by changing the code templates to be able to make use of the best block size.
 
-\mytodo{
+\mypar{Cache control}
+Improvement of cache access attempted through intrinsics for non temporal assignment in order to avoid polluting the cache with updates on the active basis elements and
+effective cost calculations. We further added prefetching in order to load soon-to-be-used blocks into the L2 cache, as well as prefetching parts of the current block into L1.
+
+\mypar{Swapping}
+In order to allow the compiler to perform optimization much better, the pivot and the last row
+of the tableau were swapped before and after entering the main loop of the base exchange step,
+allowing to get rid of the if statements used to test for the pivot row in the main loop.
+
+This optimization does not change the number of floating point operations performed, however it affects the number of bytes loaded per iteration slightly.
+
 \mypar{Vectorization}
-}
+In the last phase, manual vectorization using AVX instructions was performed.
+
 
 \ptodo{As important as the final results is to show that you took a structured, organized approach to the optimization and that you explain why you did what you did.}
 
@@ -241,8 +240,6 @@ by changing the code templates to be able to make use of the best block size.
 
 \ptodo{Here you evaluate your work using experiments. You start again with a
 very short summary of the section. The typical structure follows.}
- \ptodo{Specify the platform (processor, frequency, cache sizes)
-as well as the compiler, version, and flags used. I strongly recommend that you play with optimization flags and consider also icc for additional potential speedup.}
 
 \mypar{Experimental setup}
 All experiments were conducted on a Core i5-3360M (Ivy Bridge) running GNU/Linux and 32kB L1 cache, 256kB L2 cache and 3MB L3 cache, all at 64 bytes line size.
@@ -343,7 +340,7 @@ The corresponding test set starts with problems of size 500 in order to measure 
 
 
 \ptodo{Next divide the experiments into classes, one paragraph for each. In the simplest case you have one plot that has the size on the x-axis and the performance on the y-axis. The plot will contain several lines, one for each relevant code version. Discuss the plot and extract the overall performance gain from baseline to best code. Also state the percentage of peak performance for the best code. Note that the peak may change depending on the situation. For example, if you only do additions it would be 12 Gflop/s
-on one core with 3 Ghz and SSE and single precision floating point.
+on one core with 3 GHz and SSE and single precision floating point.
 
 Do not put two performance lines into the same plot if the operations count changed significantly (that's apples and oranges). In that case first perform the optimizations that reduce op count and report the runtime gain in a plot. Then continue to optimize the best version and show performance plots.}
 
@@ -406,36 +403,8 @@ convinced you are the reader knows it.
 high quality. Many people may read it and the quality makes a big difference.
 In this class, the quality is part of the grade.
 
-\item Books helping you to write better: %\cite{Higham:98} and \cite{Strunk:00}.
-
-\item Conversion to pdf (latex users only): 
-
-dvips -o conference.ps -t letter -Ppdf -G0 conference.dvi
-
-and then
-
-ps2pdf conference.ps
 \end{itemize}
 }
-
-\ptodo{
-\mypar{Graphics} For plots that are not images {\em never} generate (even as intermediate step)
-jpeg, gif, bmp, tif. Use eps, which means encapsulate postscript, os pdf. This way it is
-scalable since it is a vector graphic description of your graph. E.g.,
-from Matlab, you can export to eps or pdf.
-
-Here is an example of how to get a plot into latex
-(Fig.~\ref{fftperf}). Note that the text should not be any smaller than shown.
-}
-
-\begin{figure}\centering
-  %\includegraphics[scale=0.33]{dft-performance.eps}
-  \caption{Performance of four single precision implementations of the
-  discrete Fourier transform. The operations count is roughly the
-  same. {\em The labels in this plot are too small.}\label{fftperf}}
-\end{figure}
-
-
 
 % References should be produced using the bibtex program from suitable
 % BiBTeX files (here: bibl_conf). The IEEEbib.bst bibliography
